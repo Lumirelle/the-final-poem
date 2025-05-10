@@ -79,7 +79,7 @@
 						:disabled="required ? selection.length == 0 : false"
 						@tap="confirm"
 					>
-						确定
+						{{ $t("确定") }}
 					</cl-button>
 				</slot>
 			</view>
@@ -136,6 +136,8 @@ export default defineComponent({
 		},
 		// 是否必填
 		required: Boolean,
+		// 是否禁用
+		disabled: Boolean,
 	},
 
 	emits: ["update:modelValue", "change", "confirm", "opened", "close", "closed"],
@@ -180,13 +182,17 @@ export default defineComponent({
 					{
 						immediate: true,
 						deep: true,
-					},
+					}
 				);
 			},
 		});
 
 		// 打开
 		function open() {
+			if (props.disabled) {
+				return;
+			}
+
 			// 打开弹出
 			refs.popup?.open();
 
@@ -257,7 +263,7 @@ export default defineComponent({
 			() => props.modelValue,
 			(value) => {
 				if (isArray(value)) {
-					checked.value = [...value] || [];
+					checked.value = [...value];
 				} else {
 					if (value === undefined) {
 						checked.value = [];
@@ -271,7 +277,7 @@ export default defineComponent({
 			{
 				deep: true,
 				immediate: true,
-			},
+			}
 		);
 
 		return {

@@ -1,23 +1,15 @@
 <template>
-	<cl-page background-color="#fff">
+	<cl-page>
 		<view class="page-home">
-			<cl-sticky>
-				<cl-topbar :border="false" :show-back="false">
-					<text
-						class="title"
-						:class="{
-							show: scrollTop > 40,
-						}"
-					>
-						{{ app.info.name }} 快速开发脚手架
-					</text>
-				</cl-topbar>
-			</cl-sticky>
-
 			<view class="logo">
+				<view class="icon">
+					<image src="/static/logo.png" mode="aspectFit" />
+				</view>
+
 				<text class="name">{{ app.info.name }}</text>
-				<text class="version">v7.3.0</text>
 			</view>
+
+			<view class="desc">{{ t("uniapp快速开发脚手架") }}</view>
 
 			<view class="container">
 				<view class="group" v-for="(item, index) in list" :key="index">
@@ -40,43 +32,72 @@
 		</view>
 
 		<tabbar />
+
+		<cl-popup
+			v-model="i18n.visible"
+			:title="t('选择语言')"
+			direction="bottom"
+			border-radius="32rpx 32rpx 0 0"
+		>
+			<view class="list">
+				<cl-tag
+					v-for="item in i18n.list"
+					:key="item.value"
+					:type="item.value == i18n.active ? 'success' : 'info'"
+					:margin="[0, 20, 20, 0]"
+					@tap="i18n.change(item.value)"
+				>
+					{{ item.label }}
+				</cl-tag>
+			</view>
+		</cl-popup>
 	</cl-page>
 </template>
 
 <script lang="ts" setup>
-import { useApp, useCool, module } from "/@/cool";
+import { useApp, useCool, module, useStore } from "/@/cool";
 import { useUi } from "/$/cool-ui";
-import Tabbar from "./components/tabbar.vue";
-import { onPageScroll, onReady } from "@dcloudio/uni-app";
-import { ref } from "vue";
+import { onReady } from "@dcloudio/uni-app";
+import { reactive, ref } from "vue";
 import { isEmpty } from "lodash-es";
+import { setLocale } from "/@/locale";
+import Tabbar from "./components/tabbar.vue";
+import { useI18n } from "vue-i18n";
 
 const { router, service } = useCool();
 const ui = useUi();
 const app = useApp();
-
-const scrollTop = ref(0);
-
-onPageScroll((e) => {
-	scrollTop.value = e.scrollTop;
-});
+const { dict } = useStore();
+const { t } = useI18n();
 
 const list = ref([
 	{
+		label: "v8.x",
+		value: "v8",
+		children: [
+			{
+				label: "多语言",
+				path: "i18n",
+			},
+		] as any[],
+	},
+	{
 		label: "基础组件",
 		value: "basic",
-		children: [] as any[],
+		children: [],
 	},
 	{
 		label: "表单组件",
 		value: "form",
 		children: [],
 	},
+
 	{
 		label: "视图组件",
 		value: "view",
 		children: [],
 	},
+
 	{
 		label: "高级组件",
 		value: "extend",
@@ -84,11 +105,53 @@ const list = ref([
 	},
 ]);
 
+const i18n = reactive({
+	active: "zh-Hans",
+	visible: false,
+
+	list: [
+		{
+			label: "简体中文",
+			value: "zh-Hans",
+		},
+		{
+			label: "繁体中文",
+			value: "zh-Hant",
+		},
+		{
+			label: "English",
+			value: "en",
+		},
+		{
+			label: "Spanish",
+			value: "es",
+		},
+	],
+
+	open() {
+		i18n.active = uni.getLocale();
+		this.visible = true;
+	},
+
+	close() {
+		this.visible = false;
+	},
+
+	change(value: string) {
+		setLocale(value);
+		i18n.close();
+	},
+});
+
 function toLink(path: string) {
-	router.push({
-		path,
-		isGuard: false,
-	});
+	if (path == "i18n") {
+		i18n.open();
+	} else {
+		router.push({
+			path,
+			isGuard: false,
+		});
+	}
 }
 
 onReady(() => {
@@ -113,7 +176,7 @@ onReady(() => {
 
 	if (!isEmpty(children)) {
 		list.value.unshift({
-			label: "插件 / 模块",
+			label: t("插件 / 模块"),
 			value: "plugin",
 			children,
 		});
@@ -122,94 +185,46 @@ onReady(() => {
 </script>
 
 <style lang="scss" scoped>
-@mixin title {
-	background: linear-gradient(to right, #6b69f8, #a35df2, #d14bd8);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	font-weight: bold;
-}
-
 .page-home {
-	.title {
-		font-size: 32rpx;
-		padding: 0 24rpx;
-		opacity: 0;
-		transition: opacity 0.5s ease-in-out;
-		@include title();
-
-		&.show {
-			opacity: 1;
-		}
-	}
-
 	.logo {
+		padding: 80rpx 0 32rpx 0;
 		display: flex;
-		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding: 20rpx 0 100rpx 0;
-		font-weight: bold;
+		user-select: none;
 
-		.name {
-			font-size: 80rpx;
-			animation: showName 2.5s forwards;
-			@include title();
+		.icon {
+			border-radius: 16rpx;
+			padding: 10rpx;
+			margin-right: 20rpx;
+			background-color: #2c3142;
+
+			image {
+				display: block;
+				height: 66rpx;
+				width: 66rpx;
+			}
 		}
 
-		.desc,
-		.version {
-			font-size: 28rpx;
-			margin-top: 10rpx;
-			animation: showV 2.5s forwards;
-		}
-
-		.desc {
-			color: #444;
-		}
-
-		.version {
-			background-color: $cl-color-primary;
-			color: #fff;
-			padding: 4rpx 10rpx;
-			border-radius: 10rpx;
-			margin-top: 20rpx;
+		text {
+			font-size: 60rpx;
+			font-weight: bold;
+			letter-spacing: 3rpx;
 		}
 	}
 
-	.dd {
-		display: flex;
-		padding: 50rpx;
-
-		.a {
-			flex: 1;
-		}
-	}
-
-	@keyframes showName {
-		from {
-			letter-spacing: -40rpx;
-			filter: blur(20rpx);
-		}
-
-		to {
-			letter-spacing: 6rpx;
-		}
-	}
-
-	@keyframes showV {
-		from {
-			letter-spacing: -10rpx;
-			filter: blur(20rpx);
-		}
-
-		to {
-			letter-spacing: 1rpx;
-		}
+	.desc {
+		font-size: 28rpx;
+		text-align: center;
+		margin-bottom: 50rpx;
+		letter-spacing: 2rpx;
+		height: 80rpx;
+		padding: 0 50rpx;
 	}
 
 	.container {
-		border-radius: 64rpx 64rpx 0 0;
-		background-color: $cl-color-bg;
+		border-radius: 32rpx 32rpx 0 0;
+		background-color: #fff;
 	}
 
 	.group {
@@ -217,10 +232,10 @@ onReady(() => {
 
 		.label {
 			display: block;
-			margin-bottom: 20rpx;
 			margin-left: 10rpx;
 			font-size: 26rpx;
 			color: #999;
+			height: 50rpx;
 		}
 
 		.list {
@@ -231,8 +246,8 @@ onReady(() => {
 				padding: 0 30rpx;
 				margin-bottom: 25rpx;
 				background-color: #fff;
-				border-radius: 80rpx;
-				box-shadow: 0 1rpx 8rpx #6666660f;
+				border-radius: 20rpx;
+				border: 1rpx solid #ddd;
 
 				.name {
 					flex: 1;
