@@ -31,8 +31,7 @@ import static com.cool.modules.dict.entity.table.DictTypeEntityTableDef.DICT_TYP
  */
 @Service
 @RequiredArgsConstructor
-public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInfoEntity> implements
-        DictInfoService {
+public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInfoEntity> implements DictInfoService {
 
     final private DictTypeMapper dictTypeMapper;
 
@@ -40,8 +39,7 @@ public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInf
     public Object data(List<String> types) {
         Dict result = Dict.create();
         QueryWrapper find = QueryWrapper.create();
-        find.select(DICT_TYPE_ENTITY.ID, DICT_TYPE_ENTITY.KEY,
-                DICT_TYPE_ENTITY.NAME);
+        find.select(DICT_TYPE_ENTITY.ID, DICT_TYPE_ENTITY.KEY, DICT_TYPE_ENTITY.NAME);
         if (CollectionUtil.isNotEmpty(types)) {
             find.and(DICT_TYPE_ENTITY.KEY.in(types));
         }
@@ -49,12 +47,7 @@ public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInf
         if (typeData.isEmpty()) {
             return result;
         }
-        List<DictInfoEntity> infos = this.list(QueryWrapper.create()
-                .select(DictInfoEntity::getId, DictInfoEntity::getName, DictInfoEntity::getTypeId,
-                        DictInfoEntity::getParentId, DictInfoEntity::getValue)
-                .in(DictInfoEntity::getTypeId,
-                        typeData.stream().map(DictTypeEntity::getId).collect(Collectors.toList()))
-                .orderBy(DICT_INFO_ENTITY.ORDER_NUM.getName(), DICT_INFO_ENTITY.CREATE_TIME.getName()));
+        List<DictInfoEntity> infos = this.list(QueryWrapper.create().select(DictInfoEntity::getId, DictInfoEntity::getName, DictInfoEntity::getTypeId, DictInfoEntity::getParentId, DictInfoEntity::getValue).in(DictInfoEntity::getTypeId, typeData.stream().map(DictTypeEntity::getId).collect(Collectors.toList())).orderBy(DICT_INFO_ENTITY.ORDER_NUM.getName(), DICT_INFO_ENTITY.CREATE_TIME.getName()));
         typeData.forEach(item -> {
             List<Dict> datas = new ArrayList<>();
             infos.stream().filter(d -> d.getTypeId().equals(item.getId())).toList().forEach(d -> {
@@ -68,6 +61,7 @@ public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInf
                     data.set("value", Integer.parseInt(d.getValue()));
                 } catch (Exception ignored) {
                 }
+                data.set("type", d.getType());
                 datas.add(data);
             });
             result.set(item.getKey(), datas);
@@ -93,6 +87,7 @@ public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInf
                 data.set("value", Integer.parseInt(d.getValue()));
             } catch (Exception ignored) {
             }
+            data.set("type", d.getType());
             datas.add(data);
         });
         return datas;
@@ -113,8 +108,7 @@ public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInf
      * @param id 删除的菜单ID
      */
     private void delDictChild(Long id) {
-        List<DictInfoEntity> delDict = list(
-                QueryWrapper.create().eq(DictInfoEntity::getParentId, id));
+        List<DictInfoEntity> delDict = list(QueryWrapper.create().eq(DictInfoEntity::getParentId, id));
         if (CollectionUtil.isEmpty(delDict)) {
             return;
         }

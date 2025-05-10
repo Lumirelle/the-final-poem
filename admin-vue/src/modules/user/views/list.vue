@@ -2,6 +2,7 @@
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useDict } from '/$/dict'
 import { useCool } from '/@/cool'
 
 defineOptions({
@@ -10,6 +11,7 @@ defineOptions({
 
 const { t } = useI18n()
 const { service } = useCool()
+const { dict } = useDict()
 
 const options = reactive({
   loginType: [
@@ -92,7 +94,7 @@ const Table = useTable({
     {
       label: t('性别'),
       prop: 'gender',
-      dict: options.gender,
+      dict: dict.get('user-gender'),
       minWidth: 120,
     },
     {
@@ -149,7 +151,7 @@ const Upsert = useUpsert({
       value: 1,
       component: {
         name: 'el-radio-group',
-        options: options.gender,
+        options: dict.get('user-gender'),
       },
     },
     {

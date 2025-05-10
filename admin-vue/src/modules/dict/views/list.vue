@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useCrud, useTable, useUpsert } from '@cool-vue/crud'
+import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '../index'
 import { Plugins } from '/#/crud'
@@ -14,6 +15,39 @@ const { service } = useCool()
 const { dict } = useDict()
 const { t } = useI18n()
 
+/**
+ * 字典信息样式选项
+ */
+const options = reactive({
+  type: [
+    {
+      label: t('Primary'),
+      value: 'primary',
+      type: 'primary',
+    },
+    {
+      label: t('Success'),
+      value: 'success',
+      type: 'success',
+    },
+    {
+      label: t('Info'),
+      value: 'info',
+      type: 'info',
+    },
+    {
+      label: t('Warning'),
+      value: 'warning',
+      type: 'warning',
+    },
+    {
+      label: t('Danger'),
+      value: 'danger',
+      type: 'danger',
+    },
+  ],
+})
+
 const { ViewGroup } = useViewGroup({
   label: t('类型'),
   title: t('字典列表'),
@@ -23,7 +57,7 @@ const { ViewGroup } = useViewGroup({
       typeId: item.id,
       page: 1,
       prop: 'orderNum',
-      order: 'desc',
+      order: 'asc',
     })
   },
   onEdit() {
@@ -96,6 +130,12 @@ const Upsert = useUpsert({
       component: { name: 'slot-value' },
     },
     {
+      label: t('样式'),
+      prop: 'type',
+      value: 'primary',
+      component: { name: 'el-select', options: options.type },
+    },
+    {
       label: t('排序'),
       prop: 'orderNum',
       value: 1,
@@ -151,6 +191,12 @@ const Table = useTable({
       showOverflowTooltip: true,
     },
     {
+      label: t('样式'),
+      prop: 'type',
+      dict: options.type,
+      minWidth: 170,
+    },
+    {
       label: t('备注'),
       prop: 'remark',
       showOverflowTooltip: true,
@@ -159,7 +205,7 @@ const Table = useTable({
     {
       label: t('排序'),
       prop: 'orderNum',
-      sortable: 'desc',
+      sortable: 'asc',
       width: 100,
       fixed: 'right',
     },

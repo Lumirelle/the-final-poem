@@ -12,5 +12,10 @@
   "新增": "Add",
   "ID": "ID",
   "创建时间": "Create Time",
-  "更新时间": "Update Time"
+  "更新时间": "Update Time",
+  "Primary": "Primary",
+  "Success": "Success",
+  "Info": "Info",
+  "Warning": "Warning",
+  "Danger": "Danger"
 }

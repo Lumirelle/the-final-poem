@@ -27,13 +27,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AdminDictInfoController extends BaseController<DictInfoService, DictInfoEntity> {
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
-        setListOption(createOp().fieldEq(DictInfoEntityTableDef.DICT_INFO_ENTITY.TYPE_ID)
-                .keyWordLikeFields(DictInfoEntityTableDef.DICT_INFO_ENTITY.NAME)
-                .queryWrapper(QueryWrapper.create().orderBy(DictInfoEntityTableDef.DICT_INFO_ENTITY.CREATE_TIME, false))
-                .transform(o -> {
-                    DictInfoEntity entity = (DictInfoEntity) o;
-                    entity.setName(I18nUtil.getI18nDictInfo(entity.getName()));
-                }));
+        setListOption(createOp().fieldEq(DictInfoEntityTableDef.DICT_INFO_ENTITY.TYPE_ID).keyWordLikeFields(DictInfoEntityTableDef.DICT_INFO_ENTITY.NAME).queryWrapper(QueryWrapper.create().orderBy(DictInfoEntityTableDef.DICT_INFO_ENTITY.CREATE_TIME, false)).transform(o -> {
+            DictInfoEntity entity = (DictInfoEntity) o;
+            entity.setName(I18nUtil.getI18nDictInfo(entity.getName()));
+        }));
         CrudOption<DictInfoEntity> transform = createOp().transform(o -> {
             DictInfoEntity entity = (DictInfoEntity) o;
             entity.setName(I18nUtil.getI18nDictInfo(entity.getName()));

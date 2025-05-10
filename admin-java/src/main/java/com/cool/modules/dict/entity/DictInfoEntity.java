@@ -23,6 +23,9 @@ public class DictInfoEntity extends BaseEntity<DictInfoEntity> {
     @ColumnDefine(comment = "值")
     private String value;
 
+    @ColumnDefine(comment = "字典信息样式（primary、success、info、warning、danger）", defaultValue =  "primary")
+    private String type;
+
     @ColumnDefine(comment = "排序", defaultValue = "0")
     private Integer orderNum;
 

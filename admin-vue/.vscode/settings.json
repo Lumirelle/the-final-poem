@@ -22,6 +22,8 @@
     "postcss",
     "scss"
   ],
+  "i18n-ally.displayLanguage": "zh-cn",
+  "i18n-ally.sourceLanguage": "zh-cn",
   "i18n-ally.localesPaths": [
     "src/plugins/i18n",
     "packages/crud/src/locale",
