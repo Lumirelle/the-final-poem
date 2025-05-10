@@ -44,6 +44,11 @@ const props = defineProps({
     type: Array as PropType<ClTable.Column[]>,
     default: () => [],
   },
+  // 搜索项
+  searchItems: {
+    type: Array as PropType<ClForm.Item[]>,
+    default: () => [],
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -102,7 +107,9 @@ const Table = useTable({
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  items: props.searchItems,
+})
 
 // cl-crud
 const Crud = useCrud({
@@ -146,7 +153,7 @@ const pager = reactive({
 
 // 数据列表
 const data = computed(() => {
-  if (props.pickerType == 'table') {
+  if (props.pickerType === 'table') {
     const { page, size } = pager
     return list.value.slice((page - 1) * size, page * size)
   }
@@ -218,7 +225,7 @@ async function selectAll() {
 
 // 移除
 function remove() {
-  if (props.pickerType == 'table') {
+  if (props.pickerType === 'table') {
     const ids = ((refs.table?.selection || []) as any[]).map(e => e[dict.id])
 
     list.value = list.value.filter((e) => {
@@ -226,7 +233,7 @@ function remove() {
       refs.table?.toggleRowSelection(e, false)
 
       // 移除已选的
-      return !ids.find(id => id == e[dict.id])
+      return !ids.find(id => id === e[dict.id])
     })
   }
   else {
@@ -264,13 +271,13 @@ defineExpose({
 
 <template>
   <div class="cl-select-table__picker">
-    <template v-if="pickerType == 'table'">
+    <template v-if="pickerType === 'table'">
       <template v-if="multiple">
         <div class="mb-[10px]">
           <el-button type="success" @click="open">
             {{ $t('添加') }}
           </el-button>
-          <el-button type="danger" :disabled="refs.table?.selection.length == 0" @click="remove()">
+          <el-button type="danger" :disabled="refs.table?.selection.length === 0" @click="remove()">
             {{ $t('移除') }}
           </el-button>
         </div>
@@ -300,7 +307,7 @@ defineExpose({
         <template v-else>
           <template v-for="(item, index) in data" :key="index">
             <slot name="item" :item="item" :index="index">
-              <template v-if="pickerType == 'default'">
+              <template v-if="pickerType === 'default'">
                 <cl-image
                   :src="item[dict.img]"
                   :size="24"
@@ -311,7 +318,7 @@ defineExpose({
                 <span v-if="!multiple">{{ item[dict.text] }}</span>
               </template>
 
-              <template v-else-if="pickerType == 'text'">
+              <template v-else-if="pickerType === 'text'">
                 <el-tag v-if="multiple" disable-transitions size="small" effect="plain">
                   {{ item[dict.text] }}
                 </el-tag>
