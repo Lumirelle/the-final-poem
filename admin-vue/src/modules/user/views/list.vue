@@ -2,6 +2,7 @@
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useDict } from '/$/dict'
 import { useCool } from '/@/cool'
 import { phoneValidator } from '/@/cool/utils'
 
@@ -11,7 +12,7 @@ defineOptions({
 
 const { t } = useI18n()
 const { service } = useCool()
-
+const { dict } = useDict()
 const options = reactive({
   loginType: [
     {
@@ -27,35 +28,6 @@ const options = reactive({
     {
       label: t('H5'),
       value: 2,
-    },
-  ],
-  gender: [
-    {
-      label: t('未知'),
-      value: 0,
-      type: 'info',
-    },
-    {
-      label: t('男'),
-      value: 1,
-      type: 'primary',
-    },
-    {
-      label: t('女'),
-      value: 2,
-      type: 'success',
-    },
-  ],
-  role: [
-    {
-      label: t('患者'),
-      value: 0,
-      type: 'primary',
-    },
-    {
-      label: t('陪诊人员'),
-      value: 1,
-      type: 'success',
     },
   ],
   status: [
@@ -110,14 +82,14 @@ const Table = useTable({
     {
       label: t('性别'),
       prop: 'gender',
-      dict: options.gender,
+      dict: dict.get('gender'),
       minWidth: 120,
     },
     {
       label: t('角色'),
       prop: 'role',
       minWidth: 120,
-      dict: options.role,
+      dict: dict.get('user-role'),
     },
     {
       label: t('登录方式'),
@@ -174,7 +146,7 @@ const Upsert = useUpsert({
       value: 1,
       component: {
         name: 'el-radio-group',
-        options: options.gender,
+        options: dict.get('gender'),
       },
     },
     {
@@ -183,7 +155,7 @@ const Upsert = useUpsert({
       value: 0,
       component: {
         name: 'el-radio-group',
-        options: options.role,
+        options: dict.get('user-role'),
       },
     },
     {
