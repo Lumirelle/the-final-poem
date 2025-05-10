@@ -42,6 +42,9 @@ public class UserWxEntity extends BaseEntity<UserWxEntity> {
     @ColumnDefine(comment = "国家")
     private String country;
 
+    @ColumnDefine(comment = "用户角色 0-未知 1-患者 2-陪诊人员", defaultValue = "0")
+    private Integer role;
+
     @ColumnDefine(comment = "类型 0-小程序 1-公众号 2-H5 3-APP", defaultValue = "0")
     private Integer type;
 }

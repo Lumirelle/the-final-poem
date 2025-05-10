@@ -2,8 +2,8 @@
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useDict } from '/$/dict'
 import { useCool } from '/@/cool'
+import { phoneValidator } from '/@/cool/utils'
 
 defineOptions({
   name: 'user-list',
@@ -11,7 +11,6 @@ defineOptions({
 
 const { t } = useI18n()
 const { service } = useCool()
-const { dict } = useDict()
 
 const options = reactive({
   loginType: [
@@ -39,12 +38,24 @@ const options = reactive({
     {
       label: t('男'),
       value: 1,
-      type: 'success',
+      type: 'primary',
     },
     {
       label: t('女'),
       value: 2,
-      type: 'danger',
+      type: 'success',
+    },
+  ],
+  role: [
+    {
+      label: t('患者'),
+      value: 0,
+      type: 'primary',
+    },
+    {
+      label: t('陪诊人员'),
+      value: 1,
+      type: 'success',
     },
   ],
   status: [
@@ -94,8 +105,14 @@ const Table = useTable({
     {
       label: t('性别'),
       prop: 'gender',
-      dict: dict.get('user-gender'),
+      dict: options.gender,
       minWidth: 120,
+    },
+    {
+      label: t('角色'),
+      prop: 'role',
+      minWidth: 120,
+      dict: options.role,
     },
     {
       label: t('登录方式'),
@@ -144,6 +161,7 @@ const Upsert = useUpsert({
           maxlength: 11,
         },
       },
+      rules: { required: true, trigger: 'blur', validator: phoneValidator },
     },
     {
       prop: 'gender',
@@ -151,7 +169,16 @@ const Upsert = useUpsert({
       value: 1,
       component: {
         name: 'el-radio-group',
-        options: dict.get('user-gender'),
+        options: options.gender,
+      },
+    },
+    {
+      prop: 'role',
+      label: t('角色'),
+      value: 0,
+      component: {
+        name: 'el-radio-group',
+        options: options.role,
       },
     },
     {
@@ -185,6 +212,8 @@ const Crud = useCrud(
     <cl-row>
       <!-- 刷新按钮 -->
       <cl-refresh-btn />
+      <!-- 新增按钮 -->
+      <cl-add-btn />
       <!-- 删除按钮 -->
       <cl-multi-delete-btn />
       <cl-flex1 />

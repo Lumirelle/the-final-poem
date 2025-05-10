@@ -32,8 +32,11 @@ public class UserInfoEntity extends BaseEntity<UserInfoEntity> {
     @ColumnDefine(comment = "状态 0-禁用 1-正常 2-已注销", defaultValue = "1")
     private Integer status;
 
+    @ColumnDefine(comment = "用户角色 0-未知 1-患者 2-陪诊人员", defaultValue = "0")
+    private Integer role;
+
     @ColumnDefine(comment = "登录方式 0-小程序 1-公众号 2-H5", defaultValue = "0")
-    private String loginType;
+    private Integer loginType;
 
     @ColumnDefine(comment = "密码")
     private String password;
