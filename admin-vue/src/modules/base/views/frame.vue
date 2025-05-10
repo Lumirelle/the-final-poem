@@ -1,49 +1,49 @@
-<template>
-	<div v-loading="loading" class="page-iframe" :element-loading-text="$t('拼命加载中')">
-		<iframe :ref="setRefs('iframe')" :src="url" frameborder="0"></iframe>
-	</div>
-</template>
-
 <script lang="ts" setup>
+import { onMounted, ref, watch } from 'vue'
+import { useCool } from '/@/cool'
+
 defineOptions({
-	name: 'frame-web'
-});
+  name: 'frame-web',
+})
 
-import { ref, watch, onMounted } from 'vue';
-import { useCool } from '/@/cool';
+const loading = ref(false)
+const url = ref()
 
-const loading = ref(false);
-const url = ref();
-
-const { route, refs, setRefs } = useCool();
+const { route, refs, setRefs } = useCool()
 
 watch(
-	() => route,
-	val => {
-		url.value = val.meta?.iframeUrl;
-	},
-	{
-		immediate: true,
-		deep: true
-	}
-);
+  () => route,
+  (val) => {
+    url.value = val.meta?.iframeUrl
+  },
+  {
+    immediate: true,
+    deep: true,
+  },
+)
 
 onMounted(() => {
-	loading.value = true;
+  loading.value = true
 
-	refs.iframe.onload = () => {
-		loading.value = false;
-	};
-});
+  refs.iframe.onload = () => {
+    loading.value = false
+  }
+})
 </script>
+
+<template>
+  <div v-loading="loading" class="page-iframe" :element-loading-text="$t('拼命加载中')">
+    <iframe :ref="setRefs('iframe')" :src="url" frameborder="0" />
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .page-iframe {
-	height: 100%;
+  height: 100%;
 
-	iframe {
-		height: 100%;
-		width: 100%;
-	}
+  iframe {
+    height: 100%;
+    width: 100%;
+  }
 }
 </style>

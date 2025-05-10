@@ -1,9 +1,9 @@
-import { host, value } from './proxy';
+import { host, value } from './proxy'
 
 export default {
-	// 根地址
-	host,
+  // 根地址
+  host,
 
-	// 请求地址
-	baseUrl: `/${value}`
-};
+  // 请求地址
+  baseUrl: `/${value}`,
+}

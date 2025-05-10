@@ -1,18 +1,18 @@
-import { defineComponent } from 'vue';
-import { CrudProps } from '../../comm';
+import { defineComponent } from 'vue'
+import { CrudProps } from '../../comm'
 
 export default defineComponent({
-	name: 'cl-render',
+  name: 'cl-render',
 
-	props: {
-		...CrudProps,
-		modelValue: null,
-		placeholder: String
-	},
+  props: {
+    ...CrudProps,
+    modelValue: null,
+    placeholder: String,
+  },
 
-	setup(props, { slots }) {
-		return () => {
-			return slots.default?.(props);
-		};
-	}
-});
+  setup(props, { slots }) {
+    return () => {
+      return slots.default?.(props)
+    }
+  },
+})

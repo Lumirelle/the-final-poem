@@ -1,11 +1,11 @@
-<template>
-	<error-page :code="500" :desc="$t('糟糕，出了点问题')" />
-</template>
-
 <script lang="ts" setup>
-defineOptions({
-	name: '500'
-});
+import ErrorPage from './components/error-page.vue'
 
-import ErrorPage from './components/error-page.vue';
+defineOptions({
+  name: '500',
+})
 </script>
+
+<template>
+  <error-page :code="500" :desc="$t('糟糕，出了点问题')" />
+</template>

@@ -1,5 +1,5 @@
-import { setAuto } from './setAuto';
+import { setAuto } from './setAuto'
 
 export const Search = {
-	setAuto
-};
+  setAuto,
+}

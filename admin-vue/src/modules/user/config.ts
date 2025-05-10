@@ -1,5 +1,5 @@
-import { type ModuleConfig } from '/@/cool';
+import type { ModuleConfig } from '/@/cool'
 
 export default (): ModuleConfig => {
-	return {};
-};
+  return {}
+}

@@ -1,45 +1,48 @@
-<template>
-	<cl-editor-preview v-if="!isHide" :ref="setRefs('preview')" type="code" :tabs="tabs">
-		<el-button @click="open">代码</el-button>
-	</cl-editor-preview>
-</template>
-
 <script setup lang="ts">
-defineOptions({
-	name: 'demo-code'
-});
+import type { PropType } from 'vue'
+import { isEmpty } from 'lodash-es'
+import { demo } from 'virtual:demo'
+import { computed } from 'vue'
+import { useCool } from '/@/cool'
+import { basename } from '/@/cool/utils'
 
-import { useCool } from '/@/cool';
-import { type PropType, computed } from 'vue';
-import { demo } from 'virtual:demo';
-import { basename } from '/@/cool/utils';
-import { isEmpty } from 'lodash-es';
+defineOptions({
+  name: 'demo-code',
+})
 
 const props = defineProps({
-	files: {
-		type: Array as PropType<string[]>,
-		default: () => []
-	}
-});
+  files: {
+    type: Array as PropType<string[]>,
+    default: () => [],
+  },
+})
 
-const { refs, setRefs } = useCool();
+const { refs, setRefs } = useCool()
 
 // 是否隐藏
-const isHide = computed(() => isEmpty(demo));
+const isHide = computed(() => isEmpty(demo))
 
 // 文件列表
 const tabs = computed(() => {
-	return props.files?.map(e => {
-		return {
-			name: basename(e),
-			language: e.includes('.vue') ? 'html' : 'typescript',
-			data: demo[e]
-		};
-	});
-});
+  return props.files?.map((e) => {
+    return {
+      name: basename(e),
+      language: e.includes('.vue') ? 'html' : 'typescript',
+      data: demo[e],
+    }
+  })
+})
 
 // 打开
 function open() {
-	refs.preview.open();
+  refs.preview.open()
 }
 </script>
+
+<template>
+  <cl-editor-preview v-if="!isHide" :ref="setRefs('preview')" type="code" :tabs="tabs">
+    <el-button @click="open">
+      代码
+    </el-button>
+  </cl-editor-preview>
+</template>

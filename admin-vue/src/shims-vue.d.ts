@@ -1,8 +1,10 @@
 declare module '*.vue' {
-	import type { DefineComponent } from 'vue';
-	const component: DefineComponent<{}, {}, any>;
+  import type { DefineComponent } from 'vue'
 
-	export default component;
+  // eslint-disable-next-line ts/no-empty-object-type
+  const component: DefineComponent<{}, {}, any>
+
+  export default component
 }
 
-declare module 'element-plus/dist/locale/zh-cn.mjs';
+declare module 'element-plus/dist/locale/zh-cn.mjs'

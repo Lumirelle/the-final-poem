@@ -1,9 +1,9 @@
-import { useUserStore } from "./user";
-import { useDictStore } from "./dict";
+import { useDictStore } from './dict'
+import { useUserStore } from './user'
 
 export function useStore() {
-	return {
-		user: useUserStore(),
-		dict: useDictStore(),
-	};
+  return {
+    user: useUserStore(),
+    dict: useDictStore(),
+  }
 }

@@ -1,95 +1,96 @@
-<template>
-	<div class="cl-menu-perms">
-		<el-cascader
-			v-model="value"
-			separator=":"
-			clearable
-			filterable
-			collapse-tags
-			collapse-tags-tooltip
-			:disabled="disabled"
-			:options="data"
-			:props="cascaderProps"
-			@change="onChange"
-		/>
-	</div>
-</template>
-
 <script lang="ts" setup>
-defineOptions({
-	name: 'cl-menu-perms'
-});
+import { onMounted, reactive, ref, watch } from 'vue'
+import { useCool } from '/@/cool'
+import { deepPaths } from '/@/cool/utils'
 
-import { onMounted, ref, watch, reactive } from 'vue';
-import { useCool } from '/@/cool';
-import { deepPaths } from '/@/cool/utils';
+defineOptions({
+  name: 'cl-menu-perms',
+})
 
 const props = defineProps({
-	modelValue: {
-		type: String,
-		default: ''
-	},
-	disabled: Boolean
-});
+  modelValue: {
+    type: String,
+    default: '',
+  },
+  disabled: Boolean,
+})
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue'])
 
-const { service } = useCool();
+const { service } = useCool()
 
 // 绑定值
-const value = ref<string[][]>([]);
+const value = ref<string[][]>([])
 
 // 权限列表
-const data = ref<any[]>([]);
+const data = ref<any[]>([])
 
 // elm BUG
-const cascaderProps = reactive({ multiple: true });
+const cascaderProps = reactive({ multiple: true })
 
 // 监听改变
 function onChange(arr: any) {
-	emit('update:modelValue', arr.map((e: string[]) => e.join(':')).join(','));
+  emit('update:modelValue', arr.map((e: string[]) => e.join(':')).join(','))
 }
 
 // 监听值
 watch(
-	() => props.modelValue,
-	val => {
-		value.value = val ? val.split(',').map(e => e.split(':')) : [];
-	},
-	{
-		immediate: true
-	}
-);
+  () => props.modelValue,
+  (val) => {
+    value.value = val ? val.split(',').map(e => e.split(':')) : []
+  },
+  {
+    immediate: true,
+  },
+)
 
 onMounted(() => {
-	const list: any[] = [];
+  const list: any[] = []
 
-	function deep(s: any) {
-		if (typeof s == 'object') {
-			for (const i in s) {
-				const { permission } = s[i];
+  function deep(s: any) {
+    if (typeof s === 'object') {
+      for (const i in s) {
+        const { permission } = s[i]
 
-				if (permission) {
-					list.push(...Object.values(permission));
-				} else {
-					deep(s[i]);
-				}
-			}
-		}
-	}
+        if (permission) {
+          list.push(...Object.values(permission))
+        }
+        else {
+          deep(s[i])
+        }
+      }
+    }
+  }
 
-	deep(service);
+  deep(service)
 
-	data.value = deepPaths(list, ':');
-});
+  data.value = deepPaths(list, ':')
+})
 </script>
+
+<template>
+  <div class="cl-menu-perms">
+    <el-cascader
+      v-model="value"
+      separator=":"
+      clearable
+      filterable
+      collapse-tags
+      collapse-tags-tooltip
+      :disabled="disabled"
+      :options="data"
+      :props="cascaderProps"
+      @change="onChange"
+    />
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .cl-menu-perms {
-	line-height: 0;
+  line-height: 0;
 
-	:deep(.el-cascader) {
-		width: 100%;
-	}
+  :deep(.el-cascader) {
+    width: 100%;
+  }
 }
 </style>

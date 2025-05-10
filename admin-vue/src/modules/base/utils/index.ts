@@ -1,9 +1,9 @@
 export function revisePath(path: string) {
-	if (!path) {
-		return '';
-	}
+  if (!path) {
+    return ''
+  }
 
-	return path.startsWith('/') ? path : `/${path}`;
+  return path.startsWith('/') ? path : `/${path}`
 }
 
-export * from './permission';
+export * from './permission'

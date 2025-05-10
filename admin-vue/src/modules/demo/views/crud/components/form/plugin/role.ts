@@ -4,17 +4,17 @@
  * @returns
  */
 export function setRole(role?: string): ClForm.Plugin {
-	return ({ exposed }) => {
-		function deep(arr: ClForm.Item[]) {
-			arr.forEach(e => {
-				if (e.role) {
-					e.hidden = e.role != role;
-				}
+  return ({ exposed }) => {
+    function deep(arr: ClForm.Item[]) {
+      arr.forEach((e) => {
+        if (e.role) {
+          e.hidden = e.role != role
+        }
 
-				deep(e.children || []);
-			});
-		}
+        deep(e.children || [])
+      })
+    }
 
-		deep(exposed.config.items);
-	};
+    deep(exposed.config.items)
+  }
 }

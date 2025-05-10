@@ -1,19 +1,27 @@
 {
-	"editor.cursorSmoothCaretAnimation": "on",
-	"explorer.fileNesting.enabled": true,
-	"explorer.fileNesting.patterns": {
-		"tsconfig.json": "tsconfig.*.json, env.d.ts",
-		"vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
-		"package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig"
-	},
-	"editor.codeActionsOnSave": {
-		"source.fixAll": "explicit"
-	},
-	"editor.formatOnSave": true,
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"[scss]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+  // -- format & lint --
+  "prettier.enable": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
   },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "html",
+    "markdown",
+    "json",
+    "jsonc",
+    "yaml",
+    "toml",
+    "xml",
+    "css",
+    "postcss",
+    "scss"
+  ],
   "i18n-ally.localesPaths": [
     "src/plugins/i18n",
     "packages/crud/src/locale",

@@ -1,9 +1,9 @@
-import { useDictStore } from './dict';
+import { useDictStore } from './dict'
 
 export function useStore() {
-	const dict = useDictStore();
+  const dict = useDictStore()
 
-	return {
-		dict
-	};
+  return {
+    dict,
+  }
 }

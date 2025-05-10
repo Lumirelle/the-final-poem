@@ -1,9 +1,9 @@
-<template>
-	<cl-upload v-model="value" />
-</template>
-
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-const value = ref('');
+const value = ref('')
 </script>
+
+<template>
+  <cl-upload v-model="value" />
+</template>

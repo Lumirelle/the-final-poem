@@ -1,5 +1,5 @@
 export default {
-	created(el: HTMLElement, binding: any) {
-		el.style.color = binding.value;
-	}
-};
+  created(el: HTMLElement, binding: any) {
+    el.style.color = binding.value
+  },
+}

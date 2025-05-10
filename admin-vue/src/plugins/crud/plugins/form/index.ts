@@ -1,5 +1,5 @@
-import { setFocus } from './setFocus';
+import { setFocus } from './setFocus'
 
 export const Form = {
-	setFocus
-};
+  setFocus,
+}

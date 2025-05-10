@@ -1,2 +1,2 @@
-export * from './menu';
-export * from './plugin';
+export * from './menu'
+export * from './plugin'

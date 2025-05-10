@@ -1,11 +1,11 @@
-<template>
-	<space-inner />
-</template>
-
 <script lang="ts" setup>
-defineOptions({
-	name: 'upload-list'
-});
+import SpaceInner from '../components/space-inner.vue'
 
-import SpaceInner from '../components/space-inner.vue';
+defineOptions({
+  name: 'upload-list',
+})
 </script>
+
+<template>
+  <space-inner />
+</template>

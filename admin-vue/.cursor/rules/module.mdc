@@ -1,6 +1,7 @@
 ---
 description: module | plugins 模块、插件
 globs: 
+alwaysApply: false
 ---
 # 模块/插件开发
 
@@ -112,9 +113,9 @@ export default (): ModuleConfig => {
 ```ts
 // demo/directives/test.ts
 export default {
-	created(el, binding) {},
-	mounted() {},
-	...
+  created(el, binding) {},
+  mounted() {},
+  ...
 };
 ```
 

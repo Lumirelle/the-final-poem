@@ -1,7 +1,7 @@
-import { useStore } from './store';
+import { useStore } from './store'
 
 export function useDict() {
-	return {
-		...useStore()
-	};
+  return {
+    ...useStore(),
+  }
 }

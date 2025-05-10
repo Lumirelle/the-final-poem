@@ -1,4 +1,4 @@
-import { useRefs } from '/@/cool';
+import { useRefs } from '/@/cool'
 
 /**
  * 设置聚焦，prop为空则默认第一个选项
@@ -6,42 +6,44 @@ import { useRefs } from '/@/cool';
  * @returns
  */
 export function setFocus(prop?: string): ClForm.Plugin {
-	const { refs, setRefs } = useRefs();
+  const { refs, setRefs } = useRefs()
 
-	return ({ exposed, onOpen }) => {
-		if (prop === '') {
-			return;
-		}
+  return ({ exposed, onOpen }) => {
+    if (prop === '') {
+      return
+    }
 
-		const name = prop || exposed.config?.items?.[0]?.prop;
-		let _ref: any;
+    const name = prop || exposed.config?.items?.[0]?.prop
+    let _ref: any
 
-		if (name) {
-			function deep(arr: ClForm.Item[]) {
-				arr.forEach(e => {
-					if (e.prop == name && name) {
-						if (e.component) {
-							if (e.component.ref) {
-								_ref = e.component.ref();
-							} else {
-								e.component.ref = setRefs(name);
-							}
-						}
-					} else {
-						deep(e.children || []);
-					}
-				});
-			}
+    if (name) {
+      function deep(arr: ClForm.Item[]) {
+        arr.forEach((e) => {
+          if (e.prop == name && name) {
+            if (e.component) {
+              if (e.component.ref) {
+                _ref = e.component.ref()
+              }
+              else {
+                e.component.ref = setRefs(name)
+              }
+            }
+          }
+          else {
+            deep(e.children || [])
+          }
+        })
+      }
 
-			deep(exposed.config?.items || []);
+      deep(exposed.config?.items || [])
 
-			onOpen(() => {
-				if (_ref) {
-					refs[name] = _ref();
-				}
+      onOpen(() => {
+        if (_ref) {
+          refs[name] = _ref()
+        }
 
-				refs[name]?.focus?.();
-			});
-		}
-	};
+        refs[name]?.focus?.()
+      })
+    }
+  }
 }

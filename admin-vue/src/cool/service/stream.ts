@@ -1,103 +1,104 @@
-import { useBase } from '/$/base';
-import { config } from '/@/config';
+import { useBase } from '/$/base'
+import { config } from '/@/config'
 
 export function useStream() {
-	const { user } = useBase();
-	let abortController: AbortController | null = null;
+  const { user } = useBase()
+  let abortController: AbortController | null = null
 
-	// 调用
-	async function invoke({
-		url,
-		method = 'POST',
-		data,
-		cb
-	}: {
-		url: string;
-		method?: string;
-		data?: any;
-		cb?: (result: any) => void;
-	}) {
-		abortController = new AbortController();
+  // 调用
+  async function invoke({
+    url,
+    method = 'POST',
+    data,
+    cb,
+  }: {
+    url: string
+    method?: string
+    data?: any
+    cb?(result: any): void
+  }) {
+    abortController = new AbortController()
 
-		let cacheText = '';
+    let cacheText = ''
 
-		return fetch(config.baseUrl + url, {
-			method,
-			headers: {
-				Authorization: user.token,
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data),
-			signal: abortController?.signal
-		})
-			.then(res => {
-				if (res.body) {
-					const reader = res.body.getReader();
-					const decoder = new TextDecoder('utf-8');
-					const stream = new ReadableStream({
-						start(controller) {
-							function push() {
-								reader.read().then(({ done, value }) => {
-									if (done) {
-										controller.close();
-										return;
-									}
+    return fetch(config.baseUrl + url, {
+      method,
+      headers: {
+        'Authorization': user.token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      signal: abortController?.signal,
+    })
+      .then((res) => {
+        if (res.body) {
+          const reader = res.body.getReader()
+          const decoder = new TextDecoder('utf-8')
+          const stream = new ReadableStream({
+            start(controller) {
+              function push() {
+                reader.read().then(({ done, value }) => {
+                  if (done) {
+                    controller.close()
+                    return
+                  }
 
-									let text = decoder.decode(value, { stream: true });
+                  let text = decoder.decode(value, { stream: true })
 
-									if (cb) {
-										if (cacheText) {
-											text = cacheText + text;
-										}
+                  if (cb) {
+                    if (cacheText) {
+                      text = cacheText + text
+                    }
 
-										if (text.indexOf('data:') == 0) {
-											text = '\n\n' + text;
-										}
+                    if (text.indexOf('data:') == 0) {
+                      text = `\n\n${text}`
+                    }
 
-										try {
-											const arr = text
-												.split(/\n\ndata:/g)
-												.filter(Boolean)
-												.map(e => JSON.parse(e));
+                    try {
+                      const arr = text
+                        .split(/\n\ndata:/g)
+                        .filter(Boolean)
+                        .map(e => JSON.parse(e))
 
-											arr.forEach(cb);
+                      arr.forEach(cb)
 
-											cacheText = '';
-										} catch (err) {
-											console.error('[parse text]', text);
-											cacheText = text;
-										}
-									}
+                      cacheText = ''
+                    }
+                    catch (err) {
+                      console.error('[parse text]', text)
+                      cacheText = text
+                    }
+                  }
 
-									controller.enqueue(text);
-									push();
-								});
-							}
-							push();
-						}
-					});
+                  controller.enqueue(text)
+                  push()
+                })
+              }
+              push()
+            },
+          })
 
-					return new Response(stream);
-				}
+          return new Response(stream)
+        }
 
-				return res;
-			})
-			.catch(err => {
-				console.error(err);
-				throw err;
-			});
-	}
+        return res
+      })
+      .catch((err) => {
+        console.error(err)
+        throw err
+      })
+  }
 
-	// 取消
-	function cancel() {
-		if (abortController) {
-			abortController.abort();
-			abortController = null;
-		}
-	}
+  // 取消
+  function cancel() {
+    if (abortController) {
+      abortController.abort()
+      abortController = null
+    }
+  }
 
-	return {
-		invoke,
-		cancel
-	};
+  return {
+    invoke,
+    cancel,
+  }
 }

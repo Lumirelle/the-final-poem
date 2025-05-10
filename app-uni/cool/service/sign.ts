@@ -1,22 +1,22 @@
-import md5 from "md5";
+import md5 from 'md5'
 
 function useSign(params: any) {
-	const timestamp = new Date().getTime();
+  const timestamp = new Date().getTime()
 
-	let arr = [`timestamp=${timestamp}`];
+  const arr = [`timestamp=${timestamp}`]
 
-	for (const i in params) {
-		arr.push(`${i}=${decodeURIComponent(params[i])}`);
-	}
+  for (const i in params) {
+    arr.push(`${i}=${decodeURIComponent(params[i])}`)
+  }
 
-	arr.sort();
+  arr.sort()
 
-	const sign = md5(arr.join("&"));
+  const sign = md5(arr.join('&'))
 
-	return {
-		timestamp,
-		sign,
-	};
+  return {
+    timestamp,
+    sign,
+  }
 }
 
-export { useSign };
+export { useSign }
