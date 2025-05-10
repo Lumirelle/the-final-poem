@@ -309,3 +309,4 @@ export function sleep(duration: number) {
 
 export { storage }
 export * from './loading'
+export * from './validator'
