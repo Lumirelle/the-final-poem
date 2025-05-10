@@ -85,6 +85,11 @@ const Table = useTable({
       width: 60,
     },
     {
+      label: t('用户 ID'),
+      prop: 'id',
+      minWidth: 100,
+    },
+    {
       label: t('昵称'),
       prop: 'nickName',
       minWidth: 150,
