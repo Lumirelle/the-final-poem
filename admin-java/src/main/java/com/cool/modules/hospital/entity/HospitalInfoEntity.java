@@ -12,7 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@Table(value = "hospital_hospital_info", comment = "医院信息")
+@Table(value = "hospital_info", comment = "医院信息")
 public class HospitalInfoEntity extends BaseEntity<HospitalInfoEntity> {
 
     @ColumnDefine(comment = "名称")
