@@ -5,7 +5,7 @@ import { useDict } from '/$/dict'
 import { useCool } from '/@/cool'
 
 defineOptions({
-  name: 'hospital-list',
+  name: 'meal-category',
 })
 
 const { service } = useCool()
@@ -23,23 +23,10 @@ const Upsert = useUpsert({
       required: true,
     },
     {
-      label: t('编码'),
-      prop: 'code',
-      component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
-      required: true,
-    },
-    {
-      label: t('地址'),
-      prop: 'address',
-      component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
-      required: true,
-    },
-    {
-      label: t('联系电话'),
-      prop: 'phone',
-      component: { name: 'el-input', props: { clearable: true } },
+      label: t('排序'),
+      prop: 'sort',
+      hook: 'number',
+      component: { name: 'el-input-number', props: { min: 0 } },
       span: 12,
       required: true,
     },
@@ -51,6 +38,11 @@ const Upsert = useUpsert({
       span: 12,
       required: true,
     },
+    {
+      label: t('图标'),
+      prop: 'icon',
+      component: { name: 'cl-upload' },
+    },
   ],
 })
 
@@ -58,12 +50,20 @@ const Upsert = useUpsert({
 const Table = useTable({
   columns: [
     { type: 'selection' },
-    { label: t('医院 ID'), prop: 'id', minWidth: 140 },
     { label: t('名称'), prop: 'name', minWidth: 140 },
-    { label: t('编码'), prop: 'code', minWidth: 140 },
-    { label: t('地址'), prop: 'address', minWidth: 120 },
-    { label: t('联系电话'), prop: 'phone', minWidth: 140 },
-    { label: t('状态'), prop: 'status', component: { name: 'cl-switch' }, minWidth: 100 },
+    {
+      label: t('状态'),
+      prop: 'status',
+      minWidth: 100,
+      component: { name: 'cl-switch' },
+    },
+    { label: t('排序'), prop: 'sort', minWidth: 140, sortable: 'custom' },
+    {
+      label: t('图标'),
+      prop: 'icon',
+      minWidth: 100,
+      component: { name: 'cl-image', props: { size: 60 } },
+    },
     {
       label: t('创建时间'),
       prop: 'createTime',
@@ -88,7 +88,7 @@ const Search = useSearch()
 // cl-crud
 const Crud = useCrud(
   {
-    service: service.hospital.info,
+    service: service.meal.category,
   },
   (app) => {
     app.refresh()

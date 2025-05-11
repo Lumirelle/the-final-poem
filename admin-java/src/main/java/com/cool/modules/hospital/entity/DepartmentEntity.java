@@ -34,7 +34,7 @@ public class DepartmentEntity extends BaseEntity<DepartmentEntity> {
     @Column(ignore = true)
     private String headDoctorName;
 
-    @ColumnDefine(comment = "状态 0-启用 1-停用", defaultValue = "1")
+    @ColumnDefine(comment = "状态 0-禁用 1-启用", defaultValue = "1")
     private Integer status;
 
     @ColumnDefine(comment = "医院ID")

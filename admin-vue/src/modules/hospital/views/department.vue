@@ -83,7 +83,7 @@ const Table = useTable({
     },
     { label: t('负责人名称'), prop: 'headDoctorName', minWidth: 120 },
     { label: t('类型'), prop: 'type', dict: dict.get('department-type'), minWidth: 120 },
-    { label: t('状态'), prop: 'status', dict: dict.get('base-status'), minWidth: 120 },
+    { label: t('状态'), prop: 'status', component: { name: 'cl-switch' }, minWidth: 100 },
     { label: t('医院'), prop: 'hospitalId', minWidth: 120 },
     { label: t('医院名称'), prop: 'hospitalName', minWidth: 120 },
     { label: t('医院编码'), prop: 'hospitalCode', minWidth: 120 },

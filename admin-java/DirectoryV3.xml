@@ -5,4 +5,8 @@
      <tree path="/src/main/java/com/cool/modules/patient" title="患者"/>
      <tree path="/src/main/java/com/cool/modules/user" title="用户"/>
      <tree path="/src/main/java/com/cool/modules/hospital" title="医院资源"/>
+     <tree path="/src/main/java/com/cool/modules/meals" title="套餐"/>
+     <tree path="/src/main/java/com/cool/modules/meal" title="套餐"/>
+     <tree path="/src/main/java/com/cool/modules/dict" title="字典"/>
+     <tree path="/src/main/java/com/cool/modules/task" title="定时任务"/>
  </trees>

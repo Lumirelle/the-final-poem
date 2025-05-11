@@ -33,6 +33,6 @@ public class DoctorEntity extends BaseEntity<DoctorEntity> {
     @ColumnDefine(comment = "专长")
     private String specialty;
 
-    @ColumnDefine(comment = "状态 0-启用 1-停用", defaultValue = "0")
+    @ColumnDefine(comment = "状态 0-禁用 1-启用", defaultValue = "1")
     private Integer status;
 }

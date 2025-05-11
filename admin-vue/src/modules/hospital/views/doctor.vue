@@ -77,7 +77,7 @@ const Table = useTable({
       showOverflowTooltip: true,
       minWidth: 200,
     },
-    { label: t('状态'), prop: 'status', dict: dict.get('base-status'), minWidth: 120 },
+    { label: t('状态'), prop: 'status', component: { name: 'cl-switch' }, minWidth: 100 },
     {
       label: t('创建时间'),
       prop: 'createTime',

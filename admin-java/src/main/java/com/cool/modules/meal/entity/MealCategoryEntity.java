@@ -1,4 +1,4 @@
-package com.cool.modules.hospital.entity;
+package com.cool.modules.meal.entity;
 
 import com.cool.core.base.BaseEntity;
 import com.mybatisflex.annotation.Table;
@@ -8,26 +8,23 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 医院信息
+ * 套餐分类表
  */
 @Getter
 @Setter
-@Table(value = "hospital_hospital_info", comment = "医院信息")
-public class HospitalInfoEntity extends BaseEntity<HospitalInfoEntity> {
+@Table(value = "meal_category", comment = "套餐分类表")
+public class MealCategoryEntity extends BaseEntity<MealCategoryEntity> {
 
+    @UniIndex(name = "uni_name")
     @ColumnDefine(comment = "名称")
     private String name;
 
-    @UniIndex
-    @ColumnDefine(comment = "编码")
-    private String code;
-
-    @ColumnDefine(comment = "地址")
-    private String address;
-
-    @ColumnDefine(comment = "联系电话")
-    private String phone;
-
     @ColumnDefine(comment = "状态 0-禁用 1-启用", defaultValue = "1")
     private Integer status;
+
+    @ColumnDefine(comment = "排序")
+    private Integer sort;
+
+    @ColumnDefine(comment = "图标")
+    private String icon;
 }
