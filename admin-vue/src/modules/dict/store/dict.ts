@@ -21,6 +21,11 @@ const useDictStore = defineStore('dict', () => {
     return arr.filter(e => e !== undefined).map(v => deepFind(v, get(name).value))
   }
 
+  // 通过 label 获取值，没有则返回 0
+  function getByLabel(name: Dict.Key, label: string) {
+    return get(name).value.find(item => item.label === label)?.value || 0
+  }
+
   // 刷新
   async function refresh(types?: Dict.Key[]) {
     return service.dict.info
@@ -57,6 +62,7 @@ const useDictStore = defineStore('dict', () => {
   return {
     data,
     get,
+    getByLabel,
     find,
     refresh,
   }
