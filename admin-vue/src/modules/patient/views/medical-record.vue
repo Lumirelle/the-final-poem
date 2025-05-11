@@ -5,7 +5,7 @@ import PatientSelect from '/$/patient/components/patient-select.vue'
 import { useCool } from '/@/cool'
 
 defineOptions({
-  name: 'patient-medical-record',
+  name: 'medical-record',
 })
 
 const { service } = useCool()
@@ -133,6 +133,7 @@ const Search = useSearch()
 // cl-crud
 const Crud = useCrud(
   {
+    // service: service.<module name>.<controller name split by dot>
     service: service.patient.medical.record,
   },
   (app) => {

@@ -16,8 +16,8 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@Table(value = "patient_profile", comment = "患者档案")
-public class PatientProfileEntity extends BaseEntity<PatientProfileEntity> {
+@Table(value = "patient_info", comment = "患者档案")
+public class PatientInfoEntity extends BaseEntity<PatientInfoEntity> {
 
     @ColumnDefine(comment = "姓名")
     private String name;
@@ -28,13 +28,14 @@ public class PatientProfileEntity extends BaseEntity<PatientProfileEntity> {
     @ColumnDefine(comment = "生日")
     private Date birthday;
 
+    @UniIndex
     @ColumnDefine(comment = "电话")
     private String phone;
 
     @ColumnDefine(comment = "地址")
     private String address;
 
-    @ColumnDefine(comment = "类型 1-门诊 2-住院 3-急诊", defaultValue = "1")
+    @ColumnDefine(comment = "类型 0=正常 1=沟通不便 2=行动不便 3=其他不便", defaultValue = "0")
     private Integer type;
 
     @UniIndex

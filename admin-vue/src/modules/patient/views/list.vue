@@ -8,7 +8,7 @@ import { useCool } from '/@/cool'
 import { phoneValidator } from '/@/cool/utils'
 
 defineOptions({
-  name: 'patient-patient-profile',
+  name: 'patient-list',
 })
 
 const { service } = useCool()
@@ -43,7 +43,7 @@ const Upsert = useUpsert({
         component: {
           vm: UserSelect,
           props: {
-            role: dict.get('user-role').value.find(item => item.label === '患者')?.value || 1,
+            role: dict.getByLabel('user-role', '患者'),
           },
         },
         required: true,
@@ -69,7 +69,7 @@ const Upsert = useUpsert({
       label: t('性别'),
       prop: 'gender',
       group: 'basic',
-      value: dict.get('gender').value.find(item => item.label === '男')?.value || 1,
+      value: dict.getByLabel('gender', '男'),
       component: { name: 'el-radio-group', options: dict.get('gender') },
       required: true,
       span: 12,
@@ -78,7 +78,7 @@ const Upsert = useUpsert({
       label: t('类型'),
       prop: 'type',
       group: 'basic',
-      value: dict.get('patient-type').value.find(item => item.label === '正常')?.value || 0,
+      value: dict.getByLabel('patient-type', '正常'),
       component: { name: 'el-radio-group', options: dict.get('patient-type') },
       required: true,
       span: 12,
@@ -257,7 +257,8 @@ const Search = useSearch()
 // cl-crud
 const Crud = useCrud(
   {
-    service: service.patient.profile,
+    // service: service.<module name>.<controller name split by dot>
+    service: service.patient.info,
   },
   (app) => {
     app.refresh()

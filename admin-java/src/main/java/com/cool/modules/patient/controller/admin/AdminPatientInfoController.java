@@ -3,30 +3,30 @@ package com.cool.modules.patient.controller.admin;
 import cn.hutool.json.JSONObject;
 import com.cool.core.annotation.CoolRestController;
 import com.cool.core.base.BaseController;
-import com.cool.modules.patient.entity.PatientProfileEntity;
-import com.cool.modules.patient.service.PatientProfileService;
+import com.cool.modules.patient.entity.PatientInfoEntity;
+import com.cool.modules.patient.service.PatientInfoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 
-import static com.cool.modules.patient.entity.table.PatientProfileEntityTableDef.PATIENT_PROFILE_ENTITY;
+import static com.cool.modules.patient.entity.table.PatientInfoEntityTableDef.PATIENT_INFO_ENTITY;
 
 /**
  * 患者档案管理
  */
 @Tag(name = "患者档案管理", description = "管理患者档案信息")
 @CoolRestController(api = {"add", "delete", "update", "info", "page"})
-public class AdminPatientProfileController extends BaseController<PatientProfileService, PatientProfileEntity> {
+public class AdminPatientInfoController extends BaseController<PatientInfoService, PatientInfoEntity> {
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp()
             .fieldEq(
-                    PATIENT_PROFILE_ENTITY.ID,
-                    PATIENT_PROFILE_ENTITY.GENDER,
-                    PATIENT_PROFILE_ENTITY.TYPE
+                    PATIENT_INFO_ENTITY.ID,
+                    PATIENT_INFO_ENTITY.GENDER,
+                    PATIENT_INFO_ENTITY.TYPE
             )
             .keyWordLikeFields(
-                    PATIENT_PROFILE_ENTITY.NAME,
-                    PATIENT_PROFILE_ENTITY.MEDICAL_RECORD_NUMBER
+                    PATIENT_INFO_ENTITY.NAME,
+                    PATIENT_INFO_ENTITY.MEDICAL_RECORD_NUMBER
             ));
     }
 }
