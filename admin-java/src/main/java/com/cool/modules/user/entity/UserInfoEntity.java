@@ -29,7 +29,7 @@ public class UserInfoEntity extends BaseEntity<UserInfoEntity> {
     @ColumnDefine(comment = "性别 0-未知 1-男 2-女", defaultValue = "0")
     private Integer gender;
 
-    @ColumnDefine(comment = "状态 0-禁用 1-正常 2-已注销", defaultValue = "1")
+    @ColumnDefine(comment = "状态 0-正常 1-禁用 2-已注销", defaultValue = "0")
     private Integer status;
 
     @ColumnDefine(comment = "用户角色 0-未知 1-患者 2-陪诊人员", defaultValue = "0")

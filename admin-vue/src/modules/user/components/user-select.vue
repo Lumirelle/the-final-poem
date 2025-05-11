@@ -27,7 +27,7 @@ const customService = computed(() => {
       if (props.role !== undefined) {
         queryParams.role = props.role
       }
-      queryParams.status = 1
+      queryParams.status = dict.getByLabel('user-status', '启用')
       return service.user.info.page(queryParams)
     },
   }

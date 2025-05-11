@@ -30,23 +30,6 @@ const options = reactive({
       value: 2,
     },
   ],
-  status: [
-    {
-      label: t('禁用'),
-      value: 0,
-      type: 'danger',
-    },
-    {
-      label: t('正常'),
-      value: 1,
-      type: 'success',
-    },
-    {
-      label: t('已注销'),
-      value: 2,
-      type: 'warning',
-    },
-  ],
 })
 
 // cl-table
@@ -101,7 +84,7 @@ const Table = useTable({
       label: t('状态'),
       prop: 'status',
       minWidth: 120,
-      dict: options.status,
+      dict: dict.get('user-status'),
     },
     {
       label: t('创建时间'),
@@ -143,7 +126,7 @@ const Upsert = useUpsert({
     {
       prop: 'gender',
       label: t('性别'),
-      value: 1,
+      value: dict.getByLabel('gender', '男'),
       component: {
         name: 'el-radio-group',
         options: dict.get('gender'),
@@ -152,7 +135,7 @@ const Upsert = useUpsert({
     {
       prop: 'role',
       label: t('角色'),
-      value: 0,
+      value: dict.getByLabel('user-role', '患者'),
       component: {
         name: 'el-radio-group',
         options: dict.get('user-role'),
@@ -161,10 +144,10 @@ const Upsert = useUpsert({
     {
       prop: 'status',
       label: t('状态'),
-      value: 1,
+      value: dict.getByLabel('user-status', '启用'),
       component: {
         name: 'el-radio-group',
-        options: options.status,
+        options: dict.get('user-status'),
       },
     },
   ],

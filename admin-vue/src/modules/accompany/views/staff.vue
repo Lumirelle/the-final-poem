@@ -73,18 +73,19 @@ const Upsert = useUpsert({
         props: { type: 'date', valueFormat: 'YYYY-MM-DD HH:mm:ss' },
       },
       required: true,
-      span: 12,
     },
-    {
-      label: t('状态'),
-      prop: 'status',
-      value: dict.getByLabel('acc-staff-status', '正常'),
-      component: {
-        name: 'el-radio-group',
-        options: dict.get('acc-staff-status'),
-      },
-      required: true,
-      span: 12,
+    () => {
+      return {
+        label: t('状态'),
+        prop: 'status',
+        value: dict.getByLabel('acc-staff-status', '正常'),
+        hidden: Upsert.value?.mode === 'add',
+        component: {
+          name: 'el-radio-group',
+          options: dict.get('acc-staff-status'),
+        },
+        required: true,
+      }
     },
     {
       label: t('简介'),
@@ -137,6 +138,8 @@ const Table = useTable({
       showOverflowTooltip: true,
       minWidth: 200,
     },
+    { label: t('账户 ID'), prop: 'userId', minWidth: 140 },
+    { label: t('账户昵称'), prop: 'nickName', minWidth: 140 },
     {
       label: t('创建时间'),
       prop: 'createTime',

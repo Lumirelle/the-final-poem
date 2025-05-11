@@ -47,7 +47,7 @@ public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInf
         if (typeData.isEmpty()) {
             return result;
         }
-        List<DictInfoEntity> infos = this.list(QueryWrapper.create().select(DictInfoEntity::getId, DictInfoEntity::getName, DictInfoEntity::getTypeId, DictInfoEntity::getParentId, DictInfoEntity::getValue).in(DictInfoEntity::getTypeId, typeData.stream().map(DictTypeEntity::getId).collect(Collectors.toList())).orderBy(DICT_INFO_ENTITY.ORDER_NUM.getName(), DICT_INFO_ENTITY.CREATE_TIME.getName()));
+        List<DictInfoEntity> infos = this.list(QueryWrapper.create().select(DictInfoEntity::getId, DictInfoEntity::getName, DictInfoEntity::getTypeId, DictInfoEntity::getParentId, DictInfoEntity::getValue, DictInfoEntity::getType).in(DictInfoEntity::getTypeId, typeData.stream().map(DictTypeEntity::getId).collect(Collectors.toList())).orderBy(DICT_INFO_ENTITY.ORDER_NUM.getName(), DICT_INFO_ENTITY.CREATE_TIME.getName()));
         typeData.forEach(item -> {
             List<Dict> datas = new ArrayList<>();
             infos.stream().filter(d -> d.getTypeId().equals(item.getId())).toList().forEach(d -> {

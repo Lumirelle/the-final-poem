@@ -1,11 +1,13 @@
 package com.cool.modules.accompany.entity;
 
 import com.cool.core.base.BaseEntity;
+import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import com.tangzc.mybatisflex.autotable.annotation.UniIndex;
 import lombok.Getter;
 import lombok.Setter;
+import org.dromara.autotable.annotation.Index;
 
 import java.util.Date;
 
@@ -41,4 +43,12 @@ public class AccompanyStaffEntity extends BaseEntity<AccompanyStaffEntity> {
 
     @ColumnDefine(comment = "备注")
     private String remark;
+
+    @Index
+    @ColumnDefine(comment = "关联用户ID")
+    private Long userId;
+
+    @Column(ignore = true)
+    private String nickName;
+
 }
