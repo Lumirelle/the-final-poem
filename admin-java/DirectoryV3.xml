@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <trees>
+     <tree path="/src/main/java/com/cool/modules/accompany" title="陪诊员"/>
+     <tree path="/src/main/java/com/cool/modules/patient" title="患者"/>
+     <tree path="/src/main/java/com/cool/modules/user" title="用户"/>
+ </trees>

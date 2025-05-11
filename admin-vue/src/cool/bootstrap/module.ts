@@ -38,11 +38,11 @@ for (const i in files) {
   }
 
   // 配置
-  if (action == 'config.ts') {
+  if (action === 'config.ts') {
     d.value = v
   }
   // 服务
-  else if (action == 'service') {
+  else if (action === 'service') {
     const s = new (v as any)()
 
     if (s) {
@@ -53,7 +53,7 @@ for (const i in files) {
     }
   }
   // 指令
-  else if (action == 'directives') {
+  else if (action === 'directives') {
     d.directives?.push({ name: n, value: v as Directive })
   }
 

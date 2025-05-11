@@ -44,7 +44,7 @@ request.interceptors.request.use(
     if (isDev) {
       console.group(req.url)
       console.log('method:', req.method)
-      console.table('data:', req.method == 'get' ? req.params : req.data)
+      console.table('data:', req.method === 'get' ? req.params : req.data)
       console.groupEnd()
     }
 
@@ -142,7 +142,7 @@ request.interceptors.response.use(
       const { status } = error.response
       const { user } = useBase()
 
-      if (status == 401) {
+      if (status === 401) {
         user.logout() // 未授权，登出用户
       }
       else {

@@ -114,16 +114,26 @@ public class CoolEps {
         ArrayList<Object> emptyList = new ArrayList<>();
         Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();
         for (Map.Entry<RequestMappingInfo, HandlerMethod> methodEntry : map.entrySet()) {
+            // Contains url patterns & HTTP methods (GET\POST...)
             RequestMappingInfo info = methodEntry.getKey();
+            // Contains controller bean name & method name
             HandlerMethod method = methodEntry.getValue();
+            // TokenIgnore annotation
             TokenIgnore tokenIgnore = method.getMethodAnnotation(TokenIgnore.class);
+            // Return module name if the controller bean is under the `modules` package, such as `com.cool.modules.base`
             String module = getModule(method);
+
             if (StrUtil.isNotEmpty(module)) {
+                // Simple name of entity class of controller bean
                 String entityName = getEntity(method.getBeanType());
+                // Get method url path
                 String methodPath = getMethodUrl(method);
+                // Escape curly braces in method path
                 String escapedMethodPath = methodPath.replace("{", "\\{").replace("}", "\\}");
+                // Get method url path prefix
                 String prefix = Objects.requireNonNull(getUrl(info))
                         .replaceFirst("(?s)(.*)" + escapedMethodPath, "$1");
+
                 Dict result;
                 int type = 0;
                 if (prefix.startsWith("/admin")) {
@@ -149,8 +159,10 @@ public class CoolEps {
                     }
                 });
                 if (item != null) {
+                    // If item exists, do nothing
                     item.set("api", apis(prefix, methodPath, item.getBean("api"), tokenIgnore));
                 } else {
+                    // If item does not exist, create a new one
                     item = Dict.create();
                     item.set("controller", method.getBeanType().getSimpleName());
                     item.set("module", module);
@@ -350,8 +362,6 @@ public class CoolEps {
             Table mergedAnnotation = AnnotatedElementUtils.findMergedAnnotation(e, Table.class);
 
             menuInfo.set(e.getSimpleName(), mergedAnnotation.comment());
-
-
         });
     }
 

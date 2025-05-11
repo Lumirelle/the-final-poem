@@ -4,6 +4,9 @@ import { hmr } from '../hooks'
 import { BaseService, service } from '../service'
 import { isDev } from '/@/config'
 
+/**
+ * 创建 eps 信息
+ */
 export function createEps() {
   // 设置 request 方法
   function set(d: any) {
@@ -21,7 +24,7 @@ export function createEps() {
             return this.request({
               url: path,
               method,
-              [method.toLocaleLowerCase() == 'post' ? 'data' : 'params']: data,
+              [method.toLocaleLowerCase() === 'post' ? 'data' : 'params']: data,
             })
           }
         }
