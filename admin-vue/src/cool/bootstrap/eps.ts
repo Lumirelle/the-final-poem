@@ -1,5 +1,8 @@
 import { merge } from 'lodash-es'
+
+// 存储 eps 信息到 vite 虚拟模块
 import { eps } from 'virtual:eps'
+
 import { hmr } from '../hooks'
 import { BaseService, service } from '../service'
 import { isDev } from '/@/config'
@@ -17,6 +20,7 @@ export function createEps() {
         const { path, method = 'get' } = d[i]
 
         if (path) {
+          // 将 a 中的 request 方法赋值给 a.request
           // eslint-disable-next-line no-self-assign
           a.request = a.request
 
