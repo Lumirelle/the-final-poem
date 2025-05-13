@@ -1,12 +1,13 @@
 package com.cool.modules.hospital.entity;
 
 import com.cool.core.base.BaseEntity;
+import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
-import org.dromara.autotable.annotation.Index;
 import com.tangzc.mybatisflex.autotable.annotation.UniIndex;
 import lombok.Getter;
 import lombok.Setter;
+import org.dromara.autotable.annotation.Index;
 
 /**
  * 医生信息
@@ -27,8 +28,18 @@ public class DoctorEntity extends BaseEntity<DoctorEntity> {
     private String title;
 
     @Index
+    @ColumnDefine(comment = "医院ID")
+    private Long hospitalId;
+
+    @Column(ignore = true)
+    private String hospitalName;
+
+    @Index
     @ColumnDefine(comment = "科室ID（关联科室）")
     private Long departmentId;
+
+    @Column(ignore = true)
+    private String departmentName;
 
     @ColumnDefine(comment = "专长")
     private String specialty;

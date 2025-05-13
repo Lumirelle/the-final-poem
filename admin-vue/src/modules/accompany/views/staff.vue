@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
+import { useCrud, useForm, useSearch, useTable, useUpsert } from '@cool-vue/crud'
 import dayjs from 'dayjs'
+import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '/$/dict'
 import UserSelect from '/$/user/components/user-select.vue'
@@ -30,6 +31,7 @@ const Upsert = useUpsert({
           },
         },
         required: true,
+        span: 24,
       }
     },
     {
@@ -42,7 +44,7 @@ const Upsert = useUpsert({
     {
       label: t('电话'),
       prop: 'phone',
-      component: { name: 'el-input', props: { clearable: true } },
+      component: { name: 'el-input', props: { clearable: true, maxlength: 11 } },
       rules: { required: true, trigger: 'blur', validator: phoneValidator },
       span: 12,
     },
@@ -55,17 +57,6 @@ const Upsert = useUpsert({
       span: 12,
     },
     {
-      label: t('级别'),
-      prop: 'level',
-      value: dict.getByLabel('acc-staff-level', '初级'),
-      component: {
-        name: 'el-radio-group',
-        options: dict.get('acc-staff-level'),
-      },
-      span: 12,
-      required: true,
-    },
-    {
       label: t('生日'),
       prop: 'birthday',
       component: {
@@ -73,6 +64,7 @@ const Upsert = useUpsert({
         props: { type: 'date', valueFormat: 'YYYY-MM-DD HH:mm:ss' },
       },
       required: true,
+      span: 24,
     },
     () => {
       return {
@@ -85,6 +77,7 @@ const Upsert = useUpsert({
           options: dict.get('acc-staff-status'),
         },
         required: true,
+        span: 24,
       }
     },
     {
@@ -95,6 +88,7 @@ const Upsert = useUpsert({
         props: { type: 'textarea', rows: 4 },
       },
       required: true,
+      span: 24,
     },
     {
       label: t('备注'),
@@ -103,9 +97,96 @@ const Upsert = useUpsert({
         name: 'el-input',
         props: { type: 'textarea', rows: 4 },
       },
+      span: 24,
     },
   ],
 })
+
+// 审核表单
+const Review = useForm()
+
+// 打开审核表单
+function openReview(row: any) {
+  Review.value?.open({
+    title: '资质审核',
+    width: '600px',
+    items: [
+      {
+        label: '陪诊员姓名',
+        prop: 'name',
+        component: {
+          name: 'el-input',
+          props: {
+            disabled: true,
+          },
+        },
+      },
+      {
+        label: '当前级别',
+        prop: 'oldLevel',
+        component: {
+          name: 'el-input',
+          props: {
+            disabled: true,
+          },
+        },
+        hook: {
+          bind: (value) => {
+            return dict.get('acc-staff-level').value.find((e: any) => e.value === value)?.label || value
+          },
+        },
+      },
+      {
+        label: '审核结果',
+        prop: 'level',
+        value: row.level,
+        component: {
+          name: 'el-radio-group',
+          options: dict.get('acc-staff-level'),
+        },
+        required: true,
+      },
+      {
+        label: '审核意见',
+        prop: 'remark',
+        component: {
+          name: 'el-input',
+          props: {
+            type: 'textarea',
+            rows: 4,
+          },
+        },
+        required: true,
+      },
+    ],
+    form: {
+      staffId: row.id,
+      name: row.name,
+      oldLevel: row.level,
+      oldLevelValue: row.level,
+    },
+    on: {
+      submit: async (data, { done, close }) => {
+        try {
+          await service.accompany.staff.doreview({
+            staffId: data.staffId,
+            oldLevel: data.oldLevelValue,
+            level: data.level,
+            remark: data.remark,
+          })
+
+          ElMessage.success('审核完成')
+          refresh()
+          close()
+        }
+        catch (err: any) {
+          ElMessage.error(err?.message || '审核失败')
+          done()
+        }
+      },
+    },
+  })
+}
 
 // cl-table
 const Table = useTable({
@@ -154,7 +235,21 @@ const Table = useTable({
       sortable: 'custom',
       component: { name: 'cl-date-text' },
     },
-    { type: 'op', buttons: ['edit', 'delete'] },
+    {
+      type: 'op',
+      buttons: [
+        'edit',
+        {
+          label: '审核',
+          type: 'primary',
+          onClick: ({ scope }) => {
+            openReview(scope.row)
+          },
+        },
+        'delete',
+      ],
+      width: 260,
+    },
   ],
 })
 
@@ -204,5 +299,14 @@ function refresh(params?: any) {
 
     <!-- 新增、编辑 -->
     <cl-upsert ref="Upsert" />
+
+    <!-- 审核表单 -->
+    <cl-form ref="Review" />
   </cl-crud>
 </template>
+
+<style lang="scss" scoped>
+.cl-crud {
+  height: 100%;
+}
+</style>

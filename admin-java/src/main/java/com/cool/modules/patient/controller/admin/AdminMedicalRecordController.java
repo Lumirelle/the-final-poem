@@ -19,8 +19,9 @@ public class AdminMedicalRecordController extends BaseController<MedicalRecordSe
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp()
-            .fieldEq(MEDICAL_RECORD_ENTITY.PATIENT_ID)
-            .keyWordLikeFields(MEDICAL_RECORD_ENTITY.DOCTOR_NAME, MEDICAL_RECORD_ENTITY.HOSPITAL)
+                .fieldEq(MEDICAL_RECORD_ENTITY.PATIENT_ID,
+                        MEDICAL_RECORD_ENTITY.DOCTOR_ID,
+                        MEDICAL_RECORD_ENTITY.HOSPITAL_ID)
         );
     }
 }

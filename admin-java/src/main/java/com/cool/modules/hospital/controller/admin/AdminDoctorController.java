@@ -1,13 +1,12 @@
 package com.cool.modules.hospital.controller.admin;
 
+import cn.hutool.json.JSONObject;
 import com.cool.core.annotation.CoolRestController;
 import com.cool.core.base.BaseController;
 import com.cool.modules.hospital.entity.DoctorEntity;
 import com.cool.modules.hospital.service.DoctorService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
-import cn.hutool.json.JSONObject;
+
 import static com.cool.modules.hospital.entity.table.DoctorEntityTableDef.DOCTOR_ENTITY;
 
 /**
@@ -19,7 +18,9 @@ public class AdminDoctorController extends BaseController<DoctorService, DoctorE
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp()
-                .keyWordLikeFields(DOCTOR_ENTITY.NAME)
+                .keyWordLikeFields(DOCTOR_ENTITY.NAME,
+                        DOCTOR_ENTITY.HOSPITAL_ID,
+                        DOCTOR_ENTITY.DEPARTMENT_ID)
                 .fieldEq(DOCTOR_ENTITY.JOB_CODE, DOCTOR_ENTITY.STATUS));
     }
 }

@@ -25,13 +25,10 @@ public class DepartmentServiceImpl extends BaseServiceImpl<DepartmentMapper, Dep
     public Object page(JSONObject requestParams, Page<DepartmentEntity> page, QueryWrapper queryWrapper) {
         queryWrapper.select(
                         DepartmentEntityTableDef.DEPARTMENT_ENTITY.ALL_COLUMNS,
-                        DoctorEntityTableDef.DOCTOR_ENTITY.NAME.as("headDoctorName"),
                         HospitalInfoEntityTableDef.HOSPITAL_INFO_ENTITY.NAME.as("hospitalName"),
                         HospitalInfoEntityTableDef.HOSPITAL_INFO_ENTITY.CODE.as("hospitalCode")
                 )
                 .from(DepartmentEntityTableDef.DEPARTMENT_ENTITY)
-                .leftJoin(DoctorEntityTableDef.DOCTOR_ENTITY)
-                .on(DepartmentEntity::getHeadDoctorId, DoctorEntity::getId)
                 .leftJoin(HospitalInfoEntityTableDef.HOSPITAL_INFO_ENTITY)
                 .on(DepartmentEntity::getHospitalId, HospitalInfoEntity::getId);
         return mapper.paginate(page, queryWrapper);

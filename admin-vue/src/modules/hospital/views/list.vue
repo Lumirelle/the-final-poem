@@ -39,7 +39,7 @@ const Upsert = useUpsert({
     {
       label: t('联系电话'),
       prop: 'phone',
-      component: { name: 'el-input', props: { clearable: true } },
+      component: { name: 'el-input', props: { clearable: true, maxlength: 11 } },
       span: 12,
       required: true,
     },

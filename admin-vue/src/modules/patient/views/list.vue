@@ -61,7 +61,7 @@ const Upsert = useUpsert({
       label: t('电话'),
       prop: 'phone',
       group: 'basic',
-      component: { name: 'el-input', props: { clearable: true } },
+      component: { name: 'el-input', props: { clearable: true, maxlength: 11 } },
       rules: { required: true, trigger: 'blur', validator: phoneValidator },
       span: 12,
     },

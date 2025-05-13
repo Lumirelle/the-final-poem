@@ -23,10 +23,16 @@ public class MedicalRecordEntity extends BaseEntity<MedicalRecordEntity> {
     @ColumnDefine(comment = "就诊日期")
     private Date visitDate;
 
-    @ColumnDefine(comment = "医院")
-    private String hospital;
+    @ColumnDefine(comment = "医院 ID")
+    private Integer hospitalId;
 
-    @ColumnDefine(comment = "医生姓名")
+    @Column(ignore = true)
+    private String hospitalName;
+
+    @ColumnDefine(comment = "医生 ID")
+    private String doctorId;
+
+    @Column(ignore = true)
     private String doctorName;
 
     @ColumnDefine(comment = "诊断结果")

@@ -152,7 +152,7 @@ const Upsert = useUpsert({
         prop: 'password',
         label: t('密码'),
         span: 12,
-        required: Upsert.value?.mode == 'add',
+        required: Upsert.value?.mode === 'add',
         component: {
           name: 'el-input',
           props: {
@@ -190,6 +190,9 @@ const Upsert = useUpsert({
       span: 12,
       component: {
         name: 'el-input',
+        props: {
+          maxlength: 11,
+        },
       },
     },
     {

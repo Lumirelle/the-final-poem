@@ -23,9 +23,6 @@ public class MealInfoEntity extends BaseEntity<MealInfoEntity> {
     @ColumnDefine(comment = "价格")
     private Double price;
 
-    @ColumnDefine(comment = "时长")
-    private Integer duration;
-
     @ColumnDefine(comment = "状态 0-禁用 1-启用", defaultValue = "1")
     private Integer status;
 
@@ -35,13 +32,33 @@ public class MealInfoEntity extends BaseEntity<MealInfoEntity> {
     @Column(ignore = true)
     private String categoryName;
 
+    @ColumnDefine(comment = "医院 ID")
+    private Long hospitalId;
+
+    @Column(ignore = true)
+    private String hospitalName;
+
+    // 科室
+    @ColumnDefine(comment = "科室 ID")
+    private Long departmentId;
+
+    @Column(ignore = true)
+    private String departmentName;
+
+    // 医生
+    @ColumnDefine(comment = "医生 ID")
+    private Long doctorId;
+
+    @Column(ignore = true)
+    private String doctorName;
+
     @ColumnDefine(comment = "简介")
     private String intro;
 
     @ColumnDefine(comment = "封面图")
     private String cover;
 
-    @ColumnDefine(comment = "服务次数")
+    @ColumnDefine(comment = "服务次数", defaultValue = "0")
     private Integer serviceCount;
 
     @ColumnDefine(comment = "服务范围", type = "json")

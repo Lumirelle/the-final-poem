@@ -24,7 +24,7 @@ const customService = computed(() => {
   return {
     page: (params: any) => {
       const queryParams = { ...params }
-      return service.patient.profile.page(queryParams)
+      return service.patient.info.page(queryParams)
     },
   }
 })

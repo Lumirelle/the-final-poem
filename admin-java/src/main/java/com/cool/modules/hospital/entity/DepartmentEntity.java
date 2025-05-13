@@ -27,13 +27,6 @@ public class DepartmentEntity extends BaseEntity<DepartmentEntity> {
     @ColumnDefine(comment = "类型 0-临床 1-医技 2-辅助", defaultValue = "0")
     private Integer type;
 
-    @Index
-    @ColumnDefine(comment = "负责人ID")
-    private Long headDoctorId;
-
-    @Column(ignore = true)
-    private String headDoctorName;
-
     @ColumnDefine(comment = "状态 0-禁用 1-启用", defaultValue = "1")
     private Integer status;
 

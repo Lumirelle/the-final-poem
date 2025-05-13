@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
+import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import DoctorSelect from '/$/hospital/components/doctor-select.vue'
+import HospitalSelect from '/$/hospital/components/hospital-select.vue'
 import PatientSelect from '/$/patient/components/patient-select.vue'
 import { useCool } from '/@/cool'
 
@@ -33,19 +36,31 @@ const Upsert = useUpsert({
       required: true,
       span: 12,
     },
-    {
-      label: t('医院'),
-      prop: 'hospital',
-      component: { name: 'el-input', props: { clearable: true } },
-      required: true,
-      span: 12,
+    () => {
+      return {
+        label: t('医院'),
+        prop: 'hospitalId',
+        hidden: Upsert.value?.mode === 'update',
+        component: { vm: HospitalSelect },
+        required: true,
+        span: 12,
+      }
     },
-    {
-      label: t('医生姓名'),
-      prop: 'doctorName',
-      component: { name: 'el-input', props: { clearable: true } },
-      required: true,
-      span: 12,
+    () => {
+      return {
+        label: t('医生'),
+        prop: 'doctorId',
+        hidden: true, // 默认隐藏,等选择医院后显示
+        component: {
+          vm: DoctorSelect,
+          props: {
+            // 传入医院ID作为过滤条件
+            hospitalId: Upsert.value?.form.hospitalId,
+          },
+        },
+        required: true,
+        span: 12,
+      }
     },
     {
       label: t('诊断结果'),
@@ -76,6 +91,22 @@ const Upsert = useUpsert({
   ],
 })
 
+// 监听医院ID变化
+watch(
+  () => Upsert.value?.form.hospitalId,
+  (val) => {
+    // 清空医生选择
+    Upsert.value?.setForm('doctorId', undefined)
+    // 显示/隐藏医生选择
+    if (val) {
+      Upsert.value?.showItem('doctorId')
+    }
+    else {
+      Upsert.value?.hideItem('doctorId')
+    }
+  },
+)
+
 // cl-table
 const Table = useTable({
   columns: [
@@ -92,8 +123,12 @@ const Table = useTable({
         props: { format: 'YYYY-MM-DD' },
       },
     },
-    { label: t('医院'), prop: 'hospital', minWidth: 140 },
+    { label: t('医院 ID'), prop: 'hospitalId', minWidth: 140 },
+    { label: t('医院名称'), prop: 'hospitalName', minWidth: 140 },
+    { label: t('医生 ID'), prop: 'doctorId', minWidth: 140 },
     { label: t('医生姓名'), prop: 'doctorName', minWidth: 140 },
+    { label: t('患者ID'), prop: 'patientId', minWidth: 140 },
+    { label: t('患者姓名'), prop: 'patientName', minWidth: 140 },
     {
       label: t('诊断结果'),
       prop: 'diagnosis',
@@ -107,8 +142,6 @@ const Table = useTable({
       minWidth: 200,
     },
     { label: t('费用'), prop: 'cost', minWidth: 140, sortable: 'custom' },
-    { label: t('患者ID'), prop: 'patientId', minWidth: 140 },
-    { label: t('患者姓名'), prop: 'patientName', minWidth: 140 },
     {
       label: t('创建时间'),
       prop: 'createTime',

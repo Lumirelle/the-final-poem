@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
+import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import CategorySelect from '../components/category-select.vue'
 import { useDict } from '/$/dict'
+import DepartmentSelect from '/$/hospital/components/department-select.vue'
+import DoctorSelect from '/$/hospital/components/doctor-select.vue'
+import HospitalSelect from '/$/hospital/components/hospital-select.vue'
 import { useCool } from '/@/cool'
 
 defineOptions({
@@ -23,6 +27,7 @@ const Upsert = useUpsert({
         hidden: Upsert?.value.mode === 'update',
         component: { vm: CategorySelect },
         span: 12,
+        required: true,
       }
     },
     {
@@ -40,13 +45,46 @@ const Upsert = useUpsert({
       span: 12,
       required: true,
     },
-    {
-      label: t('时长（分钟）'),
-      prop: 'duration',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-      required: true,
+    () => {
+      return {
+        label: t('选择医院'),
+        prop: 'hospitalId',
+        hidden: Upsert?.value.mode === 'update',
+        component: { vm: HospitalSelect },
+        span: 12,
+        required: true,
+      }
+    },
+    () => {
+      return {
+        label: t('选择科室'),
+        prop: 'departmentId',
+        hidden: true,
+        component: {
+          vm: DepartmentSelect,
+          props: {
+            hospitalId: Upsert.value?.form.hospitalId,
+          },
+        },
+        span: 12,
+        required: true,
+      }
+    },
+    () => {
+      return {
+        label: t('选择医生'),
+        prop: 'doctorId',
+        hidden: true,
+        component: {
+          vm: DoctorSelect,
+          props: {
+            hospitalId: Upsert.value?.form.hospitalId,
+            departmentId: Upsert.value?.form.departmentId,
+          },
+        },
+        span: 12,
+        required: true,
+      }
     },
     {
       label: t('状态'),
@@ -59,7 +97,20 @@ const Upsert = useUpsert({
     {
       label: t('服务范围'),
       prop: 'serviceArea',
-      hook: 'json',
+      hook: {
+        bind: (value) => {
+          try {
+            return value ? JSON.parse(value) : []
+          }
+          catch {
+            return []
+          }
+        },
+        submit: (value, { form }) => {
+          form.serviceArea = JSON.stringify(value || [])
+        },
+      },
+      value: [],
       component: {
         name: 'el-checkbox-group',
         options: dict.get('meal-service-area'),
@@ -79,18 +130,48 @@ const Upsert = useUpsert({
   ],
 })
 
+// 监听医院数据改变
+watch(
+  () => Upsert.value?.form.hospitalId,
+  (val) => {
+    // 清空科室和医生选择
+    Upsert.value?.setForm('departmentId', undefined)
+    Upsert.value?.setForm('doctorId', undefined)
+    // 显示/隐藏科室选择
+    if (val && Upsert.value?.mode !== 'update') {
+      Upsert.value?.showItem('departmentId')
+    }
+    else {
+      Upsert.value?.hideItem('departmentId')
+      Upsert.value?.hideItem('doctorId')
+    }
+  },
+)
+
+// 监听科室数据改变
+watch(
+  () => Upsert.value?.form.departmentId,
+  (val) => {
+    Upsert.value?.setForm('doctorId', undefined)
+    // 显示/隐藏医生选择
+    if (val && Upsert.value?.mode !== 'update') {
+      Upsert.value?.showItem('doctorId')
+    }
+    else {
+      Upsert.value?.hideItem('doctorId')
+    }
+  },
+)
+
 // cl-table
 const Table = useTable({
   columns: [
     { type: 'selection' },
     { label: t('名称'), prop: 'name', minWidth: 140 },
     { label: t('价格（元）'), prop: 'price', minWidth: 140, sortable: 'custom' },
-    {
-      label: t('时长（分钟）'),
-      prop: 'duration',
-      minWidth: 140,
-      sortable: 'custom',
-    },
+    { label: t('医院'), prop: 'hospitalName', minWidth: 140 },
+    { label: t('科室'), prop: 'departmentName', minWidth: 140 },
+    { label: t('医生'), prop: 'doctorName', minWidth: 140 },
     {
       label: t('状态'),
       prop: 'status',
@@ -199,3 +280,9 @@ function refresh(params?: any) {
     <cl-upsert ref="Upsert" />
   </cl-crud>
 </template>
+
+<style lang="scss" scoped>
+.cl-crud {
+  height: 100%;
+}
+</style>

@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
+import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '/$/dict'
 import DepartmentSelect from '/$/hospital/components/department-select.vue'
+import HospitalSelect from '/$/hospital/components/hospital-select.vue'
 import { useCool } from '/@/cool'
 
 defineOptions({
@@ -37,12 +39,30 @@ const Upsert = useUpsert({
       span: 12,
       required: true,
     },
-    {
-      label: t('选择科室（关联科室）'),
-      prop: 'departmentId',
-      component: { vm: DepartmentSelect },
-      span: 12,
-      required: true,
+    () => {
+      return {
+        label: t('选择医院'),
+        prop: 'hospitalId',
+        component: { vm: HospitalSelect },
+        span: 12,
+        required: true,
+        hidden: Upsert.value?.mode === 'update',
+      }
+    },
+    () => {
+      return {
+        label: t('选择科室（关联科室）'),
+        prop: 'departmentId',
+        component: {
+          vm: DepartmentSelect,
+          props: {
+            hospitalId: Upsert.value?.form.hospitalId,
+          },
+        },
+        span: 12,
+        required: true,
+        hidden: true, // 默认隐藏,等选择医院后显示
+      }
     },
     {
       label: t('专长'),
@@ -64,6 +84,22 @@ const Upsert = useUpsert({
   ],
 })
 
+// 监听医院ID变化
+watch(
+  () => Upsert.value?.form.hospitalId,
+  (val) => {
+    // 清空科室选择
+    Upsert.value?.setForm('departmentId', undefined)
+    // 显示/隐藏科室选择
+    if (val) {
+      Upsert.value?.showItem('departmentId')
+    }
+    else {
+      Upsert.value?.hideItem('departmentId')
+    }
+  },
+)
+
 // cl-table
 const Table = useTable({
   columns: [
@@ -77,6 +113,10 @@ const Table = useTable({
       showOverflowTooltip: true,
       minWidth: 200,
     },
+    { label: t('医院 ID'), prop: 'hospitalId', minWidth: 140 },
+    { label: t('医院'), prop: 'hospitalName', minWidth: 140 },
+    { label: t('科室 ID'), prop: 'departmentId', minWidth: 140 },
+    { label: t('科室'), prop: 'departmentName', minWidth: 140 },
     { label: t('状态'), prop: 'status', component: { name: 'cl-switch' }, minWidth: 100 },
     {
       label: t('创建时间'),

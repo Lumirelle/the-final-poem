@@ -11,6 +11,8 @@ defineOptions({
 const props = defineProps({
   modelValue: null,
   multiple: Boolean,
+  hospitalId: Number,
+  departmentId: Number,
 })
 
 const { service } = useCool()
@@ -24,6 +26,12 @@ const customService = computed(() => {
     page: (params: any) => {
       const queryParams = { ...params }
       queryParams.status = dict.getByLabel('base-status', '启用')
+      if (props.hospitalId) {
+        queryParams.hospitalId = props.hospitalId
+      }
+      if (props.departmentId) {
+        queryParams.departmentId = props.departmentId
+      }
       return service.hospital.doctor.page(queryParams)
     },
   }

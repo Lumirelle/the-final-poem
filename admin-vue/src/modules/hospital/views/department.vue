@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
 import { useI18n } from 'vue-i18n'
-import DoctorSelect from '../components/doctor-select.vue'
 import HospitalSelect from '../components/hospital-select.vue'
 import { useDict } from '/$/dict'
 import { useCool } from '/@/cool'
@@ -41,15 +40,6 @@ const Upsert = useUpsert({
       span: 12,
       required: true,
     },
-    () => {
-      return {
-        label: Upsert.value?.mode === 'add' ? t('选择关联的负责人') : t('选择新的负责人（置空为不修改）'),
-        prop: 'headDoctorId',
-        component: { vm: DoctorSelect },
-        span: 12,
-        required: true,
-      }
-    },
     {
       label: t('类型'),
       prop: 'type',
@@ -76,12 +66,6 @@ const Table = useTable({
     { label: t('科室 ID'), prop: 'id', minWidth: 140 },
     { label: t('名称'), prop: 'name', minWidth: 140 },
     { label: t('编码'), prop: 'code', minWidth: 140 },
-    {
-      label: t('负责人 ID'),
-      prop: 'headDoctorId',
-      minWidth: 120,
-    },
-    { label: t('负责人名称'), prop: 'headDoctorName', minWidth: 120 },
     { label: t('类型'), prop: 'type', dict: dict.get('department-type'), minWidth: 120 },
     { label: t('状态'), prop: 'status', component: { name: 'cl-switch' }, minWidth: 100 },
     { label: t('医院'), prop: 'hospitalId', minWidth: 120 },
