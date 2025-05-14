@@ -9,4 +9,6 @@
      <tree path="/src/main/java/com/cool/modules/meal" title="套餐"/>
      <tree path="/src/main/java/com/cool/modules/dict" title="字典"/>
      <tree path="/src/main/java/com/cool/modules/task" title="定时任务"/>
+     <tree path="/src/main/java/com/cool/modules/feedback" title="投诉反馈"/>
+     <tree path="/src/main/java/com/cool/modules/order" title="订单"/>
  </trees>

@@ -1,9 +1,10 @@
 package com.cool.modules.order.entity;
 
 import com.cool.core.base.BaseEntity;
-import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
+
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,23 +21,28 @@ public class OrderStatisticsEntity extends BaseEntity<OrderStatisticsEntity> {
     private Integer totalOrders;
 
     @ColumnDefine(comment = "总金额")
-    private Double totalAmount;
+    private BigDecimal totalAmount;
+
+    // 实付总金额
+    @ColumnDefine(comment = "实付总金额")
+    private BigDecimal totalActualAmount;
 
     @ColumnDefine(comment = "退款数")
-    private Integer refundCount;
+    private Long refundCount;
 
     @ColumnDefine(comment = "完成数")
-    private Integer completedCount;
+    private Long completedCount;
 
     @ColumnDefine(comment = "取消数")
-    private Integer cancelledCount;
+    private Long cancelledCount;
 
     @ColumnDefine(comment = "支付订单数")
-    private Integer paidOrders;
+    private Long paidOrders;
 
-    @ColumnDefine(comment = "配送订单数")
-    private Integer deliveringOrders;
+    @ColumnDefine(comment = "开始日期")
+    private Date startDate;
 
-    @ColumnDefine(comment = "统计日期")
-    private Date statisticsDate;
+    @ColumnDefine(comment = "结束日期")
+    private Date endDate;
+
 }

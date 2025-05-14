@@ -1,15 +1,19 @@
 <script lang="ts" setup>
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
+import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useDict } from '/$/dict'
+import MealSelect from '/$/meal/components/meal-select.vue'
 import UserSelect from '/$/user/components/user-select.vue'
 import { useCool } from '/@/cool'
 
 defineOptions({
-  name: 'order-order-info',
+  name: 'order-info',
 })
 
 const { service } = useCool()
 const { t } = useI18n()
+const { dict } = useDict()
 
 // cl-upsert
 const Upsert = useUpsert({
@@ -18,41 +22,57 @@ const Upsert = useUpsert({
       label: t('编号'),
       prop: 'orderNumber',
       component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
+      span: 24,
       required: true,
     },
     {
-      label: t('状态'),
-      prop: 'status',
-      component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
+      label: t('套餐'),
+      prop: 'mealId',
+      component: { vm: MealSelect },
+      span: 24,
+      required: true,
+    },
+    {
+      label: t('选择用户'),
+      prop: 'userId',
+      component: { vm: UserSelect, props: { role: dict.getByLabel('user-role', '患者') || 1 } },
       required: true,
     },
     {
       label: t('总金额'),
       prop: 'totalAmount',
       hook: 'number',
+      component: { name: 'el-input-number', props: { min: 0.01 } },
+      span: 12,
+      required: true,
+    },
+    // 优惠金额
+    {
+      label: t('优惠金额'),
+      prop: 'discountAmount',
+      hook: 'number',
       component: { name: 'el-input-number', props: { min: 0 } },
       span: 12,
       required: true,
     },
-    {
-      label: t('选择用户'),
-      prop: 'userId',
-      component: { vm: UserSelect },
-      required: true,
+    // 实付金额自动根据总金额和优惠金额计算
+    () => {
+      return {
+        label: t('实付金额'),
+        prop: 'actualAmount',
+        hook: 'number',
+        component: { name: 'el-input-number', props: { min: 0.01, disabled: true } },
+        span: 12,
+        required: true,
+      }
     },
     {
       label: t('支付方式'),
       prop: 'payType',
-      component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
-      required: true,
-    },
-    {
-      label: t('收货地址'),
-      prop: 'address',
-      component: { name: 'el-input', props: { clearable: true } },
+      component: {
+        name: 'el-select',
+        props: { clearable: true, options: dict.get('order-pay-type') },
+      },
       span: 12,
       required: true,
     },
@@ -63,25 +83,41 @@ const Upsert = useUpsert({
         name: 'el-input',
         props: { type: 'textarea', rows: 4 },
       },
-      required: true,
     },
   ],
 })
+
+watch(
+  () => Upsert.value?.form.totalAmount - Upsert.value?.form.discountAmount,
+  (val) => {
+    if (val < 0) {
+      Upsert.value?.setForm('actualAmount', 0.01)
+    }
+    else {
+      Upsert.value?.setForm('actualAmount', val)
+    }
+  },
+)
 
 // cl-table
 const Table = useTable({
   columns: [
     { type: 'selection' },
     { label: t('编号'), prop: 'orderNumber', minWidth: 140 },
-    { label: t('状态'), prop: 'status', minWidth: 120 },
+    { label: t('套餐ID'), prop: 'mealId', minWidth: 140 },
+    { label: t('套餐'), prop: 'mealName', minWidth: 140 },
+    { label: t('用户ID'), prop: 'userId', minWidth: 140 },
+    { label: t('用户'), prop: 'userName', minWidth: 140 },
     {
       label: t('总金额'),
       prop: 'totalAmount',
       minWidth: 140,
       sortable: 'custom',
     },
-    { label: t('支付方式'), prop: 'payType', minWidth: 120 },
-    { label: t('收货地址'), prop: 'address', minWidth: 120 },
+    { label: t('优惠金额'), prop: 'discountAmount', minWidth: 140 },
+    { label: t('实付金额'), prop: 'actualAmount', minWidth: 140 },
+    { label: t('支付方式'), prop: 'payType', minWidth: 120, dict: dict.get('pay-type') },
+    { label: t('状态'), prop: 'status', minWidth: 120, dict: dict.get('order-status') },
     {
       label: t('备注'),
       prop: 'remark',
@@ -102,7 +138,6 @@ const Table = useTable({
       sortable: 'custom',
       component: { name: 'cl-date-text' },
     },
-    { type: 'op', buttons: ['edit', 'delete'] },
   ],
 })
 

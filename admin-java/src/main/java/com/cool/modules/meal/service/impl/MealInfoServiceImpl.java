@@ -2,6 +2,8 @@ package com.cool.modules.meal.service.impl;
 
 import cn.hutool.json.JSONObject;
 import com.cool.core.base.BaseServiceImpl;
+import com.cool.modules.accompany.entity.AccompanyStaffEntity;
+import com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableDef;
 import com.cool.modules.hospital.entity.DepartmentEntity;
 import com.cool.modules.hospital.entity.DoctorEntity;
 import com.cool.modules.hospital.entity.HospitalInfoEntity;
@@ -28,7 +30,8 @@ public class MealInfoServiceImpl extends BaseServiceImpl<MealInfoMapper, MealInf
                         MealCategoryEntityTableDef.MEAL_CATEGORY_ENTITY.NAME.as("categoryName"),
                         HospitalInfoEntityTableDef.HOSPITAL_INFO_ENTITY.NAME.as("hospitalName"),
                         DepartmentEntityTableDef.DEPARTMENT_ENTITY.NAME.as("departmentName"),
-                        DoctorEntityTableDef.DOCTOR_ENTITY.NAME.as("doctorName")
+                        DoctorEntityTableDef.DOCTOR_ENTITY.NAME.as("doctorName"),
+                        AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY.NAME.as("staffName")
                 )
                 .from(MealInfoEntityTableDef.MEAL_INFO_ENTITY)
                 .leftJoin(MealCategoryEntityTableDef.MEAL_CATEGORY_ENTITY)
@@ -38,7 +41,9 @@ public class MealInfoServiceImpl extends BaseServiceImpl<MealInfoMapper, MealInf
                 .leftJoin(DepartmentEntityTableDef.DEPARTMENT_ENTITY)
                 .on(MealInfoEntity::getDepartmentId, DepartmentEntity::getId)
                 .leftJoin(DoctorEntityTableDef.DOCTOR_ENTITY)
-                .on(MealInfoEntity::getDoctorId, DoctorEntity::getId);
+                .on(MealInfoEntity::getDoctorId, DoctorEntity::getId)
+                .leftJoin(AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY)
+                .on(MealInfoEntity::getStaffId, AccompanyStaffEntity::getId);
         return mapper.paginate(page, queryWrapper);
     }
 }

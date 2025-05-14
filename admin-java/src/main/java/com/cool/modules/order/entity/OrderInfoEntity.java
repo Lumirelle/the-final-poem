@@ -8,6 +8,8 @@ import com.tangzc.mybatisflex.autotable.annotation.UniIndex;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 /**
  * 订单信息
  */
@@ -20,20 +22,35 @@ public class OrderInfoEntity extends BaseEntity<OrderInfoEntity> {
     @ColumnDefine(comment = "编号")
     private String orderNumber;
 
-    @ColumnDefine(comment = "状态 0-待支付 1-已支付 2-配送中 3-已完成 4-已取消 5-退款中", defaultValue = "0")
+    @ColumnDefine(comment = "状态 0-待支付 1-已支付 2-待使用 3-已完成 4-已取消 5-已退款", defaultValue = "0")
     private Integer status;
 
     @ColumnDefine(comment = "总金额")
-    private Double totalAmount;
+    private BigDecimal totalAmount;
+
+    @ColumnDefine(comment = "实付金额")
+    private BigDecimal actualAmount;
+
+    @ColumnDefine(comment = "优惠金额")
+    private BigDecimal discountAmount;
+
+    @ColumnDefine(comment = "套餐 ID")
+    private Long mealId;
+
+    @Column(ignore = true)
+    private String mealName;
 
     @ColumnDefine(comment = "用户ID")
     private Long userId;
 
-    @ColumnDefine(comment = "支付方式 0-微信 1-支付宝 2-银行卡", defaultValue = "0")
+    @Column(ignore = true)
+    private String userName;
+
+    @ColumnDefine(comment = "支付方式 0-微信 1-支付宝 2-线下银行卡 3-线下现金", defaultValue = "0")
     private Integer payType;
 
-    @ColumnDefine(comment = "收货地址")
-    private String address;
+    @ColumnDefine(comment = "支付时间")
+    private String payTime;
 
     @ColumnDefine(comment = "备注")
     private String remark;

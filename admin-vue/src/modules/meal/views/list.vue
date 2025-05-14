@@ -3,6 +3,7 @@ import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
 import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import CategorySelect from '../components/category-select.vue'
+import StaffSelect from '/$/accompany/components/staff-select.vue'
 import { useDict } from '/$/dict'
 import DepartmentSelect from '/$/hospital/components/department-select.vue'
 import DoctorSelect from '/$/hospital/components/doctor-select.vue'
@@ -45,13 +46,21 @@ const Upsert = useUpsert({
       span: 12,
       required: true,
     },
+    {
+      label: t('状态'),
+      prop: 'status',
+      value: dict.getByLabel('base-status', '启用'),
+      component: { name: 'el-radio-group', options: dict.get('base-status') },
+      span: 12,
+      required: true,
+    },
     () => {
       return {
         label: t('选择医院'),
         prop: 'hospitalId',
         hidden: Upsert?.value.mode === 'update',
         component: { vm: HospitalSelect },
-        span: 12,
+        span: 24,
         required: true,
       }
     },
@@ -66,7 +75,7 @@ const Upsert = useUpsert({
             hospitalId: Upsert.value?.form.hospitalId,
           },
         },
-        span: 12,
+        span: 24,
         required: true,
       }
     },
@@ -82,17 +91,19 @@ const Upsert = useUpsert({
             departmentId: Upsert.value?.form.departmentId,
           },
         },
-        span: 12,
+        span: 24,
         required: true,
       }
     },
-    {
-      label: t('状态'),
-      prop: 'status',
-      value: dict.getByLabel('base-status', '启用'),
-      component: { name: 'el-radio-group', options: dict.get('base-status') },
-      span: 12,
-      required: true,
+    () => {
+      return {
+        label: t('选择陪诊员'),
+        prop: 'staffId',
+        hidden: Upsert?.value.mode === 'update',
+        component: { vm: StaffSelect },
+        span: 24,
+        required: true,
+      }
     },
     {
       label: t('服务范围'),
@@ -105,9 +116,6 @@ const Upsert = useUpsert({
           catch {
             return []
           }
-        },
-        submit: (value, { form }) => {
-          form.serviceArea = JSON.stringify(value || [])
         },
       },
       value: [],
@@ -128,6 +136,12 @@ const Upsert = useUpsert({
     },
     { label: t('封面图'), prop: 'cover', component: { name: 'cl-upload' } },
   ],
+  onSubmit: (form, { next }) => {
+    next({
+      ...form,
+      serviceArea: JSON.stringify(form.serviceArea || []),
+    })
+  },
 })
 
 // 监听医院数据改变
@@ -172,6 +186,7 @@ const Table = useTable({
     { label: t('医院'), prop: 'hospitalName', minWidth: 140 },
     { label: t('科室'), prop: 'departmentName', minWidth: 140 },
     { label: t('医生'), prop: 'doctorName', minWidth: 140 },
+    { label: t('陪诊员'), prop: 'staffName', minWidth: 140 },
     {
       label: t('状态'),
       prop: 'status',

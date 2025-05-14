@@ -44,6 +44,12 @@ const Table = useTable({
       prop: 'id',
       minWidth: 100,
     },
+    // 唯一登录id
+    {
+      label: t('唯一登录 ID'),
+      prop: 'unionId',
+      minWidth: 100,
+    },
     {
       label: t('昵称'),
       prop: 'nickName',
@@ -131,6 +137,7 @@ const Upsert = useUpsert({
         name: 'el-radio-group',
         options: dict.get('gender'),
       },
+      required: true,
     },
     {
       prop: 'role',
@@ -140,6 +147,7 @@ const Upsert = useUpsert({
         name: 'el-radio-group',
         options: dict.get('user-role'),
       },
+      required: true,
     },
     {
       prop: 'status',
@@ -149,6 +157,7 @@ const Upsert = useUpsert({
         name: 'el-radio-group',
         options: dict.get('user-status'),
       },
+      required: true,
     },
   ],
 })

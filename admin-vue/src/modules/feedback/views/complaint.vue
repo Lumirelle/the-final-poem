@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
 import { useI18n } from 'vue-i18n'
+import UserSelect from '/$/user/components/user-select.vue'
 import { useCool } from '/@/cool'
 
 defineOptions({
-  name: 'order-order-log',
+  name: 'feedback-complaint',
 })
 
 const { service } = useCool()
@@ -14,39 +15,72 @@ const { t } = useI18n()
 const Upsert = useUpsert({
   items: [
     {
-      label: t('操作类型'),
-      prop: 'operationType',
+      label: t('单号'),
+      prop: 'complaintNo',
       component: { name: 'el-input', props: { clearable: true } },
       span: 12,
+      required: true,
     },
     {
-      label: t('操作内容'),
-      prop: 'operationContent',
+      label: t('类型'),
+      prop: 'type',
+      component: { name: 'el-input', props: { clearable: true } },
+      span: 12,
+      required: true,
+    },
+    {
+      label: t('状态'),
+      prop: 'status',
+      component: { name: 'el-input', props: { clearable: true } },
+      span: 12,
+      required: true,
+    },
+    {
+      label: t('内容'),
+      prop: 'content',
       component: {
         name: 'el-input',
         props: { type: 'textarea', rows: 4 },
       },
+      required: true,
     },
     {
-      label: t('选择操作人员'),
-      prop: 'operatorId',
+      label: t('选择用户'),
+      prop: 'userId',
+      component: { vm: UserSelect },
+      required: true,
+    },
+    {
+      label: t('选择处理人'),
+      prop: 'handlerId',
       component: { name: 'el-input', props: { clearable: true } },
       span: 12,
+      required: true,
     },
     {
-      label: t('操作时间'),
-      prop: 'operationTime',
+      label: t('处理结果'),
+      prop: 'handleResult',
       component: {
-        name: 'el-date-picker',
-        props: { type: 'datetime', valueFormat: 'YYYY-MM-DD HH:mm:ss' },
+        name: 'el-input',
+        props: { type: 'textarea', rows: 4 },
       },
-      span: 12,
+      required: true,
     },
     {
-      label: t('选择订单'),
-      prop: 'orderId',
+      label: t('备注'),
+      prop: 'remark',
+      component: {
+        name: 'el-input',
+        props: { type: 'textarea', rows: 4 },
+      },
+      required: true,
+    },
+    {
+      label: t('创建时间'),
+      prop: 'nickName',
       component: { name: 'el-input', props: { clearable: true } },
       span: 12,
+      required: true,
     },
   ],
 })
@@ -55,22 +89,29 @@ const Upsert = useUpsert({
 const Table = useTable({
   columns: [
     { type: 'selection' },
-    { label: t('操作类型'), prop: 'operationType', minWidth: 120 },
+    { label: t('单号'), prop: 'complaintNo', minWidth: 140 },
+    { label: t('类型'), prop: 'type', minWidth: 120 },
+    { label: t('状态'), prop: 'status', minWidth: 120 },
     {
-      label: t('操作内容'),
-      prop: 'operationContent',
+      label: t('内容'),
+      prop: 'content',
       showOverflowTooltip: true,
       minWidth: 200,
     },
-    { label: t('操作人员ID'), prop: 'operatorId', minWidth: 140 },
+    { label: t('处理人ID'), prop: 'handlerId', minWidth: 120 },
     {
-      label: t('操作时间'),
-      prop: 'operationTime',
-      minWidth: 170,
-      sortable: 'custom',
-      component: { name: 'cl-date-text' },
+      label: t('处理结果'),
+      prop: 'handleResult',
+      showOverflowTooltip: true,
+      minWidth: 200,
     },
-    { label: t('订单ID'), prop: 'orderId', minWidth: 140 },
+    {
+      label: t('备注'),
+      prop: 'remark',
+      showOverflowTooltip: true,
+      minWidth: 200,
+    },
+    { label: t('创建时间'), prop: 'nickName', minWidth: 140 },
     {
       label: t('创建时间'),
       prop: 'createTime',
@@ -85,7 +126,7 @@ const Table = useTable({
       sortable: 'custom',
       component: { name: 'cl-date-text' },
     },
-    { type: 'op', buttons: ['edit', 'delete'] },
+    { type: 'op', buttons: ['delete'] },
   ],
 })
 
@@ -95,7 +136,7 @@ const Search = useSearch()
 // cl-crud
 const Crud = useCrud(
   {
-    service: service.order.log,
+    service: service.feedback.complaint,
   },
   (app) => {
     app.refresh()
@@ -113,7 +154,6 @@ function refresh(params?: any) {
     <cl-row>
       <!-- 刷新按钮 -->
       <cl-refresh-btn />
-      <!-- 新增按钮 -->
       <cl-add-btn />
       <!-- 删除按钮 -->
       <cl-multi-delete-btn />

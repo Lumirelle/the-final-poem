@@ -1,5 +1,4 @@
 {
-  "base_sys_param": [],
   "base_sys_conf": [
     {
       "cKey": "logKeep",
@@ -63,7 +62,7 @@
       "password": "e10adc3949ba59abbe56e057f20f883e",
       "passwordV": 7,
       "nickName": "管理员",
-      "headImg": "https://cool-js.com/admin/headimg.jpg",
+      "headImg": "https://avatars.githubusercontent.com/u/51262009?v=4",
       "phone": "18000000000",
       "email": "admin@acc-consult.com",
       "status": 1,
@@ -122,6 +121,21 @@
       "id": 9,
       "name": "套餐服务范围",
       "key": "meal-service-area"
+    },
+    {
+      "id": 10,
+      "name": "支付方式",
+      "key": "pay-type"
+    },
+    {
+      "id": 11,
+      "name": "订单状态",
+      "key": "order-status"
+    },
+    {
+      "id": 12,
+      "name": "订单售后状态",
+      "key": "order-after-sale-status"
     }
   ],
   "dict_info": [
@@ -424,6 +438,328 @@
       "type": "primary",
       "orderNum": 5,
       "remark": null
+    },
+    {
+      "id": 31,
+      "typeId": 10,
+      "parentId": null,
+      "name": "微信",
+      "value": "0",
+      "type": "success",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 32,
+      "typeId": 10,
+      "parentId": null,
+      "name": "支付宝",
+      "value": "1",
+      "type": "primary",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 33,
+      "typeId": 10,
+      "parentId": null,
+      "name": "线下银行卡",
+      "value": "2",
+      "type": "info",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 34,
+      "typeId": 10,
+      "parentId": null,
+      "name": "线下现金",
+      "value": "3",
+      "type": "danger",
+      "orderNum": 4,
+      "remark": null
+    },
+    {
+      "id": 35,
+      "typeId": 11,
+      "parentId": null,
+      "name": "待支付",
+      "value": "0",
+      "type": "warning",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 36,
+      "typeId": 11,
+      "parentId": null,
+      "name": "已支付",
+      "value": "1",
+      "type": "success",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 37,
+      "typeId": 11,
+      "parentId": null,
+      "name": "待使用",
+      "value": "2",
+      "type": "primary",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 38,
+      "typeId": 11,
+      "parentId": null,
+      "name": "已完成",
+      "value": "3",
+      "type": "info",
+      "orderNum": 4,
+      "remark": null
+    },
+    {
+      "id": 39,
+      "typeId": 11,
+      "parentId": null,
+      "name": "已取消",
+      "value": "4",
+      "type": "danger",
+      "orderNum": 5,
+      "remark": null
+    },
+    {
+      "id": 40,
+      "typeId": 11,
+      "parentId": null,
+      "name": "已退款",
+      "value": "5",
+      "type": "danger",
+      "orderNum": 6,
+      "remark": null
+    },
+    {
+      "id": 41,
+      "typeId": 12,
+      "parentId": null,
+      "name": "无售后",
+      "value": "0",
+      "type": "info",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 42,
+      "typeId": 12,
+      "parentId": null,
+      "name": "待处理",
+      "value": "1",
+      "type": "warning",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 43,
+      "typeId": 12,
+      "parentId": null,
+      "name": "处理完成",
+      "value": "2",
+      "type": "success",
+      "orderNum": 3,
+      "remark": null
+    }
+  ],
+  "user_info": [
+    {
+      "id": 1,
+      "unionId": "1234567890",
+      "nickName": "t_u_patient_1",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
+      "phone": "19865400235",
+      "gender": 1,
+      "status": 0,
+      "role": 1,
+      "loginType": 0,
+      "password": "e10adc3949ba59abbe56e057f20f883e"
+    },
+    {
+      "id": 2,
+      "unionId": "1234567890",
+      "nickName": "t_u_patient_2",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
+      "phone": "19865400236",
+      "gender": 2,
+      "status": 0,
+      "role": 1,
+      "loginType": 0,
+      "password": "e10adc3949ba59abbe56e057f20f883e"
+    },
+    {
+      "id": 3,
+      "unionId": "1234567890",
+      "nickName": "t_u_staff_1",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
+      "phone": "19865400237",
+      "gender": 2,
+      "status": 0,
+      "role": 2,
+      "loginType": 0,
+      "password": "e10adc3949ba59abbe56e057f20f883e"
+    },
+    {
+      "id": 4,
+      "unionId": "1234567890",
+      "nickName": "t_u_staff_2",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
+      "phone": "19865400238",
+      "gender": 1,
+      "status": 0,
+      "role": 2,
+      "loginType": 0,
+      "password": "e10adc3949ba59abbe56e057f20f883e"
+    }
+  ],
+  "patient_info": [
+    {
+      "id": 1,
+      "name": "t_p_patient_1",
+      "gender": 1,
+      "birthday": "2020-01-01 00:00:00",
+      "phone": "19865400235",
+      "address": "On the earth",
+      "type": 0,
+      "medicalRecordNumber": "xxxx; xxxx; xxxx",
+      "medicalHistory": "NA",
+      "allergyHistory": "NA",
+      "remark": null,
+      "height": 170,
+      "weight": 60,
+      "systolicPressure": 120,
+      "diastolicPressure": 80,
+      "userId": 1
+    }
+  ],
+  "accompany_staff": [
+    {
+      "id": 1,
+      "name": "t_a_staff_1",
+      "gender": 1,
+      "birthday": "2020-02-02 00:00:00",
+      "phone": "19865400235",
+      "level": 0,
+      "status": 0,
+      "introduction": "NA",
+      "remark": null,
+      "userId": 3
+    }
+  ],
+  "hospital_info": [
+    {
+      "id": 1,
+      "name": "t_h_hospital_1",
+      "code": "H0-001",
+      "address": "On the earth",
+      "phone": "19865400235",
+      "status": 1
+    }
+  ],
+  "hospital_department": [
+    {
+      "id": 1,
+      "name": "t_h_department_1",
+      "code": "D0-001",
+      "type": 0,
+      "status": 1,
+      "hospitalId": 1
+    },
+    {
+      "id": 2,
+      "name": "t_h_department_2",
+      "code": "D0-002",
+      "type": 2,
+      "status": 1,
+      "hospitalId": 1
+    }
+  ],
+  "hospital_doctor": [
+    {
+      "id": 1,
+      "name": "t_h_doctor_1",
+      "jobCode": "D0-001",
+      "title": "Master",
+      "status": 1,
+      "hospitalId": 1,
+      "departmentId": 1,
+      "specialty": "Everything"
+    },
+    {
+      "id": 2,
+      "name": "t_h_doctor_2",
+      "jobCode": "D0-002",
+      "title": "Master",
+      "status": 1,
+      "hospitalId": 1,
+      "departmentId": 1,
+      "specialty": "Nothing"
+    },
+    {
+      "id": 3,
+      "name": "t_h_doctor_3",
+      "jobCode": "D0-003",
+      "title": "Master",
+      "status": 1,
+      "hospitalId": 1,
+      "departmentId": 2,
+      "specialty": "Sleep"
+    }
+  ],
+  "meal_category": [
+    {
+      "id": 1,
+      "name": "t_m_category_1",
+      "status": 1,
+      "sort": 0,
+      "icon": null
+    }
+  ],
+  "meal_info": [
+    {
+      "id": 1,
+      "name": "t_m_info_1",
+      "price": 88.59,
+      "status": 1,
+      "categoryId": 1,
+      "hospitalId": 1,
+      "departmentId": 1,
+      "doctorId": 1,
+      "staffId": 1,
+      "intro": "NA",
+      "cover": null,
+      "serviceArea": "[0, 1, 2, 3, 4]"
+    }
+  ],
+  "order_info": [
+    {
+      "id": 1,
+      "orderNumber": "1234567890",
+      "status": 0,
+      "totalAmount": 88.59,
+      "actualAmount": 78.59,
+      "discountAmount": 10.0,
+      "payType": 0,
+      "userId": 1,
+      "mealId": 1,
+      "payTime": "2020-01-01 00:00:00"
+    }
+  ],
+  "order_detail": [
+    {
+      "id": 1,
+      "orderId": 1,
+      "serviceMinutes": 30,
+      "customerEvaluation": 5,
+      "afterSaleStatus": 0
     }
   ],
   "task_info": [
@@ -435,6 +771,22 @@
       "every": 5000,
       "status": 1,
       "service": "baseSysLogServiceImpl.clear(false)",
+      "task_type": 0,
+      "type": null,
+      "data": null,
+      "remark": null,
+      "cron": "0 0 1 * * ?",
+      "start_date": null,
+      "end_date": null
+    },
+    {
+      "id": 2,
+      "name": "订单统计",
+      "job_id": "2",
+      "repeat_count": null,
+      "every": 5000,
+      "status": 1,
+      "service": "orderInfoServiceImpl.statisticsThisWeek()",
       "task_type": 0,
       "type": null,
       "data": null,

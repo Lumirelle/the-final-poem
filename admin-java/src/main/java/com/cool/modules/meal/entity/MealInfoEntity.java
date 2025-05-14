@@ -52,6 +52,13 @@ public class MealInfoEntity extends BaseEntity<MealInfoEntity> {
     @Column(ignore = true)
     private String doctorName;
 
+    // 陪诊员
+    @ColumnDefine(comment = "陪诊员 ID")
+    private Long staffId;
+
+    @Column(ignore = true)
+    private String staffName;
+
     @ColumnDefine(comment = "简介")
     private String intro;
 

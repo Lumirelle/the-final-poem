@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
 import { useI18n } from 'vue-i18n'
+import OrderInfoSelect from '../components/order-info-select.vue'
+import { useDict } from '/$/dict'
 import { useCool } from '/@/cool'
 
 defineOptions({
@@ -9,105 +11,66 @@ defineOptions({
 
 const { service } = useCool()
 const { t } = useI18n()
+const { dict } = useDict()
 
 // cl-upsert
-const Upsert = useUpsert({
+const Upsert = useUpsert<Eps.OrderDetailEntity>({
   items: [
     {
-      label: t('选择商品'),
-      prop: 'goodsId',
-      component: { name: 'el-input', props: { clearable: true } },
+      label: t('选择订单'),
+      prop: 'orderId',
+      component: { vm: OrderInfoSelect },
       span: 12,
+      required: true,
     },
     {
-      label: t('数量'),
-      prop: 'quantity',
-      hook: 'number',
+      label: t('服务时长（分钟）'),
+      prop: 'serviceMinutes',
       component: { name: 'el-input-number', props: { min: 0 } },
       span: 12,
+      required: true,
     },
     {
-      label: t('单价'),
-      prop: 'price',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('总价'),
-      prop: 'totalPrice',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('优惠金额'),
-      prop: 'discountAmount',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('实付金额'),
-      prop: 'actualAmount',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('物流单号'),
-      prop: 'logisticsNumber',
-      component: { name: 'el-input', props: { clearable: true } },
+      label: t('客户评价（0~5分）'),
+      prop: 'customerEvaluation',
+      component: { name: 'el-input-number', props: { min: 0, max: 5 } },
       span: 12,
     },
     {
       label: t('售后状态'),
       prop: 'afterSaleStatus',
-      component: { name: 'el-input', props: { clearable: true } },
+      component: { name: 'el-select', props: { clearable: true, dict: dict.get('order-after-sale-status') } },
       span: 12,
     },
-    {
-      label: t('选择订单'),
-      prop: 'orderId',
-      component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
-    },
+
   ],
 })
 
 // cl-table
-const Table = useTable({
+const Table = useTable<Eps.OrderDetailEntity>({
   columns: [
     { type: 'selection' },
-    { label: t('商品ID'), prop: 'goodsId', minWidth: 140 },
-    {
-      label: t('数量'),
-      prop: 'quantity',
-      minWidth: 140,
-      sortable: 'custom',
-    },
-    { label: t('单价'), prop: 'price', minWidth: 140, sortable: 'custom' },
-    {
-      label: t('总价'),
-      prop: 'totalPrice',
-      minWidth: 140,
-      sortable: 'custom',
-    },
-    {
-      label: t('优惠金额'),
-      prop: 'discountAmount',
-      minWidth: 140,
-      sortable: 'custom',
-    },
-    {
-      label: t('实付金额'),
-      prop: 'actualAmount',
-      minWidth: 140,
-      sortable: 'custom',
-    },
-    { label: t('物流单号'), prop: 'logisticsNumber', minWidth: 140 },
-    { label: t('售后状态'), prop: 'afterSaleStatus', minWidth: 120 },
     { label: t('订单ID'), prop: 'orderId', minWidth: 140 },
+    {
+      label: t('服务时长'),
+      prop: 'serviceMinutes',
+      minWidth: 140,
+      sortable: 'custom',
+      formatter: row => row.serviceMinutes ? `${row.serviceMinutes} 分钟` : '',
+    },
+    {
+      label: t('客户评价'),
+      prop: 'customerEvaluation',
+      minWidth: 140,
+      sortable: 'custom',
+      formatter: row => row.customerEvaluation ? `${row.customerEvaluation} 分` : '',
+    },
+    {
+      label: t('售后状态'),
+      prop: 'afterSaleStatus',
+      minWidth: 140,
+      sortable: 'custom',
+    },
     {
       label: t('创建时间'),
       prop: 'createTime',

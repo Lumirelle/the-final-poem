@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useCool } from '/@/cool'
 
 defineOptions({
-  name: 'order-order-statistics',
+  name: 'order-statistics',
 })
 
 const { service } = useCool()
@@ -14,62 +14,24 @@ const { t } = useI18n()
 const Upsert = useUpsert({
   items: [
     {
-      label: t('订单总数'),
-      prop: 'totalOrders',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('总金额'),
-      prop: 'totalAmount',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('退款数'),
-      prop: 'refundCount',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('完成数'),
-      prop: 'completedCount',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('取消数'),
-      prop: 'cancelledCount',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('支付订单数'),
-      prop: 'paidOrders',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('配送订单数'),
-      prop: 'deliveringOrders',
-      hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-    },
-    {
-      label: t('统计日期'),
-      prop: 'statisticsDate',
+      label: t('统计开始日期'),
+      prop: 'startDate',
       component: {
         name: 'el-date-picker',
-        props: { type: 'date', valueFormat: 'YYYY-MM-DD' },
+        props: { type: 'date', valueFormat: 'YYYY-MM-DD HH:mm:ss' },
       },
       span: 12,
+      required: true,
+    },
+    {
+      label: t('统计结束日期'),
+      prop: 'endDate',
+      component: {
+        name: 'el-date-picker',
+        props: { type: 'date', valueFormat: 'YYYY-MM-DD HH:mm:ss' },
+      },
+      span: 12,
+      required: true,
     },
   ],
 })
@@ -79,6 +41,26 @@ const Table = useTable({
   columns: [
     { type: 'selection' },
     {
+      label: t('统计开始日期'),
+      prop: 'startDate',
+      minWidth: 140,
+      sortable: 'custom',
+      component: {
+        name: 'cl-date-text',
+        props: { format: 'YYYY-MM-DD' },
+      },
+    },
+    {
+      label: t('统计截至日期'),
+      prop: 'endDate',
+      minWidth: 140,
+      sortable: 'custom',
+      component: {
+        name: 'cl-date-text',
+        props: { format: 'YYYY-MM-DD' },
+      },
+    },
+    {
       label: t('订单总数'),
       prop: 'totalOrders',
       minWidth: 140,
@@ -87,6 +69,12 @@ const Table = useTable({
     {
       label: t('总金额'),
       prop: 'totalAmount',
+      minWidth: 140,
+      sortable: 'custom',
+    },
+    {
+      label: t('总实付金额'),
+      prop: 'totalActualAmount',
       minWidth: 140,
       sortable: 'custom',
     },
@@ -113,22 +101,6 @@ const Table = useTable({
       prop: 'paidOrders',
       minWidth: 140,
       sortable: 'custom',
-    },
-    {
-      label: t('配送订单数'),
-      prop: 'deliveringOrders',
-      minWidth: 140,
-      sortable: 'custom',
-    },
-    {
-      label: t('统计日期'),
-      prop: 'statisticsDate',
-      minWidth: 140,
-      sortable: 'custom',
-      component: {
-        name: 'cl-date-text',
-        props: { format: 'YYYY-MM-DD' },
-      },
     },
     {
       label: t('创建时间'),
@@ -144,7 +116,6 @@ const Table = useTable({
       sortable: 'custom',
       component: { name: 'cl-date-text' },
     },
-    { type: 'op', buttons: ['edit', 'delete'] },
   ],
 })
 
@@ -172,10 +143,7 @@ function refresh(params?: any) {
     <cl-row>
       <!-- 刷新按钮 -->
       <cl-refresh-btn />
-      <!-- 新增按钮 -->
       <cl-add-btn />
-      <!-- 删除按钮 -->
-      <cl-multi-delete-btn />
       <cl-flex1 />
       <!-- 条件搜索 -->
       <cl-search ref="Search" />
