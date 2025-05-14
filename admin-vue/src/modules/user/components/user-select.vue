@@ -40,6 +40,16 @@ const columns = ref([
     minWidth: 100,
   },
   {
+    prop: 'unionid',
+    label: t('唯一登录 ID'),
+    minWidth: 100,
+  },
+  {
+    prop: 'nickName',
+    label: t('昵称'),
+    minWidth: 150,
+  },
+  {
     prop: 'avatarUrl',
     label: t('头像'),
     component: {
@@ -51,11 +61,6 @@ const columns = ref([
     prop: 'phone',
     label: t('手机号'),
     minWidth: 120,
-  },
-  {
-    prop: 'nickName',
-    label: t('姓名'),
-    minWidth: 150,
   },
   {
     label: t('角色'),
@@ -79,13 +84,13 @@ const searchItems = ref([
     },
   },
   {
-    label: t('手机号'),
-    prop: 'phone',
+    label: t('唯一登录 ID'),
+    prop: 'unionid',
     component: {
       name: 'el-input',
       props: {
         clearable: true,
-        placeholder: t('请输入手机号'),
+        placeholder: t('请输入唯一登录 ID'),
       },
     },
   },
@@ -97,6 +102,17 @@ const searchItems = ref([
       props: {
         clearable: true,
         placeholder: t('请输入昵称'),
+      },
+    },
+  },
+  {
+    label: t('手机号'),
+    prop: 'phone',
+    component: {
+      name: 'el-input',
+      props: {
+        clearable: true,
+        placeholder: t('请输入手机号'),
       },
     },
   },

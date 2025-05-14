@@ -21,11 +21,13 @@ public class AdminPatientInfoController extends BaseController<PatientInfoServic
         setPageOption(createOp()
             .fieldEq(
                     PATIENT_INFO_ENTITY.ID,
-                    PATIENT_INFO_ENTITY.GENDER,
+                    PATIENT_INFO_ENTITY.USER_ID,
                     PATIENT_INFO_ENTITY.TYPE
             )
             .keyWordLikeFields(
                     PATIENT_INFO_ENTITY.NAME,
+                    PATIENT_INFO_ENTITY.PHONE,
+                    PATIENT_INFO_ENTITY.ADDRESS,
                     PATIENT_INFO_ENTITY.MEDICAL_RECORD_NUMBER
             ));
     }

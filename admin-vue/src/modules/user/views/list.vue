@@ -47,7 +47,7 @@ const Table = useTable({
     // 唯一登录id
     {
       label: t('唯一登录 ID'),
-      prop: 'unionId',
+      prop: 'unionid',
       minWidth: 100,
     },
     {
@@ -163,7 +163,45 @@ const Upsert = useUpsert({
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  items: [
+    {
+      prop: 'id',
+      label: t('用户 ID'),
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      prop: 'unionid',
+      label: t('唯一登录 ID'),
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      prop: 'nickName',
+      label: t('昵称'),
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      prop: 'phone',
+      label: t('手机号'),
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      prop: 'role',
+      label: t('角色'),
+      component: { name: 'el-select', options: dict.get('user-role'), props: { clearable: true } },
+    },
+    {
+      prop: 'loginType',
+      label: t('登录方式'),
+      component: { name: 'el-select', options: options.loginType, props: { clearable: true } },
+    },
+    {
+      prop: 'status',
+      label: t('状态'),
+      component: { name: 'el-select', options: dict.get('user-status'), props: { clearable: true } },
+    },
+  ],
+})
 
 // cl-crud
 const Crud = useCrud(

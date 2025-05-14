@@ -41,10 +41,9 @@ const columns = ref([
     minWidth: 100,
   },
   {
-    prop: 'gender',
-    label: t('性别'),
+    prop: 'phone',
+    label: t('电话'),
     minWidth: 100,
-    dict: dict.get('gender'),
   },
   {
     label: t('年龄'),
@@ -54,6 +53,12 @@ const columns = ref([
     formatter: (row: any) => {
       return row.birthday ? dayjs().diff(dayjs(row.birthday), 'year') : ''
     },
+  },
+  {
+    prop: 'gender',
+    label: t('性别'),
+    minWidth: 100,
+    dict: dict.get('gender'),
   },
   { label: t('病历号'), prop: 'medicalRecordNumber', minWidth: 100 },
   { label: t('类型'), prop: 'type', minWidth: 120, dict: dict.get('patient-type') },
@@ -72,6 +77,12 @@ const searchItems = ref([
       },
     },
   },
+  // 账户ID
+  {
+    label: t('账户 ID'),
+    prop: 'accountId',
+    component: { name: 'el-input', props: { clearable: true } },
+  },
   {
     label: t('姓名'),
     prop: 'name',
@@ -80,6 +91,17 @@ const searchItems = ref([
       props: {
         clearable: true,
         placeholder: t('请输入姓名'),
+      },
+    },
+  },
+  {
+    label: t('电话'),
+    prop: 'phone',
+    component: {
+      name: 'el-input',
+      props: {
+        clearable: true,
+        placeholder: t('请输入电话'),
       },
     },
   },
@@ -99,6 +121,11 @@ const searchItems = ref([
     label: t('病历号'),
     prop: 'medicalRecordNumber',
     component: { name: 'el-input', props: { clearable: true } },
+  },
+  {
+    label: t('类型'),
+    prop: 'type',
+    component: { name: 'el-select', options: dict.get('patient-type'), props: { clearable: true } },
   },
 ])
 </script>

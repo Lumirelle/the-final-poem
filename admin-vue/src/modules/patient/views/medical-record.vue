@@ -21,9 +21,29 @@ const Upsert = useUpsert({
       return {
         label: t('选择患者'),
         prop: 'patientId',
-        hidden: Upsert.value?.mode === 'update',
+        hidden: Upsert.value?.mode !== 'add',
         component: { vm: PatientSelect },
         required: true,
+        span: 24,
+      }
+    },
+    // 回显患者使用
+    () => {
+      return {
+        label: t('患者 ID'),
+        prop: 'patientId',
+        hidden: Upsert.value?.mode === 'add',
+        component: { name: 'el-input', props: { clearable: true } },
+        span: 12,
+      }
+    },
+    () => {
+      return {
+        label: t('患者姓名'),
+        prop: 'patientName',
+        hidden: Upsert.value?.mode === 'add',
+        component: { name: 'el-input', props: { clearable: true } },
+        span: 12,
       }
     },
     {
@@ -34,15 +54,34 @@ const Upsert = useUpsert({
         props: { type: 'date', valueFormat: 'YYYY-MM-DD HH:mm:ss' },
       },
       required: true,
-      span: 12,
+      span: 24,
     },
     () => {
       return {
         label: t('医院'),
         prop: 'hospitalId',
-        hidden: Upsert.value?.mode === 'update',
+        hidden: Upsert.value?.mode !== 'add',
         component: { vm: HospitalSelect },
         required: true,
+        span: 24,
+      }
+    },
+    // 回显医院使用
+    () => {
+      return {
+        label: t('医院 ID'),
+        prop: 'hospitalId',
+        hidden: Upsert.value?.mode === 'add',
+        component: { name: 'el-input', props: { clearable: true } },
+        span: 12,
+      }
+    },
+    () => {
+      return {
+        label: t('医院名称'),
+        prop: 'hospitalName',
+        hidden: Upsert.value?.mode === 'add',
+        component: { name: 'el-input', props: { clearable: true } },
         span: 12,
       }
     },
@@ -50,7 +89,7 @@ const Upsert = useUpsert({
       return {
         label: t('医生'),
         prop: 'doctorId',
-        hidden: true, // 默认隐藏,等选择医院后显示
+        hidden: true,
         component: {
           vm: DoctorSelect,
           props: {
@@ -59,6 +98,25 @@ const Upsert = useUpsert({
           },
         },
         required: true,
+        span: 24,
+      }
+    },
+    // 回显医生使用
+    () => {
+      return {
+        label: t('医生 ID'),
+        prop: 'doctorId',
+        hidden: Upsert.value?.mode === 'add',
+        component: { name: 'el-input', props: { clearable: true } },
+        span: 12,
+      }
+    },
+    () => {
+      return {
+        label: t('医生姓名'),
+        prop: 'doctorName',
+        hidden: Upsert.value?.mode === 'add',
+        component: { name: 'el-input', props: { clearable: true } },
         span: 12,
       }
     },
@@ -84,7 +142,7 @@ const Upsert = useUpsert({
       label: t('费用'),
       prop: 'cost',
       hook: 'number',
-      component: { name: 'el-input-number', props: { min: 0 } },
+      component: { name: 'el-input-number', props: { min: 0.01, precision: 2 } },
       required: true,
       span: 12,
     },
@@ -98,7 +156,7 @@ watch(
     // 清空医生选择
     Upsert.value?.setForm('doctorId', undefined)
     // 显示/隐藏医生选择
-    if (val) {
+    if (val && Upsert.value?.mode === 'add') {
       Upsert.value?.showItem('doctorId')
     }
     else {
@@ -109,10 +167,12 @@ watch(
 
 // cl-table
 const Table = useTable({
+  contextMenu: ['refresh', 'info', 'order-desc', 'order-asc'],
   columns: [
     { type: 'selection' },
-
     { label: t('就诊记录 ID'), prop: 'id', minWidth: 140 },
+    { label: t('患者ID'), prop: 'patientId', minWidth: 140 },
+    { label: t('患者姓名'), prop: 'patientName', minWidth: 140 },
     {
       label: t('就诊日期'),
       prop: 'visitDate',
@@ -127,8 +187,6 @@ const Table = useTable({
     { label: t('医院名称'), prop: 'hospitalName', minWidth: 140 },
     { label: t('医生 ID'), prop: 'doctorId', minWidth: 140 },
     { label: t('医生姓名'), prop: 'doctorName', minWidth: 140 },
-    { label: t('患者ID'), prop: 'patientId', minWidth: 140 },
-    { label: t('患者姓名'), prop: 'patientName', minWidth: 140 },
     {
       label: t('诊断结果'),
       prop: 'diagnosis',
@@ -156,12 +214,60 @@ const Table = useTable({
       sortable: 'custom',
       component: { name: 'cl-date-text' },
     },
-    { type: 'op', buttons: ['edit', 'delete'] },
+    { type: 'op', buttons: ['info'] },
   ],
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  items: [
+    {
+      label: t('患者 ID'),
+      prop: 'patientId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('患者姓名'),
+      prop: 'patientName',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('就诊日期'),
+      prop: 'visitDate',
+      component: { name: 'el-date-picker', props: { type: 'date', valueFormat: 'YYYY-MM-DD HH:mm:ss' } },
+    },
+    {
+      label: t('医院 ID'),
+      prop: 'hospitalId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('医院名称'),
+      prop: 'hospitalName',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('医生 ID'),
+      prop: 'doctorId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('医生姓名'),
+      prop: 'doctorName',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('诊断结果'),
+      prop: 'diagnosis',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('处方内容'),
+      prop: 'prescription',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+  ],
+})
 
 // cl-crud
 const Crud = useCrud(
@@ -187,8 +293,6 @@ function refresh(params?: any) {
       <cl-refresh-btn />
       <!-- 新增按钮 -->
       <cl-add-btn />
-      <!-- 删除按钮 -->
-      <cl-multi-delete-btn />
       <cl-flex1 />
       <!-- 条件搜索 -->
       <cl-search ref="Search" />

@@ -42,4 +42,25 @@ public class MedicalRecordServiceImpl extends BaseServiceImpl<MedicalRecordMappe
         return mapper.paginate(page, queryWrapper);
     }
 
+    @Override
+    public Object info(JSONObject requestParams, Long id) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(
+                        MEDICAL_RECORD_ENTITY.ALL_COLUMNS,
+                        PATIENT_INFO_ENTITY.NAME.as("patientName"),
+                        HOSPITAL_INFO_ENTITY.NAME.as("hospitalName"),
+                        DOCTOR_ENTITY.NAME.as("doctorName")
+                )
+                .from(MEDICAL_RECORD_ENTITY)
+                .leftJoin(PATIENT_INFO_ENTITY)
+                .on(MedicalRecordEntity::getPatientId, PatientInfoEntity::getId)
+                .leftJoin(HOSPITAL_INFO_ENTITY)
+                .on(MedicalRecordEntity::getHospitalId, HospitalInfoEntity::getId)
+                .leftJoin(DOCTOR_ENTITY)
+                .on(MedicalRecordEntity::getDoctorId, DoctorEntity::getId)
+                .where(MEDICAL_RECORD_ENTITY.ID.eq(id));
+        
+        return mapper.selectOneByQuery(queryWrapper);
+    }
+
 }

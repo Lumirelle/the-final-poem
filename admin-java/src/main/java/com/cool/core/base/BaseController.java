@@ -47,6 +47,9 @@ public abstract class BaseController<S extends BaseService<T>, T extends BaseEnt
     protected S service;
     protected Class<T> entityClass;
 
+    // @ModelAttribute是Spring MVC的一个重要注解
+    // 它会在Controller中的任何请求处理方法执行之前被调用
+    // 用于预处理请求数据和初始化模型数据
     @ModelAttribute
     protected void preHandle(HttpServletRequest request,
                              @RequestAttribute JSONObject requestParams) {

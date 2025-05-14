@@ -95,7 +95,7 @@ const Upsert = useUpsert({
       span: 12,
     },
     {
-      label: t('地址'),
+      label: t('居住地址'),
       prop: 'address',
       group: 'basic',
       component: { name: 'el-input', props: { clearable: true } },
@@ -175,7 +175,7 @@ const Table = useTable({
     { type: 'selection' },
     { label: t('患者 ID'), prop: 'id', minWidth: 140 },
     { label: t('姓名'), prop: 'name', minWidth: 140 },
-    { label: t('性别'), prop: 'gender', minWidth: 120, dict: dict.get('gender') },
+    { label: t('电话'), prop: 'phone', minWidth: 140 },
     {
       label: t('年龄'),
       prop: 'birthday',
@@ -185,10 +185,10 @@ const Table = useTable({
         return row.birthday ? dayjs().diff(dayjs(row.birthday), 'year') : ''
       },
     },
-    { label: t('电话'), prop: 'phone', minWidth: 140 },
-    { label: t('地址'), prop: 'address', minWidth: 120 },
+    { label: t('性别'), prop: 'gender', minWidth: 120, dict: dict.get('gender') },
+    { label: t('居住地址'), prop: 'address', minWidth: 200 },
     { label: t('类型'), prop: 'type', minWidth: 120, dict: dict.get('patient-type') },
-    { label: t('病历号'), prop: 'medicalRecordNumber', minWidth: 140 },
+    { label: t('病历号'), prop: 'medicalRecordNumber', minWidth: 200, showOverflowTooltip: true },
     {
       label: t('病史'),
       prop: 'medicalHistory',
@@ -198,12 +198,6 @@ const Table = useTable({
     {
       label: t('过敏史'),
       prop: 'allergyHistory',
-      showOverflowTooltip: true,
-      minWidth: 200,
-    },
-    {
-      label: t('备注'),
-      prop: 'remark',
       showOverflowTooltip: true,
       minWidth: 200,
     },
@@ -234,6 +228,12 @@ const Table = useTable({
     { label: t('账户 ID'), prop: 'userId', minWidth: 140 },
     { label: t('账户昵称'), prop: 'nickName', minWidth: 140 },
     {
+      label: t('备注'),
+      prop: 'remark',
+      showOverflowTooltip: true,
+      minWidth: 200,
+    },
+    {
       label: t('创建时间'),
       prop: 'createTime',
       minWidth: 170,
@@ -252,7 +252,40 @@ const Table = useTable({
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  items: [
+    {
+      prop: 'id',
+      label: t('患者 ID'),
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      prop: 'name',
+      label: t('姓名'),
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      prop: 'phone',
+      label: t('电话'),
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      prop: 'address',
+      label: t('居住地址'),
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      prop: 'type',
+      label: t('类型'),
+      component: { name: 'el-select', options: dict.get('patient-type'), props: { clearable: true } },
+    },
+    {
+      prop: 'medicalRecordNumber',
+      label: t('病历号'),
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+  ],
+})
 
 // cl-crud
 const Crud = useCrud(

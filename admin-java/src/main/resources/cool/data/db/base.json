@@ -673,7 +673,7 @@
   "user_info": [
     {
       "id": 1,
-      "unionId": "1234567890",
+      "unionid": "1234567890",
       "nickName": "t_u_patient_1",
       "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
       "phone": "19865400235",
@@ -685,7 +685,7 @@
     },
     {
       "id": 2,
-      "unionId": "1234567890",
+      "unionid": "1234567890",
       "nickName": "t_u_patient_2",
       "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
       "phone": "19865400236",
@@ -697,7 +697,7 @@
     },
     {
       "id": 3,
-      "unionId": "1234567890",
+      "unionid": "1234567890",
       "nickName": "t_u_staff_1",
       "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
       "phone": "19865400237",
@@ -709,7 +709,7 @@
     },
     {
       "id": 4,
-      "unionId": "1234567890",
+      "unionid": "1234567890",
       "nickName": "t_u_staff_2",
       "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
       "phone": "19865400238",
@@ -761,6 +761,14 @@
       "code": "H0-001",
       "address": "On the earth",
       "phone": "19865400235",
+      "status": 1
+    },
+    {
+      "id": 2,
+      "name": "t_h_hospital_2",
+      "code": "H0-002",
+      "address": "On the moon",
+      "phone": "19865400236",
       "status": 1
     }
   ],
