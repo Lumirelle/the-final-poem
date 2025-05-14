@@ -88,7 +88,7 @@ async function toLogin() {
       </div>
 
       <p class="desc">
-        {{ $t('快速开发后台权限管理系统') }}
+        {{ $t('就医陪诊系统管理后台') }}
       </p>
 
       <div class="form">
@@ -142,7 +142,7 @@ async function toLogin() {
       <cl-svg name="bg" />
     </div>
 
-    <a href="https://cool-js.com" class="copyright"> Copyright © COOL </a>
+    <a href="/" class="copyright"> Copyright © ACCOMPANY CONSULTATION </a>
   </div>
 </template>
 

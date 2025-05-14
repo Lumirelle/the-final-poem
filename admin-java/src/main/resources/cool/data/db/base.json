@@ -1,0 +1,447 @@
+{
+  "base_sys_param": [],
+  "base_sys_conf": [
+    {
+      "cKey": "logKeep",
+      "cValue": "31"
+    },
+    {
+      "cKey": "recycleKeep",
+      "cValue": "31"
+    }
+  ],
+  "base_sys_department": [
+    {
+      "id": 1,
+      "name": "医疗陪诊系统",
+      "parentId": null,
+      "orderNum": 0
+    },
+    {
+      "id": 11,
+      "name": "技术部",
+      "parentId": 1,
+      "orderNum": 0
+    },
+    {
+      "id": 12,
+      "name": "开发",
+      "parentId": 11,
+      "orderNum": 0
+    },
+    {
+      "id": 13,
+      "name": "运营部",
+      "parentId": 1,
+      "orderNum": 1
+    },
+    {
+      "id": 14,
+      "name": "运营",
+      "parentId": 13,
+      "orderNum": 0
+    }
+  ],
+  "base_sys_role": [
+    {
+      "id": 1,
+      "userId": "1",
+      "name": "超管",
+      "label": "admin",
+      "remark": "最高权限的角色",
+      "relevance": 1,
+      "menuIdList": null,
+      "departmentIdList": null
+    }
+  ],
+  "base_sys_user": [
+    {
+      "id": 1,
+      "departmentId": 1,
+      "name": "超级管理员",
+      "username": "admin",
+      "password": "e10adc3949ba59abbe56e057f20f883e",
+      "passwordV": 7,
+      "nickName": "管理员",
+      "headImg": "https://cool-js.com/admin/headimg.jpg",
+      "phone": "18000000000",
+      "email": "admin@acc-consult.com",
+      "status": 1,
+      "remark": "拥有最高权限的用户",
+      "socketId": null
+    }
+  ],
+  "base_sys_user_role": [
+    {
+      "userId": 1,
+      "roleId": 1
+    }
+  ],
+  "dict_type": [
+    {
+      "id": 1,
+      "name": "性别",
+      "key": "gender"
+    },
+    {
+      "id": 2,
+      "name": "基本状态",
+      "key": "base-status"
+    },
+    {
+      "id": 3,
+      "name": "用户角色",
+      "key": "user-role"
+    },
+    {
+      "id": 4,
+      "name": "用户状态",
+      "key": "user-status"
+    },
+    {
+      "id": 5,
+      "name": "患者类型",
+      "key": "patient-type"
+    },
+    {
+      "id": 6,
+      "name": "陪诊人员等级",
+      "key": "acc-staff-level"
+    },
+    {
+      "id": 7,
+      "name": "陪诊人员状态",
+      "key": "acc-staff-status"
+    },
+    {
+      "id": 8,
+      "name": "科室类型",
+      "key": "department-type"
+    },
+    {
+      "id": 9,
+      "name": "套餐服务范围",
+      "key": "meal-service-area"
+    }
+  ],
+  "dict_info": [
+    {
+      "id": 1,
+      "typeId": 1,
+      "parentId": null,
+      "name": "未知",
+      "value": "0",
+      "type": "info",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 2,
+      "typeId": 1,
+      "parentId": null,
+      "name": "男",
+      "value": "1",
+      "type": "primary",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 3,
+      "typeId": 1,
+      "parentId": null,
+      "name": "女",
+      "value": "2",
+      "type": "success",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 4,
+      "typeId": 2,
+      "parentId": null,
+      "name": "禁用",
+      "value": "0",
+      "type": "danger",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 5,
+      "typeId": 2,
+      "parentId": null,
+      "name": "启用",
+      "value": "1",
+      "type": "success",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 6,
+      "typeId": 3,
+      "parentId": null,
+      "name": "未知",
+      "value": "0",
+      "type": "info",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 7,
+      "typeId": 3,
+      "parentId": null,
+      "name": "患者",
+      "value": "1",
+      "type": "warning",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 8,
+      "typeId": 3,
+      "parentId": null,
+      "name": "陪诊人员",
+      "value": "2",
+      "type": "success",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 9,
+      "typeId": 4,
+      "parentId": null,
+      "name": "正常",
+      "value": "0",
+      "type": "success",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 10,
+      "typeId": 4,
+      "parentId": null,
+      "name": "禁用",
+      "value": "1",
+      "type": "danger",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 11,
+      "typeId": 4,
+      "parentId": null,
+      "name": "已注销",
+      "value": "2",
+      "type": "info",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 12,
+      "typeId": 5,
+      "parentId": null,
+      "name": "正常",
+      "value": "0",
+      "type": "success",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 13,
+      "typeId": 5,
+      "parentId": null,
+      "name": "沟通不便",
+      "value": "1",
+      "type": "warning",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 14,
+      "typeId": 5,
+      "parentId": null,
+      "name": "行动不便",
+      "value": "2",
+      "type": "danger",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 15,
+      "typeId": 5,
+      "parentId": null,
+      "name": "其他不便",
+      "value": "3",
+      "type": "info",
+      "orderNum": 4,
+      "remark": null
+    },
+    {
+      "id": 16,
+      "typeId": 6,
+      "parentId": null,
+      "name": "初级",
+      "value": "0",
+      "type": "success",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 17,
+      "typeId": 6,
+      "parentId": null,
+      "name": "中级",
+      "value": "1",
+      "type": "warning",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 18,
+      "typeId": 6,
+      "parentId": null,
+      "name": "高级",
+      "value": "2",
+      "type": "danger",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 19,
+      "typeId": 7,
+      "parentId": null,
+      "name": "正常",
+      "value": "0",
+      "type": "success",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 20,
+      "typeId": 7,
+      "parentId": null,
+      "name": "请假",
+      "value": "1",
+      "type": "warning",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 21,
+      "typeId": 7,
+      "parentId": null,
+      "name": "离职",
+      "value": "2",
+      "type": "danger",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 22,
+      "typeId": 7,
+      "parentId": null,
+      "name": "其他",
+      "value": "3",
+      "type": "info",
+      "orderNum": 4,
+      "remark": null
+    },
+    {
+      "id": 23,
+      "typeId": 8,
+      "parentId": null,
+      "name": "临床",
+      "value": "0",
+      "type": "success",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 24,
+      "typeId": 8,
+      "parentId": null,
+      "name": "医技",
+      "value": "1",
+      "type": "primary",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 25,
+      "typeId": 8,
+      "parentId": null,
+      "name": "辅助",
+      "value": "2",
+      "type": "info",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 26,
+      "typeId": 9,
+      "parentId": null,
+      "name": "代预约",
+      "value": "0",
+      "type": "success",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 27,
+      "typeId": 9,
+      "parentId": null,
+      "name": "代走流程",
+      "value": "1",
+      "type": "success",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 28,
+      "typeId": 9,
+      "parentId": null,
+      "name": "医嘱分析",
+      "value": "2",
+      "type": "success",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 29,
+      "typeId": 9,
+      "parentId": null,
+      "name": "健康跟踪",
+      "value": "3",
+      "type": "success",
+      "orderNum": 4,
+      "remark": null
+    },
+    {
+      "id": 30,
+      "typeId": 9,
+      "parentId": null,
+      "name": "其他定制服务",
+      "value": "4",
+      "type": "primary",
+      "orderNum": 5,
+      "remark": null
+    }
+  ],
+  "task_info": [
+    {
+      "id": 1,
+      "name": "清理日志",
+      "job_id": "1",
+      "repeat_count": null,
+      "every": 5000,
+      "status": 1,
+      "service": "baseSysLogServiceImpl.clear(false)",
+      "task_type": 0,
+      "type": null,
+      "data": null,
+      "remark": null,
+      "cron": "0 0 1 * * ?",
+      "start_date": null,
+      "end_date": null
+    }
+  ]
+}

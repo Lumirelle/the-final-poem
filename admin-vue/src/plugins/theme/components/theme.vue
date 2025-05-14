@@ -1,3 +1,77 @@
+<script lang="ts" setup>
+import { Check } from '@element-plus/icons-vue'
+import { useDark } from '@vueuse/core'
+import { ElMessage } from 'element-plus'
+import { assign } from 'lodash-es'
+import { reactive, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useTheme } from '../hooks'
+import { useBase } from '/$/base'
+
+defineOptions({
+  name: 'cl-theme',
+})
+
+const { menu } = useBase()
+const { t } = useI18n()
+const { theme, setTheme, changeDark, themes } = useTheme()
+
+// 是否暗黑模式
+const isDark = useDark()
+
+// 表单
+const form = reactive<{ color: string, theme: Theme }>({
+  color: theme?.color || '',
+  theme,
+})
+
+// 抽屉
+const visible = ref(false)
+
+// 打开
+function open() {
+  visible.value = true
+}
+
+// 清除暗黑模式
+function clearDark() {
+  isDark.value = false
+}
+
+// 设置颜色
+function setColor(color: any) {
+  setTheme({ color })
+  clearDark()
+}
+
+// 设置暗黑模式
+function setDark(el: any) {
+  changeDark(el.srcElement, !isDark.value, () => {
+    isDark.value = !isDark.value
+    setTheme({ color: form.color, dark: isDark.value })
+  })
+}
+
+// 设置推荐
+function setComd(item: any) {
+  assign(form.theme, item)
+  form.color = item.color
+  setTheme(item)
+  ElMessage.success(`${t('切换主题')}: ${item.label}`)
+}
+
+// 设置分组
+function setGroup(val: any) {
+  setTheme({ isGroup: val })
+  menu.setMenu()
+}
+
+// 设置转场动画
+function setTransition(val: any) {
+  setTheme({ transition: val })
+}
+</script>
+
 <template>
   <div class="cl-comm__icon" @click="open">
     <cl-svg name="theme" />
@@ -22,7 +96,7 @@
               <div
                 class="w"
                 :style="{
-                  backgroundColor: item.color
+                  backgroundColor: item.color,
                 }"
               >
                 <check v-show="item.color == form.theme.color" />
@@ -35,7 +109,9 @@
 
         <el-form-item :label="$t('自定义主色')">
           <el-color-picker v-model="form.color" @change="setColor" />
-          <el-text size="small" class="ml-[10px]">{{ form.color }}</el-text>
+          <el-text size="small" class="ml-[10px]">
+            {{ form.color }}
+          </el-text>
         </el-form-item>
 
         <el-form-item :label="$t('菜单分组显示')">
@@ -54,80 +130,6 @@
     </div>
   </el-drawer>
 </template>
-
-<script lang="ts" setup>
-defineOptions({
-  name: 'cl-theme'
-});
-
-import { reactive, ref } from 'vue';
-import { Check } from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus';
-import { useBase } from '/$/base';
-import { useDark } from '@vueuse/core';
-import { useI18n } from 'vue-i18n';
-import { assign } from 'lodash-es';
-import { useTheme } from '../hooks';
-
-const { menu } = useBase();
-const { t } = useI18n();
-const { theme, setTheme, changeDark, themes } = useTheme();
-
-// 是否暗黑模式
-const isDark = useDark();
-
-// 表单
-const form = reactive<{ color: string; theme: Theme }>({
-  color: theme?.color || '',
-  theme
-});
-
-// 抽屉
-const visible = ref(false);
-
-// 打开
-function open() {
-  visible.value = true;
-}
-
-// 清除暗黑模式
-function clearDark() {
-  isDark.value = false;
-}
-
-// 设置颜色
-function setColor(color: any) {
-  setTheme({ color });
-  clearDark();
-}
-
-// 设置暗黑模式
-function setDark(el: any) {
-  changeDark(el.srcElement, !isDark.value, () => {
-    isDark.value = !isDark.value;
-    setTheme({ color: form.color, dark: isDark.value });
-  });
-}
-
-// 设置推荐
-function setComd(item: any) {
-  assign(form.theme, item);
-  form.color = item.color;
-  setTheme(item);
-  ElMessage.success(`${t('切换主题')}: ${item.label}`);
-}
-
-// 设置分组
-function setGroup(val: any) {
-  setTheme({ isGroup: val });
-  menu.setMenu();
-}
-
-// 设置转场动画
-function setTransition(val: any) {
-  setTheme({ transition: val });
-}
-</script>
 
 <style lang="scss">
 .cl-theme {

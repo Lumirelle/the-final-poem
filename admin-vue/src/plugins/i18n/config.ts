@@ -6,9 +6,10 @@ import { config } from '/@/config'
 export default (): ModuleConfig => {
   return {
     order: 100,
-    toolbar: {
-      component: import('./components/switch.vue'),
-    },
+    // Temporary disable i18n plugin, because we don't need it now
+    // toolbar: {
+    //   component: import('./components/switch.vue'),
+    // },
     install(app) {
       const i18n = createI18n({
         legacy: false,

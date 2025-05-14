@@ -61,6 +61,6 @@ public class MealInfoEntity extends BaseEntity<MealInfoEntity> {
     @ColumnDefine(comment = "服务次数", defaultValue = "0")
     private Integer serviceCount;
 
-    @ColumnDefine(comment = "服务范围", type = "json")
+    @ColumnDefine(comment = "服务范围 0=代预约 1=代走流程 2=医嘱分析 3=健康跟踪 4=其他定制服务", type = "json")
     private String serviceArea;
 }
