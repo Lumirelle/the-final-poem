@@ -12,7 +12,6 @@ const props = defineProps({
   ...CrudProps,
   modelValue: null,
   multiple: Boolean,
-  hospitalId: String,
 })
 
 const { service } = useCool()
@@ -24,8 +23,8 @@ const customService = computed(() => {
   return {
     page: (params: any) => {
       const queryParams = { ...params }
-      if (props.hospitalId) {
-        queryParams.hospitalId = props.hospitalId
+      if (props.scope?.hospitalId) {
+        queryParams.hospitalId = props.scope.hospitalId
       }
       return service.hospital.department.page(queryParams)
     },

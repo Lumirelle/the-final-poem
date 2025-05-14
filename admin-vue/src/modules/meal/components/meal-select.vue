@@ -13,11 +13,6 @@ const props = defineProps({
   ...CrudProps,
   modelValue: null,
   multiple: Boolean,
-  hospitalId: String,
-  departmentId: String,
-  doctorId: String,
-  categoryId: String,
-  staffId: String,
 })
 
 const { service } = useCool()
@@ -30,20 +25,20 @@ const customService = computed(() => {
   return {
     page: (params: any) => {
       const queryParams = { ...params }
-      if (props.hospitalId) {
-        queryParams.hospitalId = props.hospitalId
+      if (props.scope?.hospitalId) {
+        queryParams.hospitalId = props.scope.hospitalId
       }
-      if (props.departmentId) {
-        queryParams.departmentId = props.departmentId
+      if (props.scope?.departmentId) {
+        queryParams.departmentId = props.scope.departmentId
       }
-      if (props.doctorId) {
-        queryParams.doctorId = props.doctorId
+      if (props.scope?.doctorId) {
+        queryParams.doctorId = props.scope.doctorId
       }
-      if (props.categoryId) {
-        queryParams.categoryId = props.categoryId
+      if (props.scope?.categoryId) {
+        queryParams.categoryId = props.scope.categoryId
       }
-      if (props.staffId) {
-        queryParams.staffId = props.staffId
+      if (props.scope?.staffId) {
+        queryParams.staffId = props.scope.staffId
       }
       return service.meal.info.page(queryParams)
     },

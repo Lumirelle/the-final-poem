@@ -136,6 +136,16 @@
       "id": 12,
       "name": "订单售后状态",
       "key": "order-after-sale-status"
+    },
+    {
+      "id": 13,
+      "name": "投诉类型",
+      "key": "complaint-type"
+    },
+    {
+      "id": 14,
+      "name": "投诉状态",
+      "key": "complaint-status"
     }
   ],
   "dict_info": [
@@ -567,6 +577,96 @@
       "value": "2",
       "type": "success",
       "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 44,
+      "typeId": 13,
+      "parentId": null,
+      "name": "服务态度",
+      "value": "0",
+      "type": "warning",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 45,
+      "typeId": 13,
+      "parentId": null,
+      "name": "价格问题",
+      "value": "1",
+      "type": "warning",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 46,
+      "typeId": 13,
+      "parentId": null,
+      "name": "服务质量",
+      "value": "2",
+      "type": "danger",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 47,
+      "typeId": 13,
+      "parentId": null,
+      "name": "其他",
+      "value": "3",
+      "type": "info",
+      "orderNum": 4,
+      "remark": null
+    },
+    {
+      "id": 48,
+      "typeId": 14,
+      "parentId": null,
+      "name": "待处理",
+      "value": "0",
+      "type": "warning",
+      "orderNum": 1,
+      "remark": null
+    },
+    {
+      "id": 49,
+      "typeId": 14,
+      "parentId": null,
+      "name": "处理中",
+      "value": "1",
+      "type": "primary",
+      "orderNum": 2,
+      "remark": null
+    },
+    {
+      "id": 50,
+      "typeId": 14,
+      "parentId": null,
+      "name": "已解决",
+      "value": "2",
+      "type": "success",
+      "orderNum": 3,
+      "remark": null
+    },
+    {
+      "id": 51,
+      "typeId": 14,
+      "parentId": null,
+      "name": "未解决",
+      "value": "3",
+      "type": "danger",
+      "orderNum": 4,
+      "remark": null
+    },
+    {
+      "id": 52,
+      "typeId": 14,
+      "parentId": null,
+      "name": "已关闭",
+      "value": "4",
+      "type": "info",
+      "orderNum": 5,
       "remark": null
     }
   ],

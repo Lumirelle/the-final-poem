@@ -20,10 +20,11 @@ public class AppComplaintController extends BaseController<ComplaintService, Com
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp()
-                .keyWordLikeFields(COMPLAINT_ENTITY.ORDER_NO)
-                .fieldEq(COMPLAINT_ENTITY.TYPE, 
-                        COMPLAINT_ENTITY.STATUS,
-                        COMPLAINT_ENTITY.USER_ID));
+                .fieldEq(
+                  COMPLAINT_ENTITY.ORDER_ID, 
+                  COMPLAINT_ENTITY.TYPE, 
+                  COMPLAINT_ENTITY.STATUS,
+                  COMPLAINT_ENTITY.USER_ID));
     }
     
 }

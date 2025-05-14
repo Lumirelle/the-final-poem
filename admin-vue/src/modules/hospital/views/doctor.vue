@@ -53,12 +53,7 @@ const Upsert = useUpsert({
       return {
         label: t('选择科室（关联科室）'),
         prop: 'departmentId',
-        component: {
-          vm: DepartmentSelect,
-          props: {
-            hospitalId: Upsert.value?.form.hospitalId,
-          },
-        },
+        component: { vm: DepartmentSelect },
         span: 12,
         required: true,
         hidden: true, // 默认隐藏,等选择医院后显示

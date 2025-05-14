@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
+import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useDict } from '/$/dict'
+import OrderSelect from '/$/order/components/order-info-select.vue'
 import UserSelect from '/$/user/components/user-select.vue'
 import { useCool } from '/@/cool'
 
@@ -10,88 +13,108 @@ defineOptions({
 
 const { service } = useCool()
 const { t } = useI18n()
+const { dict } = useDict()
 
 // cl-upsert
 const Upsert = useUpsert({
   items: [
-    {
-      label: t('单号'),
-      prop: 'complaintNo',
-      component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
-      required: true,
+    () => {
+      return {
+        label: t('选择用户'),
+        prop: 'userId',
+        hidden: Upsert.value?.mode === 'update',
+        component: { vm: UserSelect },
+        span: 24,
+        required: true,
+      }
     },
-    {
-      label: t('类型'),
-      prop: 'type',
-      component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
-      required: true,
+    () => {
+      return {
+        label: t('订单ID'),
+        prop: 'orderId',
+        hidden: true,
+        component: { vm: OrderSelect },
+        span: 24,
+        required: true,
+      }
     },
-    {
-      label: t('状态'),
-      prop: 'status',
-      component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
-      required: true,
+    () => {
+      return {
+        label: t('类型'),
+        prop: 'type',
+        hidden: Upsert.value?.mode === 'update',
+        component: {
+          name: 'el-select',
+          options: dict.get('complaint-type'),
+          props: { clearable: true },
+        },
+        span: 12,
+        required: true,
+      }
     },
-    {
-      label: t('内容'),
-      prop: 'content',
-      component: {
-        name: 'el-input',
-        props: { type: 'textarea', rows: 4 },
-      },
-      required: true,
+    () => {
+      return {
+        label: t('内容'),
+        prop: 'content',
+        hidden: Upsert.value?.mode === 'update',
+        component: { name: 'el-input', props: { type: 'textarea', rows: 4 } },
+        required: true,
+      }
     },
-    {
-      label: t('选择用户'),
-      prop: 'userId',
-      component: { vm: UserSelect },
-      required: true,
+    () => {
+      return {
+        label: t('状态'),
+        prop: 'status',
+        hidden: Upsert.value?.mode === 'add',
+        component: { name: 'el-select', options: dict.get('complaint-status'), props: { clearable: true } },
+        span: 12,
+        required: true,
+      }
     },
-    {
-      label: t('选择处理人'),
-      prop: 'handlerId',
-      component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
-      required: true,
+    () => {
+      return {
+        label: t('处理结果'),
+        prop: 'handleResult',
+        hidden: Upsert.value?.mode === 'add',
+        component: {
+          name: 'el-input',
+          props: { type: 'textarea', rows: 4 },
+        },
+        required: true,
+      }
     },
-    {
-      label: t('处理结果'),
-      prop: 'handleResult',
-      component: {
-        name: 'el-input',
-        props: { type: 'textarea', rows: 4 },
-      },
-      required: true,
-    },
-    {
-      label: t('备注'),
-      prop: 'remark',
-      component: {
-        name: 'el-input',
-        props: { type: 'textarea', rows: 4 },
-      },
-      required: true,
-    },
-    {
-      label: t('创建时间'),
-      prop: 'nickName',
-      component: { name: 'el-input', props: { clearable: true } },
-      span: 12,
-      required: true,
+    () => {
+      return {
+        label: t('备注'),
+        prop: 'remark',
+        hidden: Upsert.value?.mode === 'update',
+        component: { name: 'el-input', props: { type: 'textarea', rows: 4 } },
+      }
     },
   ],
 })
+
+watch(
+  () => Upsert.value?.form.userId,
+  (val) => {
+    Upsert.value?.setForm('orderId', undefined)
+    if (val && Upsert.value?.mode !== 'update') {
+      Upsert.value?.showItem('orderId')
+    }
+    else {
+      Upsert.value?.hideItem('orderId')
+    }
+  },
+)
 
 // cl-table
 const Table = useTable({
   columns: [
     { type: 'selection' },
-    { label: t('单号'), prop: 'complaintNo', minWidth: 140 },
-    { label: t('类型'), prop: 'type', minWidth: 120 },
-    { label: t('状态'), prop: 'status', minWidth: 120 },
+    { label: t('用户ID'), prop: 'userId', minWidth: 140 },
+    { label: t('用户昵称'), prop: 'nickName', minWidth: 140 },
+    { label: t('订单ID'), prop: 'orderId', minWidth: 140 },
+    { label: t('类型'), prop: 'type', minWidth: 120, dict: dict.get('complaint-type') },
     {
       label: t('内容'),
       prop: 'content',
@@ -99,6 +122,7 @@ const Table = useTable({
       minWidth: 200,
     },
     { label: t('处理人ID'), prop: 'handlerId', minWidth: 120 },
+    { label: t('状态'), prop: 'status', minWidth: 120, dict: dict.get('complaint-status') },
     {
       label: t('处理结果'),
       prop: 'handleResult',
@@ -111,7 +135,6 @@ const Table = useTable({
       showOverflowTooltip: true,
       minWidth: 200,
     },
-    { label: t('创建时间'), prop: 'nickName', minWidth: 140 },
     {
       label: t('创建时间'),
       prop: 'createTime',
@@ -126,7 +149,22 @@ const Table = useTable({
       sortable: 'custom',
       component: { name: 'cl-date-text' },
     },
-    { type: 'op', buttons: ['delete'] },
+    {
+      type: 'op',
+      buttons({ scope }) {
+        return [
+          {
+            label: t('处理'),
+            hidden: scope.row.status === dict.getByLabel('complaint-status', '已解决'),
+            onClick({ scope }) {
+              Upsert.value?.edit({
+                ...scope.row,
+              })
+            },
+          },
+        ]
+      },
+    },
   ],
 })
 

@@ -13,10 +13,6 @@ const props = defineProps({
   ...CrudProps,
   modelValue: null,
   multiple: Boolean,
-  userId: Number,
-  mealId: Number,
-  status: Number,
-  payType: Number,
 })
 
 const { service } = useCool()
@@ -29,17 +25,14 @@ const customService = computed(() => {
   return {
     page: (params: any) => {
       const queryParams = { ...params }
-      if (props.userId) {
-        queryParams.userId = props.userId
+      if (props.scope?.userId) {
+        queryParams.userId = props.scope.userId
       }
-      if (props.mealId) {
-        queryParams.mealId = props.mealId
+      if (props.scope?.mealId) {
+        queryParams.mealId = props.scope.mealId
       }
-      if (props.status !== undefined) {
-        queryParams.status = props.status
-      }
-      if (props.payType !== undefined) {
-        queryParams.payType = props.payType
+      if (props.scope?.status) {
+        queryParams.status = props.scope.status
       }
       return service.order.info.page(queryParams)
     },

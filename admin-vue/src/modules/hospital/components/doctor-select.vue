@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, useModel } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { CrudProps } from '/#/crud'
 import { useDict } from '/$/dict'
 import { useCool } from '/@/cool'
 
@@ -9,10 +10,9 @@ defineOptions({
 })
 
 const props = defineProps({
+  ...CrudProps,
   modelValue: null,
   multiple: Boolean,
-  hospitalId: Number,
-  departmentId: Number,
 })
 
 const { service } = useCool()
@@ -26,11 +26,11 @@ const customService = computed(() => {
     page: (params: any) => {
       const queryParams = { ...params }
       queryParams.status = dict.getByLabel('base-status', '启用')
-      if (props.hospitalId) {
-        queryParams.hospitalId = props.hospitalId
+      if (props.scope?.hospitalId) {
+        queryParams.hospitalId = props.scope.hospitalId
       }
-      if (props.departmentId) {
-        queryParams.departmentId = props.departmentId
+      if (props.scope?.departmentId) {
+        queryParams.departmentId = props.scope.departmentId
       }
       return service.hospital.doctor.page(queryParams)
     },

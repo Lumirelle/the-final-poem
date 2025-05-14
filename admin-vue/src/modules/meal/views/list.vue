@@ -69,12 +69,7 @@ const Upsert = useUpsert({
         label: t('选择科室'),
         prop: 'departmentId',
         hidden: true,
-        component: {
-          vm: DepartmentSelect,
-          props: {
-            hospitalId: Upsert.value?.form.hospitalId,
-          },
-        },
+        component: { vm: DepartmentSelect },
         span: 24,
         required: true,
       }
@@ -84,13 +79,7 @@ const Upsert = useUpsert({
         label: t('选择医生'),
         prop: 'doctorId',
         hidden: true,
-        component: {
-          vm: DoctorSelect,
-          props: {
-            hospitalId: Upsert.value?.form.hospitalId,
-            departmentId: Upsert.value?.form.departmentId,
-          },
-        },
+        component: { vm: DoctorSelect },
         span: 24,
         required: true,
       }

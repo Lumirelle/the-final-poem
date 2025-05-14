@@ -71,7 +71,8 @@ const Upsert = useUpsert({
       prop: 'payType',
       component: {
         name: 'el-select',
-        props: { clearable: true, options: dict.get('order-pay-type') },
+        options: dict.get('order-pay-type'),
+        props: { clearable: true },
       },
       span: 12,
       required: true,
