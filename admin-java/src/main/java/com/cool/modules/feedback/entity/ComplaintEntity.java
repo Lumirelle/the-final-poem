@@ -29,12 +29,14 @@ public class ComplaintEntity extends BaseEntity<ComplaintEntity> {
     @ColumnDefine(comment = "内容")
     private String content;
 
+    // USER
     @ColumnDefine(comment = "用户ID")
     private Long userId;
 
     @Column(ignore = true)
     private String userNickName;
 
+    // SYS_USER
     @ColumnDefine(comment = "处理人ID")
     private Long handlerId;
 

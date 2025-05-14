@@ -11,6 +11,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static com.cool.modules.base.entity.sys.table.BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY;
 import static com.cool.modules.feedback.entity.table.ComplaintEntityTableDef.COMPLAINT_ENTITY;
 import static com.cool.modules.user.entity.table.UserInfoEntityTableDef.USER_INFO_ENTITY;
 
@@ -26,14 +27,14 @@ public class ComplaintServiceImpl extends BaseServiceImpl<ComplaintMapper, Compl
     public Object page(JSONObject requestParams, Page<ComplaintEntity> page, QueryWrapper queryWrapper) {
         queryWrapper.select(
             COMPLAINT_ENTITY.ALL_COLUMNS,
-            USER_INFO_ENTITY.as("userInfo").NICK_NAME.as("userNickName"),
-            USER_INFO_ENTITY.as("handlerInfo").NICK_NAME.as("handlerNickName")
+            USER_INFO_ENTITY.NICK_NAME.as("userNickName"),
+            BASE_SYS_USER_ENTITY.NICK_NAME.as("handlerNickName")
         )
         .from(COMPLAINT_ENTITY)
-        .leftJoin(USER_INFO_ENTITY).as("userInfo")
-        .on(USER_INFO_ENTITY.as("userInfo").ID.eq(COMPLAINT_ENTITY.USER_ID))
-        .leftJoin(USER_INFO_ENTITY).as("handlerInfo")
-        .on(USER_INFO_ENTITY.as("handlerInfo").ID.eq(COMPLAINT_ENTITY.HANDLER_ID));
+        .leftJoin(USER_INFO_ENTITY)
+        .on(USER_INFO_ENTITY.ID.eq(COMPLAINT_ENTITY.USER_ID))
+        .leftJoin(BASE_SYS_USER_ENTITY)
+        .on(BASE_SYS_USER_ENTITY.ID.eq(COMPLAINT_ENTITY.HANDLER_ID));
         return super.page(requestParams, page, queryWrapper);
     }
 

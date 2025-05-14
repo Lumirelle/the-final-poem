@@ -111,8 +111,8 @@ watch(
 const Table = useTable({
   columns: [
     { type: 'selection' },
-    { label: t('用户ID'), prop: 'userId', minWidth: 140 },
-    { label: t('用户昵称'), prop: 'nickName', minWidth: 140 },
+    { label: t('用户ID（小程序用户）'), prop: 'userId', minWidth: 180 },
+    { label: t('用户昵称'), prop: 'userNickName', minWidth: 140 },
     { label: t('订单ID'), prop: 'orderId', minWidth: 140 },
     { label: t('类型'), prop: 'type', minWidth: 120, dict: dict.get('complaint-type') },
     {
@@ -121,7 +121,8 @@ const Table = useTable({
       showOverflowTooltip: true,
       minWidth: 200,
     },
-    { label: t('处理人ID'), prop: 'handlerId', minWidth: 120 },
+    { label: t('处理人ID（后台用户）'), prop: 'handlerId', minWidth: 180 },
+    { label: t('处理人昵称'), prop: 'handlerNickName', minWidth: 120 },
     { label: t('状态'), prop: 'status', minWidth: 120, dict: dict.get('complaint-status') },
     {
       label: t('处理结果'),
