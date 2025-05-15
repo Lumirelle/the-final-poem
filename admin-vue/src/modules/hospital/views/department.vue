@@ -56,6 +56,20 @@ const Upsert = useUpsert({
       span: 12,
       required: true,
     },
+    {
+      label: t('封面图'),
+      prop: 'coverImage',
+      component: { name: 'cl-upload' },
+      span: 12,
+      required: true,
+    },
+    {
+      label: t('简介'),
+      prop: 'introduction',
+      component: { name: 'el-input', props: { type: 'textarea', rows: 4 } },
+      span: 24,
+      required: true,
+    },
   ],
 })
 
@@ -68,9 +82,11 @@ const Table = useTable({
     { label: t('编码'), prop: 'code', minWidth: 140 },
     { label: t('类型'), prop: 'type', dict: dict.get('department-type'), minWidth: 120 },
     { label: t('状态'), prop: 'status', component: { name: 'cl-switch' }, minWidth: 100 },
-    { label: t('医院'), prop: 'hospitalId', minWidth: 120 },
+    { label: t('医院 ID'), prop: 'hospitalId', minWidth: 120 },
     { label: t('医院名称'), prop: 'hospitalName', minWidth: 120 },
     { label: t('医院编码'), prop: 'hospitalCode', minWidth: 120 },
+    { label: t('封面图'), prop: 'coverImage', minWidth: 120, component: { name: 'cl-image' } },
+    { label: t('简介'), prop: 'introduction', minWidth: 200, showOverflowTooltip: true },
     {
       label: t('创建时间'),
       prop: 'createTime',
@@ -93,6 +109,11 @@ const Table = useTable({
 const Search = useSearch({
   resetBtn: true,
   items: [
+    {
+      label: t('医院 ID'),
+      prop: 'hospitalId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
     {
       label: t('科室 ID'),
       prop: 'id',
@@ -118,11 +139,7 @@ const Search = useSearch({
       prop: 'status',
       component: { name: 'el-select', props: { clearable: true }, options: dict.get('base-status') },
     },
-    {
-      label: t('医院 ID'),
-      prop: 'hospitalId',
-      component: { name: 'el-input', props: { clearable: true } },
-    },
+
   ],
 })
 

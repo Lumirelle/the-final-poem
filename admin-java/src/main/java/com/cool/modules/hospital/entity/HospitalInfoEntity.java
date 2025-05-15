@@ -30,4 +30,14 @@ public class HospitalInfoEntity extends BaseEntity<HospitalInfoEntity> {
 
     @ColumnDefine(comment = "状态 0-禁用 1-启用", defaultValue = "1")
     private Integer status;
+
+    @ColumnDefine(comment = "封面图")
+    private String coverImage;
+
+    @ColumnDefine(comment = "详细图")
+    private String detailImage;
+
+    @ColumnDefine(comment = "医院简介")
+    private String introduction;
+
 }

@@ -4,14 +4,11 @@ import { isEmpty } from 'lodash-es'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Tabbar from './components/tabbar.vue'
-import { useUi } from '/$/cool-ui'
-import { module, useApp, useCool, useStore } from '/@/cool'
+import { module, useApp, useCool } from '/@/cool'
 import { setLocale } from '/@/locale'
 
-const { router, service } = useCool()
-const ui = useUi()
+const { router } = useCool()
 const app = useApp()
-const { dict } = useStore()
 const { t } = useI18n()
 
 const list = ref([

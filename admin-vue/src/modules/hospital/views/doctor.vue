@@ -69,6 +69,20 @@ const Upsert = useUpsert({
       required: true,
     },
     {
+      label: t('简介'),
+      prop: 'introduction',
+      component: { name: 'el-input', props: { type: 'textarea', rows: 4 } },
+      span: 24,
+      required: true,
+    },
+    {
+      label: t('头像'),
+      prop: 'avatar',
+      component: { name: 'cl-upload' },
+      span: 12,
+      required: true,
+    },
+    {
       label: t('状态'),
       prop: 'status',
       value: dict.getByLabel('base-status', '启用'),
@@ -86,7 +100,7 @@ watch(
     // 清空科室选择
     Upsert.value?.setForm('departmentId', undefined)
     // 显示/隐藏科室选择
-    if (val) {
+    if (val && Upsert.value?.mode === 'add') {
       Upsert.value?.showItem('departmentId')
     }
     else {
@@ -113,6 +127,8 @@ const Table = useTable({
     { label: t('医院'), prop: 'hospitalName', minWidth: 140 },
     { label: t('科室 ID'), prop: 'departmentId', minWidth: 140 },
     { label: t('科室'), prop: 'departmentName', minWidth: 140 },
+    { label: t('简介'), prop: 'introduction', minWidth: 200, showOverflowTooltip: true },
+    { label: t('头像'), prop: 'avatar', minWidth: 140, component: { name: 'cl-image' } },
     { label: t('状态'), prop: 'status', component: { name: 'cl-switch' }, minWidth: 100 },
     {
       label: t('创建时间'),

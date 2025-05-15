@@ -44,6 +44,27 @@ const Upsert = useUpsert({
       required: true,
     },
     {
+      label: t('简介'),
+      prop: 'introduction',
+      component: { name: 'el-input', props: { type: 'textarea', rows: 4 } },
+      span: 24,
+      required: true,
+    },
+    {
+      label: t('封面图'),
+      prop: 'coverImage',
+      component: { name: 'cl-upload' },
+      span: 12,
+      required: true,
+    },
+    {
+      label: t('详细图'),
+      prop: 'detailImage',
+      component: { name: 'cl-upload' },
+      span: 12,
+      required: true,
+    },
+    {
       label: t('状态'),
       prop: 'status',
       value: dict.getByLabel('base-status', '启用'),
@@ -64,6 +85,23 @@ const Table = useTable({
     { label: t('地址'), prop: 'address', minWidth: 120 },
     { label: t('联系电话'), prop: 'phone', minWidth: 140 },
     { label: t('状态'), prop: 'status', component: { name: 'cl-switch' }, minWidth: 100 },
+    {
+      label: t('简介'),
+      prop: 'introduction',
+      minWidth: 200,
+    },
+    {
+      label: t('封面图'),
+      prop: 'coverImage',
+      minWidth: 140,
+      component: { name: 'cl-image' },
+    },
+    {
+      label: t('详细图'),
+      prop: 'detailImage',
+      minWidth: 140,
+      component: { name: 'cl-image' },
+    },
     {
       label: t('创建时间'),
       prop: 'createTime',

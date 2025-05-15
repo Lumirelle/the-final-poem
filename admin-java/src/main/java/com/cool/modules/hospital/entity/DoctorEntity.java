@@ -46,4 +46,14 @@ public class DoctorEntity extends BaseEntity<DoctorEntity> {
 
     @ColumnDefine(comment = "状态 0-禁用 1-启用", defaultValue = "1")
     private Integer status;
+
+    // 简介
+    @ColumnDefine(comment = "简介")
+    private String introduction;
+
+    // 头像
+    @ColumnDefine(comment = "头像")
+    private String avatar;
+    
+
 }

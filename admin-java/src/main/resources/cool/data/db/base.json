@@ -761,7 +761,10 @@
       "code": "H0-001",
       "address": "On the earth",
       "phone": "19865400235",
-      "status": 1
+      "status": 1,
+      "introduction": "NAAAAAAAAAAAAAAAAAAAAA",
+      "coverImage": null,
+      "detailImage": null
     },
     {
       "id": 2,
@@ -769,7 +772,10 @@
       "code": "H0-002",
       "address": "On the moon",
       "phone": "19865400236",
-      "status": 1
+      "status": 1,
+      "introduction": "NA",
+      "coverImage": null,
+      "detailImage": null
     }
   ],
   "hospital_department": [

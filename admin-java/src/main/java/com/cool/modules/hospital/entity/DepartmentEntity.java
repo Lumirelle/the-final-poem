@@ -4,7 +4,6 @@ import com.cool.core.base.BaseEntity;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
-import org.dromara.autotable.annotation.Index;
 import com.tangzc.mybatisflex.autotable.annotation.UniIndex;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,5 +37,11 @@ public class DepartmentEntity extends BaseEntity<DepartmentEntity> {
 
     @Column(ignore = true)
     private String hospitalCode;
+
+    @ColumnDefine(comment = "封面图")
+    private String coverImage;
+
+    @ColumnDefine(comment = "简介")
+    private String introduction;
 
 }
