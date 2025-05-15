@@ -16,38 +16,61 @@ const { dict } = useDict()
 // cl-upsert
 const Upsert = useUpsert<Eps.OrderDetailEntity>({
   items: [
-    {
-      label: t('选择订单'),
-      prop: 'orderId',
-      component: { vm: OrderInfoSelect },
-      span: 12,
-      required: true,
+    () => {
+      return {
+        label: t('选择订单'),
+        prop: 'orderId',
+        hidden: Upsert.value?.mode === 'update',
+        component: { vm: OrderInfoSelect },
+        span: 12,
+        required: true,
+      }
     },
-    {
-      label: t('服务时长（分钟）'),
-      prop: 'serviceMinutes',
-      component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
-      required: true,
+    () => {
+      return {
+        label: t('服务时长（分钟）'),
+        prop: 'serviceMinutes',
+        hidden: Upsert.value?.mode === 'update',
+        component: { name: 'el-input-number', props: { min: 0 } },
+        span: 12,
+        required: true,
+      }
     },
-    {
-      label: t('客户评价（0~5分）'),
-      prop: 'customerEvaluation',
-      component: { name: 'el-input-number', props: { min: 0, max: 5 } },
-      span: 12,
+    () => {
+      return {
+        label: t('客户评价（0~5分）'),
+        prop: 'customerEvaluation',
+        hidden: Upsert.value?.mode === 'update',
+        component: { name: 'el-input-number', props: { min: 0, max: 5 } },
+        span: 12,
+      }
     },
     {
       label: t('售后状态'),
       prop: 'afterSaleStatus',
-      component: { name: 'el-select', props: { clearable: true, dict: dict.get('order-after-sale-status') } },
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('order-after-sale-status') },
       span: 12,
     },
-
   ],
 })
 
 // cl-table
 const Table = useTable<Eps.OrderDetailEntity>({
+  contextMenu: [
+    'refresh',
+    (row) => {
+      return {
+        label: t('更新售后状态'),
+        type: 'primary',
+        callback: (done) => {
+          Upsert.value?.edit({
+            ...row,
+          })
+          done()
+        },
+      }
+    },
+  ],
   columns: [
     { type: 'selection' },
     { label: t('订单ID'), prop: 'orderId', minWidth: 140 },
@@ -70,6 +93,7 @@ const Table = useTable<Eps.OrderDetailEntity>({
       prop: 'afterSaleStatus',
       minWidth: 140,
       sortable: 'custom',
+      dict: dict.get('order-after-sale-status'),
     },
     {
       label: t('创建时间'),
@@ -85,12 +109,41 @@ const Table = useTable<Eps.OrderDetailEntity>({
       sortable: 'custom',
       component: { name: 'cl-date-text' },
     },
-    { type: 'op', buttons: ['edit', 'delete'] },
+    {
+      type: 'op',
+      buttons: () => {
+        return [
+          {
+            label: t('更新售后状态'),
+            type: 'primary',
+            onClick: ({ scope }) => {
+              Upsert.value?.edit({
+                ...scope.row,
+              })
+            },
+          },
+        ]
+      },
+    },
   ],
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  resetBtn: true,
+  items: [
+    {
+      label: t('订单ID'),
+      prop: 'orderId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('售后状态'),
+      prop: 'afterSaleStatus',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('order-after-sale-status') },
+    },
+  ],
+})
 
 // cl-crud
 const Crud = useCrud(
@@ -115,8 +168,8 @@ function refresh(params?: any) {
       <cl-refresh-btn />
       <!-- 新增按钮 -->
       <cl-add-btn />
-      <!-- 删除按钮 -->
-      <cl-multi-delete-btn />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
       <cl-flex1 />
       <!-- 条件搜索 -->
       <cl-search ref="Search" />

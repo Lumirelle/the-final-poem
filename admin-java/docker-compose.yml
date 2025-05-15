@@ -9,7 +9,7 @@ services:
     networks:
       - backend
     ports:
-      - "3306:3306"                       # 将主机的 3306 端口映射到容器的 3306 端口
+      - "6033:3306"                       # 将主机的 6033 端口映射到容器的 3306 端口
     volumes:
       - ./data/mysql/:/var/lib/mysql         # 挂载数据卷以持久化数据
 

@@ -1,11 +1,21 @@
 <script lang="ts" setup>
 import { random } from 'lodash-es'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useCool } from '/@/cool'
+
+const { service } = useCool()
 
 const num = ref(0)
 
 onMounted(() => {
   num.value = random(10000)
+  service.order.info.countPayOrder().then((res) => {
+    num.value = res
+  })
+})
+
+const rise = computed(() => {
+  return ((num.value / (num.value - num.value)) * 100).toFixed(2) || 0
 })
 </script>
 
@@ -23,7 +33,7 @@ onMounted(() => {
 
       <div class="card__footer">
         <span class="mr-2">{{ $t('转化率') }}</span>
-        <span>60%</span>
+        <span>{{ rise }}%</span>
       </div>
     </div>
   </div>

@@ -685,7 +685,7 @@
     },
     {
       "id": 2,
-      "unionid": "1234567890",
+      "unionid": "1234567891",
       "nickName": "t_u_patient_2",
       "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
       "phone": "19865400236",
@@ -697,7 +697,7 @@
     },
     {
       "id": 3,
-      "unionid": "1234567890",
+      "unionid": "1234567892",
       "nickName": "t_u_staff_1",
       "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
       "phone": "19865400237",
@@ -709,7 +709,7 @@
     },
     {
       "id": 4,
-      "unionid": "1234567890",
+      "unionid": "1234567893",
       "nickName": "t_u_staff_2",
       "avatarUrl": "https://avatars.githubusercontent.com/u/51262009?v=4",
       "phone": "19865400238",
@@ -851,14 +851,26 @@
     {
       "id": 1,
       "orderNumber": "1234567890",
-      "status": 0,
+      "status": 1,
       "totalAmount": 88.59,
       "actualAmount": 78.59,
       "discountAmount": 10.0,
       "payType": 0,
       "userId": 1,
       "mealId": 1,
-      "payTime": "2020-01-01 00:00:00"
+      "payTime": "2024-01-01 00:00:00"
+    },
+    {
+      "id": 2,
+      "orderNumber": "1234567891",
+      "status": 0,
+      "totalAmount": 100.0,
+      "actualAmount": 90.0,
+      "discountAmount": 10.0,
+      "payType": 2,
+      "userId": 1,
+      "mealId": 1,
+      "payTime": "2024-01-01 00:00:00"
     }
   ],
   "order_detail": [
@@ -874,6 +886,17 @@
     {
       "id": 1,
       "orderId": 1,
+      "type": 0,
+      "status": 0,
+      "content": "NA",
+      "userId": 1,
+      "handlerId": 1,
+      "remark": "NA",
+      "handleResult": null
+    },
+    {
+      "id": 2,
+      "orderId": 2,
       "type": 0,
       "status": 0,
       "content": "NA",

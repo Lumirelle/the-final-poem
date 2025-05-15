@@ -18,9 +18,16 @@ public class AdminDoctorController extends BaseController<DoctorService, DoctorE
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp()
-                .keyWordLikeFields(DOCTOR_ENTITY.NAME,
+                .keyWordLikeFields(
+                        DOCTOR_ENTITY.NAME,
+                        DOCTOR_ENTITY.JOB_CODE,
+                        DOCTOR_ENTITY.TITLE
+                )
+                .fieldEq(
+                        DOCTOR_ENTITY.ID,
                         DOCTOR_ENTITY.HOSPITAL_ID,
-                        DOCTOR_ENTITY.DEPARTMENT_ID)
-                .fieldEq(DOCTOR_ENTITY.JOB_CODE, DOCTOR_ENTITY.STATUS));
+                        DOCTOR_ENTITY.DEPARTMENT_ID,
+                        DOCTOR_ENTITY.STATUS
+                ));
     }
 }

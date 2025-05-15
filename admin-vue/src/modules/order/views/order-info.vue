@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
+import { useCrud, useForm, useSearch, useTable, useUpsert } from '@cool-vue/crud'
 import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '/$/dict'
@@ -36,6 +36,7 @@ const Upsert = useUpsert({
       label: t('选择用户'),
       prop: 'userId',
       component: { vm: UserSelect, props: { role: dict.getByLabel('user-role', '患者') || 1 } },
+      span: 24,
       required: true,
     },
     {
@@ -43,7 +44,7 @@ const Upsert = useUpsert({
       prop: 'totalAmount',
       hook: 'number',
       component: { name: 'el-input-number', props: { min: 0.01 } },
-      span: 12,
+      span: 24,
       required: true,
     },
     // 优惠金额
@@ -52,7 +53,7 @@ const Upsert = useUpsert({
       prop: 'discountAmount',
       hook: 'number',
       component: { name: 'el-input-number', props: { min: 0 } },
-      span: 12,
+      span: 24,
       required: true,
     },
     // 实付金额自动根据总金额和优惠金额计算
@@ -62,20 +63,9 @@ const Upsert = useUpsert({
         prop: 'actualAmount',
         hook: 'number',
         component: { name: 'el-input-number', props: { min: 0.01, disabled: true } },
-        span: 12,
+        span: 24,
         required: true,
       }
-    },
-    {
-      label: t('支付方式'),
-      prop: 'payType',
-      component: {
-        name: 'el-select',
-        options: dict.get('order-pay-type'),
-        props: { clearable: true },
-      },
-      span: 12,
-      required: true,
     },
     {
       label: t('备注'),
@@ -84,8 +74,31 @@ const Upsert = useUpsert({
         name: 'el-input',
         props: { type: 'textarea', rows: 4 },
       },
+      span: 24,
     },
   ],
+})
+
+const PaymentUpsert = useUpsert({
+  items: [
+    {
+      label: t('支付方式'),
+      prop: 'payType',
+      component: {
+        name: 'el-select',
+        options: dict.get('pay-type'),
+        props: { clearable: true },
+      },
+      span: 24,
+      required: true,
+    },
+  ],
+  onSubmit: (data, { next }) => {
+    next({
+      ...data,
+      status: dict.getByLabel('order-status', '已支付') || 1,
+    })
+  },
 })
 
 watch(
@@ -102,6 +115,22 @@ watch(
 
 // cl-table
 const Table = useTable({
+  contextMenu: [
+    'refresh',
+    (row) => {
+      return {
+        label: t('支付'),
+        type: 'primary',
+        hidden: row.status === (dict.getByLabel('order-status', '已支付') || 1),
+        callback: (done) => {
+          PaymentUpsert.value?.edit({
+            ...row,
+          })
+          done()
+        },
+      }
+    },
+  ],
   columns: [
     { type: 'selection' },
     { label: t('编号'), prop: 'orderNumber', minWidth: 140 },
@@ -117,8 +146,8 @@ const Table = useTable({
     },
     { label: t('优惠金额'), prop: 'discountAmount', minWidth: 140 },
     { label: t('实付金额'), prop: 'actualAmount', minWidth: 140 },
-    { label: t('支付方式'), prop: 'payType', minWidth: 120, dict: dict.get('pay-type') },
     { label: t('状态'), prop: 'status', minWidth: 120, dict: dict.get('order-status') },
+    { label: t('支付方式'), prop: 'payType', minWidth: 120, dict: dict.get('pay-type') },
     {
       label: t('备注'),
       prop: 'remark',
@@ -139,11 +168,55 @@ const Table = useTable({
       sortable: 'custom',
       component: { name: 'cl-date-text' },
     },
+    {
+      type: 'op',
+      buttons: ({ scope }) => [
+        {
+          label: t('支付'),
+          type: 'primary',
+          hidden: scope.row.status === (dict.getByLabel('order-status', '已支付') || 1),
+          onClick: () => {
+            PaymentUpsert.value?.edit({
+              ...scope.row,
+            })
+          },
+        },
+      ],
+    },
   ],
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  resetBtn: true,
+  items: [
+    {
+      label: t('编号'),
+      prop: 'orderNumber',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('套餐 ID'),
+      prop: 'mealId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('用户 ID'),
+      prop: 'userId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('支付方式'),
+      prop: 'payType',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('pay-type') },
+    },
+    {
+      label: t('状态'),
+      prop: 'status',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('order-status') },
+    },
+  ],
+})
 
 // cl-crud
 const Crud = useCrud(
@@ -168,8 +241,8 @@ function refresh(params?: any) {
       <cl-refresh-btn />
       <!-- 新增按钮 -->
       <cl-add-btn />
-      <!-- 删除按钮 -->
-      <cl-multi-delete-btn />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
       <cl-flex1 />
       <!-- 条件搜索 -->
       <cl-search ref="Search" />
@@ -186,7 +259,9 @@ function refresh(params?: any) {
       <cl-pagination />
     </cl-row>
 
-    <!-- 新增、编辑 -->
+    <!-- 新增 -->
     <cl-upsert ref="Upsert" />
+    <!-- 支付 -->
+    <cl-upsert ref="PaymentUpsert" />
   </cl-crud>
 </template>

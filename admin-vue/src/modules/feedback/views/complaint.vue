@@ -33,7 +33,7 @@ const Upsert = useUpsert({
         label: t('订单ID'),
         prop: 'orderId',
         hidden: true,
-        component: { vm: OrderSelect },
+        component: { vm: OrderSelect, props: { payOrderOnly: true } },
         span: 24,
         required: true,
       }
@@ -109,6 +109,22 @@ watch(
 
 // cl-table
 const Table = useTable({
+  contextMenu: [
+    'refresh',
+    (row) => {
+      return {
+        label: t('处理'),
+        hidden: row.status === dict.getByLabel('complaint-status', '已解决'),
+        type: 'primary',
+        callback: (done) => {
+          Upsert.value?.edit({
+            ...row,
+          })
+          done()
+        },
+      }
+    },
+  ],
   columns: [
     { type: 'selection' },
     { label: t('用户ID（小程序用户）'), prop: 'userId', minWidth: 180 },
@@ -170,7 +186,36 @@ const Table = useTable({
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  resetBtn: true,
+  items: [
+    {
+      label: t('用户ID（小程序用户）'),
+      prop: 'userId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('订单ID'),
+      prop: 'orderId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('类型'),
+      prop: 'type',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('complaint-type') },
+    },
+    {
+      label: t('处理人ID（后台用户）'),
+      prop: 'handlerId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('状态'),
+      prop: 'status',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('complaint-status') },
+    },
+  ],
+})
 
 // cl-crud
 const Crud = useCrud(
@@ -194,8 +239,8 @@ function refresh(params?: any) {
       <!-- 刷新按钮 -->
       <cl-refresh-btn />
       <cl-add-btn />
-      <!-- 删除按钮 -->
-      <cl-multi-delete-btn />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
       <cl-flex1 />
       <!-- 条件搜索 -->
       <cl-search ref="Search" />

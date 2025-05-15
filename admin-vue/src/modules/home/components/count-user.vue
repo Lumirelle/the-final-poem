@@ -1,12 +1,25 @@
 <script lang="ts" setup>
 import { TopRight } from '@element-plus/icons-vue'
-import { random } from 'lodash-es'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useCool } from '/@/cool'
 
-const num = ref(0)
+const totalUsers = ref(0)
+const totalUsersToday = ref(0)
+
+const { service } = useCool()
 
 onMounted(() => {
-  num.value = random(100000)
+  service.user.info.count().then((res) => {
+    totalUsers.value = res
+  })
+  service.user.info.countToday().then((res) => {
+    totalUsersToday.value = res
+  })
+})
+
+const rise = computed(() => {
+  const result = totalUsersToday.value === totalUsers.value ? 100.00 : (totalUsersToday.value / (totalUsers.value - totalUsersToday.value)) * 100
+  return result.toFixed(2)
 })
 </script>
 
@@ -19,20 +32,20 @@ onMounted(() => {
       </div>
 
       <div class="card__container">
-        <cl-number :value="num" class="num" />
+        <cl-number :value="totalUsers" class="num" />
 
         <div class="rise">
           <el-icon>
             <top-right />
           </el-icon>
 
-          <span>+12%</span>
+          <span>+{{ rise }}%</span>
         </div>
       </div>
 
       <div class="card__footer">
         <span class="mr-2">{{ $t('日增用户数') }}</span>
-        <span>69</span>
+        <span>{{ totalUsersToday }}</span>
       </div>
     </div>
   </div>

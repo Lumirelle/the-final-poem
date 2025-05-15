@@ -13,6 +13,7 @@ const props = defineProps({
   ...CrudProps,
   modelValue: null,
   multiple: Boolean,
+  payOrderOnly: Boolean,
 })
 
 const { service } = useCool()
@@ -31,8 +32,8 @@ const customService = computed(() => {
       if (props.scope?.mealId) {
         queryParams.mealId = props.scope.mealId
       }
-      if (props.scope?.status) {
-        queryParams.status = props.scope.status
+      if (props.payOrderOnly) {
+        queryParams.payOrderOnly = true
       }
       return service.order.info.page(queryParams)
     },
@@ -104,7 +105,7 @@ const searchItems = ref([
 <template>
   <cl-select-table
     v-model="value"
-    :title="t('选择订单')"
+    :title="props.payOrderOnly ? t('选择已支付订单') : t('选择订单')"
     :service="customService"
     :columns="columns"
     :multiple="multiple"

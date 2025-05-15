@@ -100,7 +100,7 @@ const Upsert = useUpsert({
       hook: {
         bind: (value) => {
           try {
-            return value ? JSON.parse(value) : []
+            return value ? JSON.parse(value)?.sort() : []
           }
           catch {
             return []
@@ -128,7 +128,7 @@ const Upsert = useUpsert({
   onSubmit: (form, { next }) => {
     next({
       ...form,
-      serviceArea: JSON.stringify(form.serviceArea || []),
+      serviceArea: JSON.stringify(form.serviceArea || []).replaceAll(',', ', '),
     })
   },
 })
@@ -170,25 +170,35 @@ watch(
 const Table = useTable({
   columns: [
     { type: 'selection' },
-    { label: t('名称'), prop: 'name', minWidth: 140 },
-    { label: t('价格（元）'), prop: 'price', minWidth: 140, sortable: 'custom' },
-    { label: t('医院'), prop: 'hospitalName', minWidth: 140 },
-    { label: t('科室'), prop: 'departmentName', minWidth: 140 },
-    { label: t('医生'), prop: 'doctorName', minWidth: 140 },
-    { label: t('陪诊员'), prop: 'staffName', minWidth: 140 },
-    {
-      label: t('状态'),
-      prop: 'status',
-      minWidth: 100,
-      component: { name: 'cl-switch' },
-    },
     { label: t('分类ID'), prop: 'categoryId', minWidth: 120 },
     { label: t('分类名称'), prop: 'categoryName', minWidth: 120 },
+    { label: t('套餐 ID'), prop: 'id', minWidth: 140 },
+    { label: t('名称'), prop: 'name', minWidth: 140 },
+    { label: t('价格（元）'), prop: 'price', minWidth: 140, sortable: 'custom' },
+    { label: t('医院 ID'), prop: 'hospitalId', minWidth: 140 },
+    { label: t('医院'), prop: 'hospitalName', minWidth: 140 },
+    { label: t('科室 ID'), prop: 'departmentId', minWidth: 140 },
+    { label: t('科室'), prop: 'departmentName', minWidth: 140 },
+    { label: t('医生 ID'), prop: 'doctorId', minWidth: 140 },
+    { label: t('医生'), prop: 'doctorName', minWidth: 140 },
+    { label: t('陪诊员 ID'), prop: 'staffId', minWidth: 140 },
+    { label: t('陪诊员'), prop: 'staffName', minWidth: 140 },
+    {
+      label: t('服务范围'),
+      prop: 'serviceArea',
+      minWidth: 120,
+    },
     {
       label: t('简介'),
       prop: 'intro',
       showOverflowTooltip: true,
       minWidth: 200,
+    },
+    {
+      label: t('状态'),
+      prop: 'status',
+      minWidth: 100,
+      component: { name: 'cl-switch' },
     },
     {
       label: t('封面图'),
@@ -201,11 +211,6 @@ const Table = useTable({
       prop: 'serviceCount',
       minWidth: 140,
       sortable: 'custom',
-    },
-    {
-      label: t('服务范围'),
-      prop: 'serviceArea',
-      minWidth: 120,
     },
     {
       label: t('创建时间'),
@@ -226,7 +231,57 @@ const Table = useTable({
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  resetBtn: true,
+  items: [
+    {
+      label: t('套餐 ID'),
+      prop: 'id',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('名称'),
+      prop: 'name',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('医院 ID'),
+      prop: 'hospitalId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('科室 ID'),
+      prop: 'departmentId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('医生 ID'),
+      prop: 'doctorId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('陪诊员 ID'),
+      prop: 'staffId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('状态'),
+      prop: 'status',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('base-status') },
+    },
+    {
+      label: t('服务范围'),
+      prop: 'serviceArea',
+      component: { name: 'el-checkbox-group', options: dict.get('meal-service-area') },
+    },
+  ],
+  onSearch: (form, { next }) => {
+    next({
+      ...form,
+      serviceArea: JSON.stringify(form.serviceArea?.sort() || []).replaceAll(',', ', '),
+    })
+  },
+})
 
 // cl-crud
 const Crud = useCrud(
@@ -253,6 +308,8 @@ function refresh(params?: any) {
       <cl-add-btn />
       <!-- 删除按钮 -->
       <cl-multi-delete-btn />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
       <cl-flex1 />
       <!-- 条件搜索 -->
       <cl-search ref="Search" />

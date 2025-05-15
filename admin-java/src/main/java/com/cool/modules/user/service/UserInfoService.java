@@ -26,4 +26,11 @@ public interface UserInfoService extends BaseService<UserInfoEntity> {
      * 绑定手机号
      */
     void bindPhone(Long currentUserId, String phone, String code);
+
+
+    /**
+     * 统计日增总量
+     */
+    Long countToday();
+
 }

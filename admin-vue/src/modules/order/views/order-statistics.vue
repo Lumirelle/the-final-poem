@@ -38,6 +38,7 @@ const Upsert = useUpsert({
 
 // cl-table
 const Table = useTable({
+  contextMenu: ['refresh'],
   columns: [
     { type: 'selection' },
     {
@@ -144,6 +145,8 @@ function refresh(params?: any) {
       <!-- 刷新按钮 -->
       <cl-refresh-btn />
       <cl-add-btn />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
       <cl-flex1 />
       <!-- 条件搜索 -->
       <cl-search ref="Search" />

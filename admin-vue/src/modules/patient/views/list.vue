@@ -253,6 +253,7 @@ const Table = useTable({
 
 // cl-search
 const Search = useSearch({
+  resetBtn: true,
   items: [
     {
       prop: 'id',
@@ -313,6 +314,8 @@ function refresh(params?: any) {
       <cl-add-btn />
       <!-- 删除按钮 -->
       <cl-multi-delete-btn />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
       <cl-flex1 />
       <!-- 条件搜索 -->
       <cl-search ref="Search" />

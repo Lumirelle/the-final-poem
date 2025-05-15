@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import CategoryRatio from './components/category-ratio.vue'
-import CountEffect from './components/count-effect.vue'
-import CountPaid from './components/count-paid.vue'
-import CountUser from './components/count-user.vue'
-import CountViews from './components/count-views.vue'
-import HotGoods from './components/hot-goods.vue'
-import TabChart from './components/tab-chart.vue'
+import CategoryRatio from '../components/category-ratio.vue'
+import CountEffect from '../components/count-effect.vue'
+import CountPaid from '../components/count-paid.vue'
+import CountUser from '../components/count-user.vue'
+import CountViews from '../components/count-views.vue'
+import HotGoods from '../components/hot-goods.vue'
+import TabChart from '../components/tab-chart.vue'
 
 defineOptions({
   name: 'home',

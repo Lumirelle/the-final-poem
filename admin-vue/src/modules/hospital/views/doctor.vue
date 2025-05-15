@@ -99,6 +99,7 @@ watch(
 const Table = useTable({
   columns: [
     { type: 'selection' },
+    { label: t('医生 ID'), prop: 'id', minWidth: 140 },
     { label: t('姓名'), prop: 'name', minWidth: 140 },
     { label: t('工号'), prop: 'jobCode', minWidth: 140 },
     { label: t('职称'), prop: 'title', minWidth: 140 },
@@ -132,7 +133,46 @@ const Table = useTable({
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  resetBtn: true,
+  items: [
+    {
+      label: t('医生 ID'),
+      prop: 'id',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('姓名'),
+      prop: 'name',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('工号'),
+      prop: 'jobCode',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('职称'),
+      prop: 'title',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('医院 ID'),
+      prop: 'hospitalId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('科室 ID'),
+      prop: 'departmentId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('状态'),
+      prop: 'status',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('base-status') },
+    },
+  ],
+})
 
 // cl-crud
 const Crud = useCrud(
@@ -159,7 +199,11 @@ function refresh(params?: any) {
       <cl-add-btn />
       <!-- 删除按钮 -->
       <cl-multi-delete-btn />
-      <cl-flex1 />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
+    </cl-row>
+
+    <cl-row>
       <!-- 条件搜索 -->
       <cl-search ref="Search" />
     </cl-row>

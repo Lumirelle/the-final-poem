@@ -90,7 +90,41 @@ const Table = useTable({
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  resetBtn: true,
+  items: [
+    {
+      label: t('科室 ID'),
+      prop: 'id',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('名称'),
+      prop: 'name',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('编码'),
+      prop: 'code',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('类型'),
+      prop: 'type',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('department-type') },
+    },
+    {
+      label: t('状态'),
+      prop: 'status',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('base-status') },
+    },
+    {
+      label: t('医院 ID'),
+      prop: 'hospitalId',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+  ],
+})
 
 // cl-crud
 const Crud = useCrud(
@@ -117,6 +151,8 @@ function refresh(params?: any) {
       <cl-add-btn />
       <!-- 删除按钮 -->
       <cl-multi-delete-btn />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
       <cl-flex1 />
       <!-- 条件搜索 -->
       <cl-search ref="Search" />

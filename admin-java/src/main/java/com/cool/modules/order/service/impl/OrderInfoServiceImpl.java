@@ -19,20 +19,29 @@ import static com.cool.modules.user.entity.table.UserInfoEntityTableDef.USER_INF
  */
 @Service
 public class OrderInfoServiceImpl extends BaseServiceImpl<OrderInfoMapper, OrderInfoEntity> implements
-    OrderInfoService {
+        OrderInfoService {
 
     @Override
     public Object page(JSONObject requestParams, Page<OrderInfoEntity> page, QueryWrapper queryWrapper) {
         queryWrapper.select(
-          ORDER_INFO_ENTITY.ALL_COLUMNS,
-          MEAL_INFO_ENTITY.NAME.as("mealName"),
-          USER_INFO_ENTITY.NICK_NAME.as("userName")
-        )
-        .from(ORDER_INFO_ENTITY)
-        .leftJoin(MEAL_INFO_ENTITY)
-        .on(ORDER_INFO_ENTITY.MEAL_ID.eq(MEAL_INFO_ENTITY.ID))
-        .leftJoin(USER_INFO_ENTITY)
-        .on(ORDER_INFO_ENTITY.USER_ID.eq(USER_INFO_ENTITY.ID));
+                        ORDER_INFO_ENTITY.ALL_COLUMNS,
+                        MEAL_INFO_ENTITY.NAME.as("mealName"),
+                        USER_INFO_ENTITY.NICK_NAME.as("userName")
+                )
+                .from(ORDER_INFO_ENTITY)
+                .leftJoin(MEAL_INFO_ENTITY)
+                .on(ORDER_INFO_ENTITY.MEAL_ID.eq(MEAL_INFO_ENTITY.ID))
+                .leftJoin(USER_INFO_ENTITY)
+                .on(ORDER_INFO_ENTITY.USER_ID.eq(USER_INFO_ENTITY.ID));
         return mapper.paginate(page, queryWrapper);
     }
+
+    @Override
+    public Long countPayOrder() {
+        return count(QueryWrapper.create()
+                .from(ORDER_INFO_ENTITY)
+                .where(ORDER_INFO_ENTITY.STATUS.ge(1).and(ORDER_INFO_ENTITY.STATUS.le(3)))
+        );
+    }
+
 }

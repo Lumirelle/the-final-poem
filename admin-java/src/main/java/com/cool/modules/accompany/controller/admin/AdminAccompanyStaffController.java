@@ -8,12 +8,17 @@ import com.cool.core.base.BaseController;
 import com.cool.core.request.R;
 import com.cool.modules.accompany.entity.AccompanyReviewEntity;
 import com.cool.modules.accompany.entity.AccompanyStaffEntity;
+import com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableDef;
 import com.cool.modules.accompany.service.AccompanyReviewService;
 import com.cool.modules.accompany.service.AccompanyStaffService;
+import com.cool.modules.user.entity.UserInfoEntity;
+import com.cool.modules.user.entity.table.UserInfoEntityTableDef;
+import com.mybatisflex.core.query.QueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 
@@ -26,20 +31,33 @@ import static com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableD
  */
 @Tag(name = "陪诊员管理", description = "陪诊员信息管理")
 @CoolRestController(api = {"add", "delete", "update", "info", "page", "doreview"})
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdminAccompanyStaffController extends BaseController<AccompanyStaffService, AccompanyStaffEntity> {
 
-    private AccompanyReviewService reviewService;
+    private final AccompanyReviewService reviewService;
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(
                 createOp()
+                        .fieldEq(
+                                ACCOMPANY_STAFF_ENTITY.ID,
+                                ACCOMPANY_STAFF_ENTITY.STATUS,
+                                ACCOMPANY_STAFF_ENTITY.GENDER,
+                                ACCOMPANY_STAFF_ENTITY.LEVEL
+                        )
                         .keyWordLikeFields(
                                 ACCOMPANY_STAFF_ENTITY.NAME,
                                 ACCOMPANY_STAFF_ENTITY.PHONE
                         )
-                        .fieldEq(ACCOMPANY_STAFF_ENTITY.STATUS)
+                        .queryWrapper(QueryWrapper.create()
+                                .select(
+                                        AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY.ALL_COLUMNS,
+                                        UserInfoEntityTableDef.USER_INFO_ENTITY.NICK_NAME.as("nickName")
+                                )
+                                .from(AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY)
+                                .leftJoin(UserInfoEntityTableDef.USER_INFO_ENTITY)
+                                .on(AccompanyStaffEntity::getUserId, UserInfoEntity::getId))
         );
     }
 

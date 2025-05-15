@@ -1,6 +1,12 @@
 <script lang="ts" setup>
-import { random, range } from 'lodash-es'
+import { range } from 'lodash-es'
 import { onMounted, reactive, ref } from 'vue'
+import { useCool } from '/@/cool'
+
+const { service } = useCool()
+
+const num = ref(0)
+const totalComplaintsThisYear = reactive(range(12).map(() => 0))
 
 const chartOption = reactive({
   grid: {
@@ -52,7 +58,7 @@ const chartOption = reactive({
       showSymbol: false,
       symbol: 'circle',
       symbolSize: 6,
-      data: range(12).map(() => Number.parseInt((Math.random() * 1000).toFixed(0)) + 500),
+      data: totalComplaintsThisYear,
       itemStyle: {
         color: '#4165d7',
       },
@@ -63,10 +69,15 @@ const chartOption = reactive({
   ],
 })
 
-const num = ref(0)
-
 onMounted(() => {
-  num.value = random(1000000)
+  service.feedback.complaint.countUser().then((res) => {
+    num.value = res
+  })
+  service.feedback.complaint.countThisYear().then((res) => {
+    totalComplaintsThisYear.forEach((item, index) => {
+      totalComplaintsThisYear[index] = res[index]
+    })
+  })
 })
 </script>
 
@@ -74,7 +85,7 @@ onMounted(() => {
   <div class="count-views">
     <div class="card">
       <div class="card__header">
-        <span class="label">{{ $t('浏览量') }}</span>
+        <span class="label">{{ $t('投诉客单量') }}</span>
         <cl-svg name="trend" class="icon" />
       </div>
 
@@ -83,8 +94,8 @@ onMounted(() => {
       </div>
 
       <div class="card__footer">
-        <span class="mr-2">{{ $t('访客数') }}</span>
-        <span>142</span>
+        <span class="mr-2">{{ $t('投诉客户数') }}</span>
+        <span>{{ num }}</span>
       </div>
     </div>
   </div>

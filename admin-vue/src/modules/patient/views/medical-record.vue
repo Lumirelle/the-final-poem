@@ -220,17 +220,19 @@ const Table = useTable({
 
 // cl-search
 const Search = useSearch({
+  resetBtn: true,
   items: [
     {
       label: t('患者 ID'),
       prop: 'patientId',
       component: { name: 'el-input', props: { clearable: true } },
     },
-    {
-      label: t('患者姓名'),
-      prop: 'patientName',
-      component: { name: 'el-input', props: { clearable: true } },
-    },
+    // 暂不支持
+    // {
+    //   label: t('患者姓名'),
+    //   prop: 'patientName',
+    //   component: { name: 'el-input', props: { clearable: true } },
+    // },
     {
       label: t('就诊日期'),
       prop: 'visitDate',
@@ -241,21 +243,21 @@ const Search = useSearch({
       prop: 'hospitalId',
       component: { name: 'el-input', props: { clearable: true } },
     },
-    {
-      label: t('医院名称'),
-      prop: 'hospitalName',
-      component: { name: 'el-input', props: { clearable: true } },
-    },
+    // {
+    //   label: t('医院名称'),
+    //   prop: 'hospitalName',
+    //   component: { name: 'el-input', props: { clearable: true } },
+    // },
     {
       label: t('医生 ID'),
       prop: 'doctorId',
       component: { name: 'el-input', props: { clearable: true } },
     },
-    {
-      label: t('医生姓名'),
-      prop: 'doctorName',
-      component: { name: 'el-input', props: { clearable: true } },
-    },
+    // {
+    //   label: t('医生姓名'),
+    //   prop: 'doctorName',
+    //   component: { name: 'el-input', props: { clearable: true } },
+    // },
     {
       label: t('诊断结果'),
       prop: 'diagnosis',
@@ -293,6 +295,8 @@ function refresh(params?: any) {
       <cl-refresh-btn />
       <!-- 新增按钮 -->
       <cl-add-btn />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
       <cl-flex1 />
       <!-- 条件搜索 -->
       <cl-search ref="Search" />

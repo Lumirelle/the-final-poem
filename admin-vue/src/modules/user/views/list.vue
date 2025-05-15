@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useCrud, useSearch, useTable, useUpsert } from '@cool-vue/crud'
+import { tr } from 'element-plus/es/locale/index.mjs'
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '/$/dict'
@@ -164,6 +165,7 @@ const Upsert = useUpsert({
 
 // cl-search
 const Search = useSearch({
+  resetBtn: true,
   items: [
     {
       prop: 'id',
@@ -223,8 +225,11 @@ const Crud = useCrud(
       <cl-add-btn />
       <!-- 删除按钮 -->
       <cl-multi-delete-btn />
-      <cl-flex1 />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
+    </cl-row>
 
+    <cl-row>
       <!-- 搜索 -->
       <cl-search ref="Search" />
     </cl-row>

@@ -213,14 +213,14 @@ const Table = useTable({
       showOverflowTooltip: true,
       minWidth: 200,
     },
+    { label: t('账户 ID'), prop: 'userId', minWidth: 140 },
+    { label: t('账户昵称'), prop: 'nickName', minWidth: 140 },
     {
       label: t('备注'),
       prop: 'remark',
       showOverflowTooltip: true,
       minWidth: 200,
     },
-    { label: t('账户 ID'), prop: 'userId', minWidth: 140 },
-    { label: t('账户昵称'), prop: 'nickName', minWidth: 140 },
     {
       label: t('创建时间'),
       prop: 'createTime',
@@ -254,7 +254,46 @@ const Table = useTable({
 })
 
 // cl-search
-const Search = useSearch()
+const Search = useSearch({
+  resetBtn: true,
+  items: [
+    {
+      label: t('陪诊员 ID'),
+      prop: 'id',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('姓名'),
+      prop: 'name',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('性别'),
+      prop: 'gender',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('gender') },
+    },
+    {
+      label: t('电话'),
+      prop: 'phone',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
+      label: t('级别'),
+      prop: 'level',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('acc-staff-level') },
+    },
+    {
+      label: t('状态'),
+      prop: 'status',
+      component: { name: 'el-select', props: { clearable: true }, options: dict.get('acc-staff-status') },
+    },
+    // {
+    //   label: t('账户 ID'),
+    //   prop: 'userId',
+    //   component: { name: 'el-input', props: { clearable: true } },
+    // },
+  ],
+})
 
 // cl-crud
 const Crud = useCrud(
@@ -281,7 +320,11 @@ function refresh(params?: any) {
       <cl-add-btn />
       <!-- 删除按钮 -->
       <cl-multi-delete-btn />
-      <cl-flex1 />
+      <!-- 导出按钮 -->
+      <cl-export-btn :columns="Table?.columns" />
+    </cl-row>
+
+    <cl-row>
       <!-- 条件搜索 -->
       <cl-search ref="Search" />
     </cl-row>

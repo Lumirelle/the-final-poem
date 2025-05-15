@@ -18,16 +18,4 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AccompanyStaffServiceImpl extends BaseServiceImpl<AccompanyStaffMapper, AccompanyStaffEntity> implements AccompanyStaffService {
-
-    @Override
-    public Object page(JSONObject requestParams, Page<AccompanyStaffEntity> page, QueryWrapper queryWrapper) {
-        queryWrapper.select(
-                        AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY.ALL_COLUMNS,
-                        UserInfoEntityTableDef.USER_INFO_ENTITY.NICK_NAME
-                )
-                .from(AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY)
-                .leftJoin(UserInfoEntityTableDef.USER_INFO_ENTITY)
-                .on(AccompanyStaffEntity::getUserId, UserInfoEntity::getId);
-        return mapper.paginate(page, queryWrapper);
-    }
 }

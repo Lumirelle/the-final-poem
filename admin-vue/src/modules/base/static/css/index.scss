@@ -79,3 +79,11 @@ input {
     background-color: var(--el-fill-color-light);
   }
 }
+
+// Prevent jitters of cl-search
+.cl-search {
+  .cl-form-item .el-input__suffix {
+    position: absolute;
+    right: 16px;
+  }
+}
