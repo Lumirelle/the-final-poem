@@ -42,6 +42,7 @@ const Upsert = useUpsert({
       label: t('图标'),
       prop: 'icon',
       component: { name: 'cl-upload' },
+      required: true,
     },
   ],
 })

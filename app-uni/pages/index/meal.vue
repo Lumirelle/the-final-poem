@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onLoad } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import Tabbar from './components/tabbar.vue'
 import { useCool, usePager } from '/@/cool'
 
@@ -8,16 +8,40 @@ const { service } = useCool()
 
 const { onRefresh } = usePager()
 
-const list = ref<any[]>([])
+// 初始数据
+const categoryList = ref<Eps.MealCategoryEntity[]>([])
+const hospitalList = ref<Eps.HospitalInfoEntity[]>([])
+// const departmentList = ref<Eps.DepartmentInfoEntity[]>([])
+// const doctorList = ref<Eps.DoctorInfoEntity[]>([])
+// const staffList = ref<Eps.StaffInfoEntity[]>([])
+
+const categoryOptions = computed(() => {
+  return categoryList.value.map(item => ({
+    label: item.name,
+    value: item.id,
+  }))
+})
+
+const hospitalOptions = computed(() => {
+  return hospitalList.value.map(item => ({
+    label: item.name,
+    value: item.id,
+  }))
+})
+
+const list = ref<Eps.MealInfoEntity[]>([])
+
 const loading = ref(false)
 const showAdvanced = ref(false)
 
 // 搜索条件
 const searchForm = ref({
   name: '',
-  code: '',
-  address: '',
-  phone: '',
+  categoryId: '',
+  hospitalId: '',
+  departmentId: '',
+  doctorId: '',
+  staffId: '',
 })
 
 // 刷新列表
@@ -27,8 +51,23 @@ async function refresh() {
   loading.value = true
 
   try {
+    // 获取分类列表
+    const resCategory = await service.meal.category.page({
+      page: 1,
+      size: 100,
+    })
+    categoryList.value = [{ id: '', name: '全部' }, ...resCategory.list]
+
+    // 获取医院列表
+    const resHospital = await service.hospital.info.page({
+      page: 1,
+      size: 100,
+    })
+    hospitalList.value = [{ id: '', name: '全部' }, ...resHospital.list]
+
+    // 获取套餐列表
     const res = await next(
-      service.hospital.info.page({
+      service.meal.info.page({
         ...data,
         ...searchForm.value,
         status: 1, // 默认只显示启用状态
@@ -52,9 +91,11 @@ function search() {
 function reset() {
   searchForm.value = {
     name: '',
-    code: '',
-    address: '',
-    phone: '',
+    categoryId: '',
+    hospitalId: '',
+    departmentId: '',
+    doctorId: '',
+    staffId: '',
   }
   refresh()
 }
@@ -67,7 +108,7 @@ function toggleAdvanced() {
 // 查看详情
 function viewDetail(item: any) {
   uni.navigateTo({
-    url: `/pages/hospital/detail?id=${item.id}`,
+    url: `/pages/meal/detail?id=${item.id}`,
   })
 }
 
@@ -79,30 +120,38 @@ onLoad(() => {
 
 <template>
   <cl-page>
-    <cl-topbar title="医院列表" />
+    <cl-topbar title="套餐列表" />
 
     <!-- 搜索区域 -->
     <cl-filter-bar>
       <cl-form :model="searchForm" class="search-form">
         <!-- 基础搜索项 -->
         <view class="basic-search">
-          <cl-form-item label="医院名称" :margin="[0, 20, 20, 0]">
-            <cl-input v-model="searchForm.name" placeholder="请输入医院名称" />
+          <cl-form-item label="套餐名称" :margin="[0, 20, 20, 0]">
+            <cl-input v-model="searchForm.name" placeholder="请输入套餐名称" />
           </cl-form-item>
 
-          <cl-form-item label="医院地址" :margin="[0, 20, 20, 0]">
-            <cl-input v-model="searchForm.address" placeholder="请输入医院地址" />
+          <cl-form-item label="所属分类" :margin="[0, 20, 20, 0]">
+            <cl-select v-model="searchForm.categoryId" :options="categoryOptions" />
+          </cl-form-item>
+
+          <cl-form-item label="所属医院" :margin="[0, 20, 20, 0]">
+            <cl-select v-model="searchForm.hospitalId" :options="hospitalOptions" />
           </cl-form-item>
         </view>
 
         <!-- 高级搜索项 -->
         <view v-show="showAdvanced" class="advanced-search">
-          <cl-form-item label="医院编码" :margin="[0, 20, 20, 0]">
-            <cl-input v-model="searchForm.code" placeholder="请输入医院编码" />
+          <cl-form-item label="所属科室" :margin="[0, 20, 20, 0]">
+            <cl-input v-model="searchForm.departmentId" placeholder="请选择所属科室" />
           </cl-form-item>
 
-          <cl-form-item label="联系电话" :margin="[0, 20, 20, 0]">
-            <cl-input v-model="searchForm.phone" placeholder="请输入联系电话" />
+          <cl-form-item label="主治医生" :margin="[0, 20, 20, 0]">
+            <cl-input v-model="searchForm.doctorId" placeholder="请选择主治医生" />
+          </cl-form-item>
+
+          <cl-form-item label="陪诊人员" :margin="[0, 20, 20, 0]">
+            <cl-input v-model="searchForm.staffId" placeholder="请选择陪诊人员" />
           </cl-form-item>
         </view>
 
@@ -125,7 +174,7 @@ onLoad(() => {
 
     <!-- 列表区域 -->
     <cl-scroller @down="refresh">
-      <view class="hospital-list">
+      <view class="meal-list">
         <cl-card
           v-for="item in list"
           :key="item.id"
@@ -133,29 +182,20 @@ onLoad(() => {
           :radius="16"
           @tap="viewDetail(item)"
         >
-          <!-- 医院信息 -->
-          <view class="hospital-item">
-            <cl-image :src="item.coverImage" :size="160" radius="12" />
+          <!-- 套餐信息 -->
+          <view class="meal-item">
+            <cl-image :src="item.cover" :size="160" radius="12" />
 
-            <view class="hospital-info">
+            <view class="meal-info">
               <view class="title-row">
                 <cl-text :value="item.name" size="36" bold />
+                <cl-text :value="`¥${item.price}`" color="danger" size="32" :margin="[0, 0, 0, 20]" />
               </view>
 
               <view class="info-row">
                 <cl-icon name="location" :size="32" color="primary" />
                 <cl-text
-                  :value="item.address"
-                  color="#666"
-                  :margin="[0, 0, 0, 10]"
-                  size="28"
-                />
-              </view>
-
-              <view class="info-row">
-                <cl-icon name="phone" :size="32" color="primary" />
-                <cl-text
-                  :value="item.phone"
+                  :value="item.hospitalName"
                   color="#666"
                   :margin="[0, 0, 0, 10]"
                   size="28"
@@ -165,7 +205,27 @@ onLoad(() => {
               <view class="info-row">
                 <cl-icon name="doc-fill" :size="32" color="primary" />
                 <cl-text
-                  :value="item.code"
+                  :value="item.departmentName"
+                  color="#666"
+                  :margin="[0, 0, 0, 10]"
+                  size="28"
+                />
+              </view>
+
+              <view class="info-row">
+                <cl-icon name="face-auth" :size="32" color="primary" />
+                <cl-text
+                  :value="item.doctorName"
+                  color="#666"
+                  :margin="[0, 0, 0, 10]"
+                  size="28"
+                />
+              </view>
+
+              <view class="info-row">
+                <cl-icon name="time" :size="32" color="primary" />
+                <cl-text
+                  :value="`服务次数: ${item.serviceCount}次`"
                   color="#666"
                   :margin="[0, 0, 0, 10]"
                   size="28"
@@ -226,22 +286,23 @@ onLoad(() => {
   }
 }
 
-.hospital-list {
+.meal-list {
   padding: 20rpx 0;
 }
 
-.hospital-item {
+.meal-item {
   display: flex;
   align-items: flex-start;
   padding: 12rpx;
 
-  .hospital-info {
+  .meal-info {
     flex: 1;
     margin-left: 30rpx;
 
     .title-row {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 20rpx;
     }
 

@@ -123,7 +123,7 @@ const Upsert = useUpsert({
         props: { type: 'textarea', rows: 4 },
       },
     },
-    { label: t('封面图'), prop: 'cover', component: { name: 'cl-upload' } },
+    { label: t('封面图'), prop: 'cover', component: { name: 'cl-upload' }, required: true },
   ],
   onSubmit: (form, { next }) => {
     next({

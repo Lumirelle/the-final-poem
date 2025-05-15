@@ -4,24 +4,37 @@ import cn.hutool.json.JSONObject;
 import com.cool.core.base.BaseServiceImpl;
 import com.cool.modules.accompany.entity.AccompanyStaffEntity;
 import com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableDef;
+import com.cool.modules.accompany.mapper.AccompanyStaffMapper;
 import com.cool.modules.hospital.entity.DepartmentEntity;
 import com.cool.modules.hospital.entity.DoctorEntity;
 import com.cool.modules.hospital.entity.HospitalInfoEntity;
 import com.cool.modules.hospital.entity.table.DepartmentEntityTableDef;
 import com.cool.modules.hospital.entity.table.DoctorEntityTableDef;
 import com.cool.modules.hospital.entity.table.HospitalInfoEntityTableDef;
+import com.cool.modules.hospital.mapper.DepartmentMapper;
+import com.cool.modules.hospital.mapper.DoctorMapper;
+import com.cool.modules.hospital.mapper.HospitalInfoMapper;
 import com.cool.modules.meal.entity.MealCategoryEntity;
 import com.cool.modules.meal.entity.MealInfoEntity;
 import com.cool.modules.meal.entity.table.MealCategoryEntityTableDef;
 import com.cool.modules.meal.entity.table.MealInfoEntityTableDef;
+import com.cool.modules.meal.mapper.MealCategoryMapper;
 import com.cool.modules.meal.mapper.MealInfoMapper;
 import com.cool.modules.meal.service.MealInfoService;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MealInfoServiceImpl extends BaseServiceImpl<MealInfoMapper, MealInfoEntity> implements MealInfoService {
+
+    private final HospitalInfoMapper hospitalInfoMapper;
+    private final MealCategoryMapper mealCategoryMapper;
+    private final DepartmentMapper departmentMapper;
+    private final DoctorMapper doctorMapper;
+    private final AccompanyStaffMapper accompanyStaffMapper;
 
     @Override
     public Object page(JSONObject requestParams, Page<MealInfoEntity> page, QueryWrapper queryWrapper) {
@@ -45,5 +58,19 @@ public class MealInfoServiceImpl extends BaseServiceImpl<MealInfoMapper, MealInf
                 .leftJoin(AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY)
                 .on(MealInfoEntity::getStaffId, AccompanyStaffEntity::getId);
         return mapper.paginate(page, queryWrapper);
+    }
+
+    @Override
+    public Object info(Long id) {
+        MealInfoEntity mealInfoEntity = mapper.selectOneById(id);
+        if (mealInfoEntity == null) {
+            return null;
+        }
+        mealInfoEntity.setHospitalName(hospitalInfoMapper.selectOneById(mealInfoEntity.getHospitalId()).getName());
+        mealInfoEntity.setCategoryName(mealCategoryMapper.selectOneById(mealInfoEntity.getCategoryId()).getName());
+        mealInfoEntity.setDepartmentName(departmentMapper.selectOneById(mealInfoEntity.getDepartmentId()).getName());
+        mealInfoEntity.setDoctorName(doctorMapper.selectOneById(mealInfoEntity.getDoctorId()).getName());
+        mealInfoEntity.setStaffName(accompanyStaffMapper.selectOneById(mealInfoEntity.getStaffId()).getName());
+        return mealInfoEntity;
     }
 }

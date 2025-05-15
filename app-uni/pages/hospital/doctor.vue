@@ -34,7 +34,7 @@ onLoad((options) => {
 
 <template>
   <cl-page>
-    <cl-topbar :title="doctor.name || '医生详情'" />
+    <cl-topbar title="医生详情" />
 
     <!-- 加载中 -->
     <cl-loading-mask v-if="loading" />

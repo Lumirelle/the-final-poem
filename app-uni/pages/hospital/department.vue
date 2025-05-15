@@ -48,7 +48,7 @@ onLoad((options) => {
 
 <template>
   <cl-page>
-    <cl-topbar :title="department.name || '科室详情'" />
+    <cl-topbar title="科室详情" />
 
     <!-- 加载中 -->
     <cl-loading-mask v-if="loading" />
