@@ -133,6 +133,7 @@ const Table = useTable({
   ],
   columns: [
     { type: 'selection' },
+    { label: t('订单 ID'), prop: 'id', minWidth: 140 },
     { label: t('编号'), prop: 'orderNumber', minWidth: 140 },
     { label: t('套餐ID'), prop: 'mealId', minWidth: 140 },
     { label: t('套餐'), prop: 'mealName', minWidth: 140 },

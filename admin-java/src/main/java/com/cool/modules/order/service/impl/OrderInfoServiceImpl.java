@@ -3,9 +3,11 @@ package com.cool.modules.order.service.impl;
 
 import cn.hutool.json.JSONObject;
 import com.cool.core.base.BaseServiceImpl;
+import com.cool.modules.meal.entity.MealInfoEntity;
 import com.cool.modules.order.entity.OrderInfoEntity;
 import com.cool.modules.order.mapper.OrderInfoMapper;
 import com.cool.modules.order.service.OrderInfoService;
+import com.cool.modules.user.entity.UserInfoEntity;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import org.springframework.stereotype.Service;
@@ -30,10 +32,27 @@ public class OrderInfoServiceImpl extends BaseServiceImpl<OrderInfoMapper, Order
                 )
                 .from(ORDER_INFO_ENTITY)
                 .leftJoin(MEAL_INFO_ENTITY)
-                .on(ORDER_INFO_ENTITY.MEAL_ID.eq(MEAL_INFO_ENTITY.ID))
+                .on(OrderInfoEntity::getMealId, MealInfoEntity::getId)
                 .leftJoin(USER_INFO_ENTITY)
-                .on(ORDER_INFO_ENTITY.USER_ID.eq(USER_INFO_ENTITY.ID));
+                .on(OrderInfoEntity::getUserId, UserInfoEntity::getId);
         return mapper.paginate(page, queryWrapper);
+    }
+
+    @Override
+    public Object info(Long id) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(
+                        ORDER_INFO_ENTITY.ALL_COLUMNS,
+                        MEAL_INFO_ENTITY.NAME.as("mealName"),
+                        USER_INFO_ENTITY.NICK_NAME.as("userName")
+                )
+                .from(ORDER_INFO_ENTITY)
+                .leftJoin(MEAL_INFO_ENTITY)
+                .on(OrderInfoEntity::getMealId, MealInfoEntity::getId)
+                .leftJoin(USER_INFO_ENTITY)
+                .on(OrderInfoEntity::getUserId, UserInfoEntity::getId)
+                .eq("id", id);
+        return mapper.selectOneByQuery(queryWrapper);
     }
 
     @Override

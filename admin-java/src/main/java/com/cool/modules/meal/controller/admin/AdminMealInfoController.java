@@ -19,18 +19,19 @@ public class AdminMealInfoController extends BaseController<MealInfoService, Mea
     @Override
     protected void init(HttpServletRequest request, @RequestAttribute JSONObject requestParams) {
         setPageOption(createOp()
-                .keyWordLikeFields(
-                        MEAL_INFO_ENTITY.NAME,
-                        MEAL_INFO_ENTITY.SERVICE_AREA
-                )
-                .fieldEq(
-                        MEAL_INFO_ENTITY.ID,
-                        MEAL_INFO_ENTITY.STATUS,
-                        MEAL_INFO_ENTITY.CATEGORY_ID,
-                        MEAL_INFO_ENTITY.HOSPITAL_ID,
-                        MEAL_INFO_ENTITY.DEPARTMENT_ID,
-                        MEAL_INFO_ENTITY.DOCTOR_ID,
-                        MEAL_INFO_ENTITY.STAFF_ID
-                ));
+            .keyWordLikeFields(
+                MEAL_INFO_ENTITY.NAME,
+                MEAL_INFO_ENTITY.SERVICE_AREA
+            )
+            .fieldEq(
+                MEAL_INFO_ENTITY.ID,
+                MEAL_INFO_ENTITY.STATUS,
+                MEAL_INFO_ENTITY.CATEGORY_ID,
+                MEAL_INFO_ENTITY.HOSPITAL_ID,
+                MEAL_INFO_ENTITY.DEPARTMENT_ID,
+                MEAL_INFO_ENTITY.DOCTOR_ID,
+                MEAL_INFO_ENTITY.STAFF_ID
+            )
+        );
     }
 }

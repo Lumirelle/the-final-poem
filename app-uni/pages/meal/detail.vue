@@ -35,19 +35,17 @@ async function handleBuy() {
 
   submitting.value = true
   try {
-    // TODO: 调用购买接口
-    // const res = await service.order.info.add({
-    //   mealId: detail.value.id,
-    //   totalAmount: detail.value.price,
-    //   actualAmount: detail.value.price,
-    //   discountAmount: '0',
-    //   status: 0, // 待支付
-    // })
+    const res = await service.order.info.add({
+      mealId: detail.value.id,
+      totalAmount: detail.value.price,
+      actualAmount: detail.value.price,
+      discountAmount: '0',
+      status: 0, // 待支付
+    })
 
     // 跳转到支付页面
     uni.navigateTo({
-      // url: `/pages/order/pay?orderId=${res.id}`,
-      url: '/pages/order/pay',
+      url: `/pages/order/pay?orderId=${res.id}`,
     })
   }
   catch (err) {
