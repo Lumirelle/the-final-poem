@@ -22,15 +22,15 @@ public class AdminMedicalRecordController extends BaseController<MedicalRecordSe
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp()
-                .fieldEq(
-                  MEDICAL_RECORD_ENTITY.PATIENT_ID,
-                        MEDICAL_RECORD_ENTITY.DOCTOR_ID,
-                        MEDICAL_RECORD_ENTITY.HOSPITAL_ID
-                )
-                .keyWordLikeFields(
-                  MEDICAL_RECORD_ENTITY.DIAGNOSIS,
-                  MEDICAL_RECORD_ENTITY.PRESCRIPTION
-                )
+            .fieldEq(
+                MEDICAL_RECORD_ENTITY.PATIENT_ID,
+                MEDICAL_RECORD_ENTITY.DOCTOR_ID,
+                MEDICAL_RECORD_ENTITY.HOSPITAL_ID
+            )
+            .keyWordLikeFields(
+                MEDICAL_RECORD_ENTITY.DIAGNOSIS,
+                MEDICAL_RECORD_ENTITY.PRESCRIPTION
+            )
         );
     }
 }

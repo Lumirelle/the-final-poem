@@ -36,24 +36,19 @@ public class MealInfoServiceImpl extends BaseServiceImpl<MealInfoMapper, MealInf
     public Object page(JSONObject requestParams, Page<MealInfoEntity> page, QueryWrapper queryWrapper) {
         queryWrapper
             .select(
-                MealInfoEntityTableDef.MEAL_INFO_ENTITY.ALL_COLUMNS,
-                MealCategoryEntityTableDef.MEAL_CATEGORY_ENTITY.NAME.as("categoryName"),
-                HospitalInfoEntityTableDef.HOSPITAL_INFO_ENTITY.NAME.as("hospitalName"),
-                DepartmentEntityTableDef.DEPARTMENT_ENTITY.NAME.as("departmentName"),
-                DoctorEntityTableDef.DOCTOR_ENTITY.NAME.as("doctorName"),
-                AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY.NAME.as("staffName")
+                MEAL_INFO_ENTITY.ALL_COLUMNS,
+                MEAL_CATEGORY_ENTITY.NAME.as("categoryName"),
+                HOSPITAL_INFO_ENTITY.NAME.as("hospitalName"),
+                DEPARTMENT_ENTITY.NAME.as("departmentName"),
+                DOCTOR_ENTITY.NAME.as("doctorName"),
+                ACCOMPANY_STAFF_ENTITY.NAME.as("staffName")
             )
-            .from(MealInfoEntityTableDef.MEAL_INFO_ENTITY)
-            .leftJoin(MealCategoryEntityTableDef.MEAL_CATEGORY_ENTITY)
-            .on(MealInfoEntity::getCategoryId, MealCategoryEntity::getId)
-            .leftJoin(HospitalInfoEntityTableDef.HOSPITAL_INFO_ENTITY)
-            .on(MealInfoEntity::getHospitalId, HospitalInfoEntity::getId)
-            .leftJoin(DepartmentEntityTableDef.DEPARTMENT_ENTITY)
-            .on(MealInfoEntity::getDepartmentId, DepartmentEntity::getId)
-            .leftJoin(DoctorEntityTableDef.DOCTOR_ENTITY)
-            .on(MealInfoEntity::getDoctorId, DoctorEntity::getId)
-            .leftJoin(AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY)
-            .on(MealInfoEntity::getStaffId, AccompanyStaffEntity::getId);
+            .from(MEAL_INFO_ENTITY)
+            .leftJoin(MEAL_CATEGORY_ENTITY).on(MEAL_INFO_ENTITY.CATEGORY_ID.eq(MEAL_CATEGORY_ENTITY.ID))
+            .leftJoin(HOSPITAL_INFO_ENTITY).on(MEAL_INFO_ENTITY.HOSPITAL_ID.eq(HOSPITAL_INFO_ENTITY.ID))
+            .leftJoin(DEPARTMENT_ENTITY).on(MEAL_INFO_ENTITY.DEPARTMENT_ID.eq(DEPARTMENT_ENTITY.ID))
+            .leftJoin(DOCTOR_ENTITY).on(MEAL_INFO_ENTITY.DOCTOR_ID.eq(DOCTOR_ENTITY.ID))
+            .leftJoin(ACCOMPANY_STAFF_ENTITY).on(MEAL_INFO_ENTITY.STAFF_ID.eq(ACCOMPANY_STAFF_ENTITY.ID));
         return mapper.paginateWithRelations(page, queryWrapper);
     }
 
@@ -73,7 +68,8 @@ public class MealInfoServiceImpl extends BaseServiceImpl<MealInfoMapper, MealInf
             .leftJoin(HOSPITAL_INFO_ENTITY).on(MEAL_INFO_ENTITY.HOSPITAL_ID.eq(HOSPITAL_INFO_ENTITY.ID))
             .leftJoin(DEPARTMENT_ENTITY).on(MEAL_INFO_ENTITY.DEPARTMENT_ID.eq(DEPARTMENT_ENTITY.ID))
             .leftJoin(DOCTOR_ENTITY).on(MEAL_INFO_ENTITY.DOCTOR_ID.eq(DOCTOR_ENTITY.ID))
-            .leftJoin(ACCOMPANY_STAFF_ENTITY).on(MEAL_INFO_ENTITY.STAFF_ID.eq(ACCOMPANY_STAFF_ENTITY.ID));
+            .leftJoin(ACCOMPANY_STAFF_ENTITY).on(MEAL_INFO_ENTITY.STAFF_ID.eq(ACCOMPANY_STAFF_ENTITY.ID))
+            .where(MEAL_INFO_ENTITY.ID.eq(id));
         return mapper.selectOneWithRelationsByQuery(queryWrapper);
     }
 }

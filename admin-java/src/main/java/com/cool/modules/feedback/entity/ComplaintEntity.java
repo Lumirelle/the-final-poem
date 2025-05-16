@@ -3,10 +3,13 @@ package com.cool.modules.feedback.entity;
 import com.cool.core.base.BaseEntity;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
+import com.mybatisflex.core.handler.Fastjson2TypeHandler;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import com.tangzc.mybatisflex.autotable.annotation.UniIndex;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 /**
  * 投诉信息
@@ -29,9 +32,16 @@ public class ComplaintEntity extends BaseEntity<ComplaintEntity> {
     @ColumnDefine(comment = "内容")
     private String content;
 
+    @ColumnDefine(comment = "联系方式")
+    private String contactInfo;
+
+    @ColumnDefine(comment = "图片", type = "json")
+    @Column(typeHandler = Fastjson2TypeHandler.class)
+    private List<String> images;
+
     // USER
     @ColumnDefine(comment = "用户ID")
-    private Long userId;
+    private Long complaintUserId;
 
     @Column(ignore = true)
     private String userNickName;

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
+import BackHome from '/@/components/back-home.vue'
 import { useCool } from '/@/cool'
 
 const { service } = useCool()
@@ -33,7 +34,7 @@ onLoad((options) => {
 </script>
 
 <template>
-  <cl-page>
+  <cl-page fullscreen>
     <cl-topbar title="医生详情" />
 
     <!-- 加载中 -->
@@ -88,6 +89,9 @@ onLoad((options) => {
         </cl-card>
       </view>
     </template>
+
+    <!-- 回到首页按钮 -->
+    <back-home />
   </cl-page>
 </template>
 

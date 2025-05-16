@@ -21,7 +21,7 @@ const Upsert = useUpsert({
     () => {
       return {
         label: t('选择用户'),
-        prop: 'userId',
+        prop: 'complaintUserId',
         hidden: Upsert.value?.mode === 'update',
         component: { vm: UserSelect },
         span: 24,
@@ -95,7 +95,7 @@ const Upsert = useUpsert({
 })
 
 watch(
-  () => Upsert.value?.form.userId,
+  () => Upsert.value?.form.complaintUserId,
   (val) => {
     Upsert.value?.setForm('orderId', undefined)
     if (val && Upsert.value?.mode !== 'update') {
@@ -127,7 +127,7 @@ const Table = useTable({
   ],
   columns: [
     { type: 'selection' },
-    { label: t('用户ID（小程序用户）'), prop: 'userId', minWidth: 180 },
+    { label: t('用户ID（小程序用户）'), prop: 'complaintUserId', minWidth: 180 },
     { label: t('用户昵称'), prop: 'userNickName', minWidth: 140 },
     { label: t('订单ID'), prop: 'orderId', minWidth: 140 },
     { label: t('类型'), prop: 'type', minWidth: 120, dict: dict.get('complaint-type') },
@@ -136,6 +136,12 @@ const Table = useTable({
       prop: 'content',
       showOverflowTooltip: true,
       minWidth: 200,
+    },
+    // 多张图片
+    {
+      label: t('图片'),
+      prop: 'images',
+      minWidth: 350,
     },
     { label: t('处理人ID（后台用户）'), prop: 'handlerId', minWidth: 180 },
     { label: t('处理人昵称'), prop: 'handlerNickName', minWidth: 120 },
@@ -191,7 +197,7 @@ const Search = useSearch({
   items: [
     {
       label: t('用户ID（小程序用户）'),
-      prop: 'userId',
+      prop: 'complaintUserId',
       component: { name: 'el-input', props: { clearable: true } },
     },
     {
@@ -248,7 +254,13 @@ function refresh(params?: any) {
 
     <cl-row>
       <!-- 数据表格 -->
-      <cl-table ref="Table" />
+      <cl-table ref="Table">
+        <template #column-images="{ scope }">
+          <div class="flex flex-wrap gap-2">
+            <cl-image v-for="image in scope.row.images" :key="image" :src="image" :radius="8" />
+          </div>
+        </template>
+      </cl-table>
     </cl-row>
 
     <cl-row>

@@ -23,13 +23,24 @@ public class PatientInfoServiceImpl extends BaseServiceImpl<PatientInfoMapper, P
     @Override
     public Object page(JSONObject requestParams, Page<PatientInfoEntity> page, QueryWrapper queryWrapper) {
         queryWrapper.select(
-                        PATIENT_INFO_ENTITY.ALL_COLUMNS,
-                        USER_INFO_ENTITY.NICK_NAME
-                )
-                .from(PATIENT_INFO_ENTITY)
-                .leftJoin(USER_INFO_ENTITY)
-                .on(PatientInfoEntity::getUserId, UserInfoEntity::getId);
-        return mapper.paginate(page, queryWrapper);
+                PATIENT_INFO_ENTITY.ALL_COLUMNS,
+                USER_INFO_ENTITY.NICK_NAME
+            )
+            .from(PATIENT_INFO_ENTITY)
+            .leftJoin(USER_INFO_ENTITY).on(PATIENT_INFO_ENTITY.USER_ID.eq(USER_INFO_ENTITY.ID));
+        return mapper.paginateWithRelations(page, queryWrapper);
     }
 
+    @Override
+    public Object info(Long id) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+            .select(
+                PATIENT_INFO_ENTITY.ALL_COLUMNS,
+                USER_INFO_ENTITY.NICK_NAME
+            )
+            .from(PATIENT_INFO_ENTITY)
+            .leftJoin(USER_INFO_ENTITY).on(PATIENT_INFO_ENTITY.USER_ID.eq(USER_INFO_ENTITY.ID))
+            .where(PATIENT_INFO_ENTITY.ID.eq(id));
+        return mapper.selectOneWithRelationsByQuery(queryWrapper);
+    }
 }

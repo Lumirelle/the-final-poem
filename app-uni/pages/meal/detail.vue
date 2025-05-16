@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
+import BackHome from '/@/components/back-home.vue'
 import { useCool } from '/@/cool'
 
 const { service } = useCool()
@@ -43,9 +44,11 @@ async function handleBuy() {
       status: 0, // 待支付
     })
 
+    console.log('[meal] 生成订单：', res)
+
     // 跳转到支付页面
     uni.navigateTo({
-      url: `/pages/order/pay?orderId=${res.id}`,
+      url: `/pages/order/pay?id=${res.id}`,
     })
   }
   catch (err) {
@@ -68,7 +71,7 @@ onLoad((options) => {
 </script>
 
 <template>
-  <cl-page>
+  <cl-page fullscreen>
     <cl-topbar title="套餐详情" />
 
     <cl-loading-mask v-if="loading" />
@@ -77,10 +80,8 @@ onLoad((options) => {
       <!-- 封面图 -->
       <cl-image
         :src="detail.cover"
-        mode="widthFix"
-        width="750"
-        default-image="/static/image/default.png"
-        @error="() => detail.cover = ''"
+        mode="aspectFill"
+        :height="300"
       />
 
       <!-- 基本信息 -->
@@ -168,6 +169,9 @@ onLoad((options) => {
         <cl-text :value="detail.intro" color="#666" size="28" />
       </view>
     </cl-scroller>
+
+    <!-- 回到首页按钮 -->
+    <back-home />
   </cl-page>
 </template>
 

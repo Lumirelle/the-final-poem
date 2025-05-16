@@ -20,13 +20,13 @@ public class AdminOrderDetailController extends
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
-      setPageOption(createOp()
-        .fieldEq(
-          ORDER_DETAIL_ENTITY.ORDER_ID,
-          ORDER_DETAIL_ENTITY.ID,
-          ORDER_DETAIL_ENTITY.AFTER_SALE_STATUS
-        )
-      );
+        setPageOption(createOp()
+            .fieldEq(
+                ORDER_DETAIL_ENTITY.ORDER_ID,
+                ORDER_DETAIL_ENTITY.ID,
+                ORDER_DETAIL_ENTITY.AFTER_SALE_STATUS
+            )
+        );
     }
 
 }

@@ -61,6 +61,11 @@
 		@include color($cl-color-error);
 	}
 
+  // Compatible with admin-vue
+  &--danger {
+		@include color($cl-color-error);
+	}
+
 	&--info {
 		@include color($cl-color-info);
 	}

@@ -22,18 +22,18 @@ public class AdminUserInfoController extends BaseController<UserInfoService, Use
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp().fieldEq(
-                        USER_INFO_ENTITY.ID,
-                        USER_INFO_ENTITY.UNIONID,
-                        USER_INFO_ENTITY.ROLE,
-                        USER_INFO_ENTITY.STATUS,
-                        USER_INFO_ENTITY.LOGIN_TYPE
-                )
-                .keyWordLikeFields(
-                        USER_INFO_ENTITY.NICK_NAME,
-                        USER_INFO_ENTITY.PHONE
-                ));
+                USER_INFO_ENTITY.ID,
+                USER_INFO_ENTITY.UNIONID,
+                USER_INFO_ENTITY.ROLE,
+                USER_INFO_ENTITY.STATUS,
+                USER_INFO_ENTITY.LOGIN_TYPE
+            )
+            .keyWordLikeFields(
+                USER_INFO_ENTITY.NICK_NAME,
+                USER_INFO_ENTITY.PHONE
+            ));
     }
-    
+
     @Operation(summary = "统计", description = "统计用户总量")
     @GetMapping("/count")
     public R<Long> count() {

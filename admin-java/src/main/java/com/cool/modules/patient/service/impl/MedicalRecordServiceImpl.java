@@ -27,40 +27,32 @@ public class MedicalRecordServiceImpl extends BaseServiceImpl<MedicalRecordMappe
     @Override
     public Object page(JSONObject requestParams, Page<MedicalRecordEntity> page, QueryWrapper queryWrapper) {
         queryWrapper.select(
-                        MEDICAL_RECORD_ENTITY.ALL_COLUMNS,
-                        PATIENT_INFO_ENTITY.NAME.as("patientName"),
-                        HOSPITAL_INFO_ENTITY.NAME.as("hospitalName"),
-                        DOCTOR_ENTITY.NAME.as("doctorName")
-                )
-                .from(MEDICAL_RECORD_ENTITY)
-                .leftJoin(PATIENT_INFO_ENTITY)
-                .on(MedicalRecordEntity::getPatientId, PatientInfoEntity::getId)
-                .leftJoin(HOSPITAL_INFO_ENTITY)
-                .on(MedicalRecordEntity::getHospitalId, HospitalInfoEntity::getId)
-                .leftJoin(DOCTOR_ENTITY)
-                .on(MedicalRecordEntity::getDoctorId, DoctorEntity::getId);
-        return mapper.paginate(page, queryWrapper);
+                MEDICAL_RECORD_ENTITY.ALL_COLUMNS,
+                PATIENT_INFO_ENTITY.NAME.as("patientName"),
+                HOSPITAL_INFO_ENTITY.NAME.as("hospitalName"),
+                DOCTOR_ENTITY.NAME.as("doctorName")
+            )
+            .from(MEDICAL_RECORD_ENTITY)
+            .leftJoin(PATIENT_INFO_ENTITY).on(MEDICAL_RECORD_ENTITY.PATIENT_ID.eq(PATIENT_INFO_ENTITY.ID))
+            .leftJoin(HOSPITAL_INFO_ENTITY).on(MEDICAL_RECORD_ENTITY.HOSPITAL_ID.eq(HOSPITAL_INFO_ENTITY.ID))
+            .leftJoin(DOCTOR_ENTITY).on(MEDICAL_RECORD_ENTITY.DOCTOR_ID.eq(DOCTOR_ENTITY.ID));
+        return mapper.paginateWithRelations(page, queryWrapper);
     }
 
     @Override
     public Object info(JSONObject requestParams, Long id) {
         QueryWrapper queryWrapper = QueryWrapper.create()
-                .select(
-                        MEDICAL_RECORD_ENTITY.ALL_COLUMNS,
-                        PATIENT_INFO_ENTITY.NAME.as("patientName"),
-                        HOSPITAL_INFO_ENTITY.NAME.as("hospitalName"),
-                        DOCTOR_ENTITY.NAME.as("doctorName")
-                )
-                .from(MEDICAL_RECORD_ENTITY)
-                .leftJoin(PATIENT_INFO_ENTITY)
-                .on(MedicalRecordEntity::getPatientId, PatientInfoEntity::getId)
-                .leftJoin(HOSPITAL_INFO_ENTITY)
-                .on(MedicalRecordEntity::getHospitalId, HospitalInfoEntity::getId)
-                .leftJoin(DOCTOR_ENTITY)
-                .on(MedicalRecordEntity::getDoctorId, DoctorEntity::getId)
-                .where(MEDICAL_RECORD_ENTITY.ID.eq(id));
-        
-        return mapper.selectOneByQuery(queryWrapper);
+            .select(
+                MEDICAL_RECORD_ENTITY.ALL_COLUMNS,
+                PATIENT_INFO_ENTITY.NAME.as("patientName"),
+                HOSPITAL_INFO_ENTITY.NAME.as("hospitalName"),
+                DOCTOR_ENTITY.NAME.as("doctorName")
+            )
+            .from(MEDICAL_RECORD_ENTITY)
+            .leftJoin(PATIENT_INFO_ENTITY).on(MEDICAL_RECORD_ENTITY.PATIENT_ID.eq(PATIENT_INFO_ENTITY.ID))
+            .leftJoin(HOSPITAL_INFO_ENTITY).on(MEDICAL_RECORD_ENTITY.HOSPITAL_ID.eq(HOSPITAL_INFO_ENTITY.ID))
+            .leftJoin(DOCTOR_ENTITY).on(MEDICAL_RECORD_ENTITY.DOCTOR_ID.eq(DOCTOR_ENTITY.ID));
+        return mapper.selectOneWithRelationsByQuery(queryWrapper);
     }
 
 }

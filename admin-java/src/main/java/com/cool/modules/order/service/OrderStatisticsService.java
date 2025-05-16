@@ -12,14 +12,14 @@ public interface OrderStatisticsService extends BaseService<OrderStatisticsEntit
   /**
    * 订单统计
    * @param dto
-   * @return
+   * @return ID
    */
-  int statistics(OrderStatisticsDto dto);
+  Long statistics(OrderStatisticsDto dto);
 
   /**
    * 统计本周订单
-   * @return
+   * @return ID
    */
-  int statisticsThisWeek();
+  Long statisticsThisWeek();
 
 }

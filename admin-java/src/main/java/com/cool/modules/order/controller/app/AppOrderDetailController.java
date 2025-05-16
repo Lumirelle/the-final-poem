@@ -24,35 +24,10 @@ public class AppOrderDetailController extends BaseController<OrderDetailService,
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         // 设置分页查询条件
         setPageOption(createOp()
-                .fieldEq(
-                        ORDER_DETAIL_ENTITY.ORDER_ID,
-                        ORDER_DETAIL_ENTITY.AFTER_SALE_STATUS
-                )
-                .queryWrapper(QueryWrapper.create()
-                        .select(
-                                ORDER_DETAIL_ENTITY.ALL_COLUMNS,
-                                ORDER_INFO_ENTITY.ORDER_NUMBER,
-                                ORDER_INFO_ENTITY.STATUS.as("orderStatus")
-                        )
-                        .from(ORDER_DETAIL_ENTITY)
-                        .leftJoin(ORDER_INFO_ENTITY)
-                        .on(OrderDetailEntity::getOrderId, OrderInfoEntity::getId)
-                        .orderBy(ORDER_DETAIL_ENTITY.CREATE_TIME.desc())
-                )
-        );
-
-        // 设置详情查询条件
-        setInfoOption(createOp()
-                .queryWrapper(QueryWrapper.create()
-                        .select(
-                                ORDER_DETAIL_ENTITY.ALL_COLUMNS,
-                                ORDER_INFO_ENTITY.ORDER_NUMBER,
-                                ORDER_INFO_ENTITY.STATUS.as("orderStatus")
-                        )
-                        .from(ORDER_DETAIL_ENTITY)
-                        .leftJoin(ORDER_INFO_ENTITY)
-                        .on(OrderDetailEntity::getOrderId, OrderInfoEntity::getId)
-                )
+            .fieldEq(
+                ORDER_DETAIL_ENTITY.ORDER_ID,
+                ORDER_DETAIL_ENTITY.AFTER_SALE_STATUS
+            )
         );
     }
 } 

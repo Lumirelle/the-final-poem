@@ -16,6 +16,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import static com.cool.modules.hospital.entity.table.DepartmentEntityTableDef.DEPARTMENT_ENTITY;
+import static com.cool.modules.hospital.entity.table.DoctorEntityTableDef.DOCTOR_ENTITY;
+import static com.cool.modules.hospital.entity.table.HospitalInfoEntityTableDef.HOSPITAL_INFO_ENTITY;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,15 +28,28 @@ public class DoctorServiceImpl extends BaseServiceImpl<DoctorMapper, DoctorEntit
     @Override
     public Object page(JSONObject requestParams, Page<DoctorEntity> page, QueryWrapper queryWrapper) {
         queryWrapper.select(
-                        DoctorEntityTableDef.DOCTOR_ENTITY.ALL_COLUMNS,
-                        DepartmentEntityTableDef.DEPARTMENT_ENTITY.NAME.as("departmentName"),
-                        HospitalInfoEntityTableDef.HOSPITAL_INFO_ENTITY.NAME.as("hospitalName")
-                )
-                .from(DoctorEntityTableDef.DOCTOR_ENTITY)
-                .leftJoin(DepartmentEntityTableDef.DEPARTMENT_ENTITY)
-                .on(DoctorEntity::getDepartmentId, DepartmentEntity::getId)
-                .leftJoin(HospitalInfoEntityTableDef.HOSPITAL_INFO_ENTITY)
-                .on(DoctorEntity::getHospitalId, HospitalInfoEntity::getId);
-        return mapper.paginate(page, queryWrapper);
+                DOCTOR_ENTITY.ALL_COLUMNS,
+                DEPARTMENT_ENTITY.NAME.as("departmentName"),
+                HOSPITAL_INFO_ENTITY.NAME.as("hospitalName")
+            )
+            .from(DOCTOR_ENTITY)
+            .leftJoin(HOSPITAL_INFO_ENTITY).on(DOCTOR_ENTITY.HOSPITAL_ID.eq(HOSPITAL_INFO_ENTITY.ID))
+            .leftJoin(DEPARTMENT_ENTITY).on(DOCTOR_ENTITY.DEPARTMENT_ID.eq(DEPARTMENT_ENTITY.ID));
+        return mapper.paginateWithRelations(page, queryWrapper);
+    }
+
+    @Override
+    public Object info(Long id) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+            .select(
+                DOCTOR_ENTITY.ALL_COLUMNS,
+                DEPARTMENT_ENTITY.NAME.as("departmentName"),
+                HOSPITAL_INFO_ENTITY.NAME.as("hospitalName")
+            )
+            .from(DOCTOR_ENTITY)
+            .leftJoin(HOSPITAL_INFO_ENTITY).on(DOCTOR_ENTITY.HOSPITAL_ID.eq(HOSPITAL_INFO_ENTITY.ID))
+            .leftJoin(DEPARTMENT_ENTITY).on(DOCTOR_ENTITY.DEPARTMENT_ID.eq(DEPARTMENT_ENTITY.ID))
+            .where(DOCTOR_ENTITY.ID.eq(id));
+        return mapper.selectOneWithRelationsByQuery(queryWrapper);
     }
 }

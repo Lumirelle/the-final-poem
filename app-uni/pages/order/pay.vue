@@ -30,7 +30,7 @@ async function loadDetail(id: string) {
 
 // 提交支付
 async function handleSubmit() {
-  if (!payType.value) {
+  if (payType.value === null || payType.value === undefined || payType.value === '') {
     return uni.showToast({
       title: '请选择支付方式',
       icon: 'none',
@@ -42,8 +42,8 @@ async function handleSubmit() {
     await service.order.info.update({
       id: order.value.id,
       payType: Number(payType.value),
-      payTime: new Date().toISOString(),
-      status: 1, // 已支付
+      payTime: new Date().toUTCString(),
+      status: 2, // 待使用
     })
 
     uni.showToast({
@@ -69,16 +69,23 @@ async function handleSubmit() {
   }
 }
 
+// 选择支付方式
+function handleSelect(value: string) {
+  console.log('select pay type', value)
+  payType.value = value
+}
+
 // 页面加载
 onLoad((options) => {
   if (options?.id) {
+    console.log('[order] 页面加载：', options.id)
     loadDetail(options.id)
   }
 })
 </script>
 
 <template>
-  <cl-page>
+  <cl-page fullscreen>
     <cl-topbar title="订单支付" />
 
     <cl-loading-mask v-if="loading" />
@@ -115,7 +122,7 @@ onLoad((options) => {
             :key="item.value"
             class="method-item"
             :class="{ active: payType === item.value }"
-            @tap="payType = item.value"
+            @tap="handleSelect(item.value)"
           >
             <cl-icon :name="['wechat', 'alipay', 'card', 'cash'][Number(item.value)]" :size="48" />
             <cl-text :value="item.label" :margin="[10, 0, 0, 0]" />

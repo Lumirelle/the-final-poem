@@ -21,15 +21,15 @@ public class AppDepartmentController extends BaseController<DepartmentService, D
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         // 设置分页查询条件
         setPageOption(createOp()
-                .keyWordLikeFields(
-                        DEPARTMENT_ENTITY.NAME,
-                        DEPARTMENT_ENTITY.CODE
-                )
-                .fieldEq(
-                        DEPARTMENT_ENTITY.HOSPITAL_ID,
-                        DEPARTMENT_ENTITY.TYPE,
-                        DEPARTMENT_ENTITY.STATUS
-                )
+            .keyWordLikeFields(
+                DEPARTMENT_ENTITY.NAME,
+                DEPARTMENT_ENTITY.CODE
+            )
+            .fieldEq(
+                DEPARTMENT_ENTITY.HOSPITAL_ID,
+                DEPARTMENT_ENTITY.TYPE,
+                DEPARTMENT_ENTITY.STATUS
+            )
         );
     }
 } 

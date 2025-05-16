@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { onLoad } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+import { computed, ref } from 'vue'
 import Tabbar from './components/tabbar.vue'
 import { useCool, usePager, useStore } from '/@/cool'
 
@@ -16,6 +16,16 @@ const { dict } = useStore()
 const searchForm = ref({
   status: '',
   orderNumber: '',
+})
+
+const orderStatusOptions = computed(() => {
+  return [
+    {
+      label: '全部',
+      value: '',
+    },
+    ...dict.get('order-status'),
+  ]
 })
 
 // 刷新列表
@@ -62,14 +72,18 @@ function viewDetail(item: Eps.OrderInfoEntity) {
 function getStatusText(status: number | undefined) {
   if (status === undefined)
     return '未知'
-  return dict.get('order-status').find(item => item.value === status)?.label || '未知'
+  const result = dict.get('order-status').find(item => item.value === status)?.label
+  console.log('order status', result)
+  return result || '未知'
 }
 
 // 获取状态样式
 function getStatusType(status: number | undefined) {
   if (status === undefined)
     return 'primary'
-  return dict.get('order-status').find(item => item.value === status)?.type || 'primary'
+  const result = dict.get('order-status').find(item => item.value === status)?.type
+  console.log('order status type', result)
+  return result || 'primary'
 }
 
 // 继续支付
@@ -142,13 +156,13 @@ async function handleRefund(item: Eps.OrderInfoEntity) {
 }
 
 // 页面加载时刷新
-onLoad(() => {
+onShow(() => {
   refresh()
 })
 </script>
 
 <template>
-  <cl-page>
+  <cl-page fullscreen>
     <cl-topbar title="我的订单" />
 
     <cl-loading-mask v-if="loading" />
@@ -158,7 +172,7 @@ onLoad(() => {
       <cl-form :model="searchForm" class="search-form">
         <view class="basic-search">
           <cl-form-item label="订单状态" :margin="[0, 20, 20, 0]">
-            <cl-select v-model="searchForm.status" :options="dict.get('order-status')" />
+            <cl-select v-model="searchForm.status" :options="orderStatusOptions" />
           </cl-form-item>
 
           <cl-form-item label="订单编号" :margin="[0, 20, 20, 0]">
@@ -193,7 +207,9 @@ onLoad(() => {
           <view class="order-item">
             <view class="header">
               <cl-text :value="item.orderNumber" size="28" />
-              <cl-tag :type="getStatusType(item.status)" :text="getStatusText(item.status)" />
+              <cl-tag :type="getStatusType(item.status)">
+                {{ getStatusText(item.status) }}
+              </cl-tag>
             </view>
 
             <view class="content">

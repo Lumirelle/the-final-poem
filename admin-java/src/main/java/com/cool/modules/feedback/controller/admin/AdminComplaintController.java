@@ -27,13 +27,13 @@ public class AdminComplaintController extends BaseController<ComplaintService, C
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp()
-                .fieldEq(
-                        COMPLAINT_ENTITY.ORDER_ID,
-                        COMPLAINT_ENTITY.TYPE,
-                        COMPLAINT_ENTITY.STATUS,
-                        COMPLAINT_ENTITY.USER_ID,
-                        COMPLAINT_ENTITY.HANDLER_ID
-                ));
+            .fieldEq(
+                COMPLAINT_ENTITY.ORDER_ID,
+                COMPLAINT_ENTITY.TYPE,
+                COMPLAINT_ENTITY.STATUS,
+                COMPLAINT_ENTITY.COMPLAINT_USER_ID,
+                COMPLAINT_ENTITY.HANDLER_ID
+            ));
     }
 
     @Operation(summary = "统计", description = "统计投诉用户总量")

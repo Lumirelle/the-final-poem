@@ -21,15 +21,15 @@ public class AppDoctorController extends BaseController<DoctorService, DoctorEnt
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         // 设置分页查询条件
         setPageOption(createOp()
-                .keyWordLikeFields(
-                        DOCTOR_ENTITY.NAME,
-                        DOCTOR_ENTITY.JOB_CODE,
-                        DOCTOR_ENTITY.TITLE
-                )
-                .fieldEq(
-                        DOCTOR_ENTITY.HOSPITAL_ID,
-                        DOCTOR_ENTITY.DEPARTMENT_ID
-                )
+            .keyWordLikeFields(
+                DOCTOR_ENTITY.NAME,
+                DOCTOR_ENTITY.JOB_CODE,
+                DOCTOR_ENTITY.TITLE
+            )
+            .fieldEq(
+                DOCTOR_ENTITY.HOSPITAL_ID,
+                DOCTOR_ENTITY.DEPARTMENT_ID
+            )
         );
     }
 } 

@@ -22,13 +22,12 @@ public class AppMealCategoryController extends BaseController<MealCategoryServic
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         // 设置分页查询条件
         setPageOption(createOp()
-                .keyWordLikeFields(
-                        MEAL_CATEGORY_ENTITY.NAME
-                )
-                .fieldEq(
-                        MEAL_CATEGORY_ENTITY.STATUS
-                )
-                .queryWrapper(QueryWrapper.create().orderBy(MEAL_CATEGORY_ENTITY.SORT.asc()))
+            .keyWordLikeFields(
+                MEAL_CATEGORY_ENTITY.NAME
+            )
+            .fieldEq(
+                MEAL_CATEGORY_ENTITY.STATUS
+            )
         );
     }
 } 

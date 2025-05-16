@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { onLoad } from '@dcloudio/uni-app'
+import { onLoad, onShow } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
 import Tabbar from './components/tabbar.vue'
-import { useCool, usePager } from '/@/cool'
+import { useCool, usePager, useStore } from '/@/cool'
 
 const { service } = useCool()
+const { meal } = useStore()
 
 const { onRefresh } = usePager()
 
@@ -116,10 +117,23 @@ function viewDetail(item: any) {
 onLoad(() => {
   refresh()
 })
+
+// 监听页面显示
+onShow(() => {
+  // 如果有医院ID参数,设置到搜索条件中
+  const hospitalId = meal.getQueryParam('hospitalId')
+  console.log('[meal] 从其他页面打开：', hospitalId)
+  if (hospitalId) {
+    searchForm.value.hospitalId = hospitalId
+    meal.resetQueryParam('hospitalId')
+  }
+
+  refresh()
+})
 </script>
 
 <template>
-  <cl-page>
+  <cl-page fullscreen>
     <cl-topbar title="套餐列表" />
 
     <!-- 搜索区域 -->

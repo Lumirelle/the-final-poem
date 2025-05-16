@@ -20,15 +20,15 @@ public class AdminPatientInfoController extends BaseController<PatientInfoServic
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp()
             .fieldEq(
-                    PATIENT_INFO_ENTITY.ID,
-                    PATIENT_INFO_ENTITY.USER_ID,
-                    PATIENT_INFO_ENTITY.TYPE
+                PATIENT_INFO_ENTITY.ID,
+                PATIENT_INFO_ENTITY.USER_ID,
+                PATIENT_INFO_ENTITY.TYPE
             )
             .keyWordLikeFields(
-                    PATIENT_INFO_ENTITY.NAME,
-                    PATIENT_INFO_ENTITY.PHONE,
-                    PATIENT_INFO_ENTITY.ADDRESS,
-                    PATIENT_INFO_ENTITY.MEDICAL_RECORD_NUMBER
+                PATIENT_INFO_ENTITY.NAME,
+                PATIENT_INFO_ENTITY.PHONE,
+                PATIENT_INFO_ENTITY.ADDRESS,
+                PATIENT_INFO_ENTITY.MEDICAL_RECORD_NUMBER
             ));
     }
 }

@@ -31,54 +31,29 @@ import static com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableD
  */
 @Tag(name = "陪诊员管理", description = "陪诊员信息管理")
 @CoolRestController(api = {"add", "delete", "update", "info", "page", "doreview"})
-@RequiredArgsConstructor
 public class AdminAccompanyStaffController extends BaseController<AccompanyStaffService, AccompanyStaffEntity> {
-
-    private final AccompanyReviewService reviewService;
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(
-                createOp()
-                        .fieldEq(
-                                ACCOMPANY_STAFF_ENTITY.ID,
-                                ACCOMPANY_STAFF_ENTITY.STATUS,
-                                ACCOMPANY_STAFF_ENTITY.GENDER,
-                                ACCOMPANY_STAFF_ENTITY.LEVEL
-                        )
-                        .keyWordLikeFields(
-                                ACCOMPANY_STAFF_ENTITY.NAME,
-                                ACCOMPANY_STAFF_ENTITY.PHONE
-                        )
-                        .queryWrapper(QueryWrapper.create()
-                                .select(
-                                        AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY.ALL_COLUMNS,
-                                        UserInfoEntityTableDef.USER_INFO_ENTITY.NICK_NAME.as("nickName")
-                                )
-                                .from(AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY)
-                                .leftJoin(UserInfoEntityTableDef.USER_INFO_ENTITY)
-                                .on(AccompanyStaffEntity::getUserId, UserInfoEntity::getId))
+            createOp()
+                .fieldEq(
+                    ACCOMPANY_STAFF_ENTITY.ID,
+                    ACCOMPANY_STAFF_ENTITY.STATUS,
+                    ACCOMPANY_STAFF_ENTITY.GENDER,
+                    ACCOMPANY_STAFF_ENTITY.LEVEL
+                )
+                .keyWordLikeFields(
+                    ACCOMPANY_STAFF_ENTITY.NAME,
+                    ACCOMPANY_STAFF_ENTITY.PHONE
+                )
         );
     }
 
     @Operation(summary = "审核", description = "审核陪诊员资质，修改陪诊员级别")
     @PostMapping("/doreview")
     public R review(@RequestAttribute() JSONObject requestParams) {
-        String body = requestParams.getStr("body");
-        if (StrUtil.isBlank(body)) {
-            return R.error("参数错误");
-        }
-
-        // 保存审核记录
-        reviewService.add(requestParams, JSONUtil.toBean(body, AccompanyReviewEntity.class));
-
-        // 更新陪诊员信息
-        Long id = requestParams.getLong("staffId");
-        JSONObject info = JSONUtil.parseObj(JSONUtil.toJsonStr(service.getById(id)));
-        info.set("id", id);
-        info.set("level", requestParams.getStr("level"));
-        info.set("updateTime", new Date());
-        service.update(requestParams, JSONUtil.toBean(info, currentEntityClass()));
+        service.doReview(requestParams, requestParams.toBean(AccompanyReviewEntity.class));
         return R.ok();
     }
 

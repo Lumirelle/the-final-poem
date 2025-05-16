@@ -18,15 +18,15 @@ public class AdminDepartmentController extends BaseController<DepartmentService,
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp()
-                .keyWordLikeFields(
-                        DEPARTMENT_ENTITY.NAME,
-                        DEPARTMENT_ENTITY.CODE
-                )
-                .fieldEq(
-                        DEPARTMENT_ENTITY.HOSPITAL_ID,
-                        DEPARTMENT_ENTITY.ID,
-                        DEPARTMENT_ENTITY.STATUS,
-                        DEPARTMENT_ENTITY.TYPE
-                ));
+            .keyWordLikeFields(
+                DEPARTMENT_ENTITY.NAME,
+                DEPARTMENT_ENTITY.CODE
+            )
+            .fieldEq(
+                DEPARTMENT_ENTITY.HOSPITAL_ID,
+                DEPARTMENT_ENTITY.ID,
+                DEPARTMENT_ENTITY.STATUS,
+                DEPARTMENT_ENTITY.TYPE
+            ));
     }
 }

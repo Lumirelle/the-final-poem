@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-import { useCool } from '/@/cool'
+import BackHome from '/@/components/back-home.vue'
+import { useCool, useStore } from '/@/cool'
 
 const { service } = useCool()
+const { meal } = useStore()
 
 const hospital = ref<any>({})
 const departments = ref<any[]>([])
@@ -38,6 +40,14 @@ function viewDepartment(item: any) {
   })
 }
 
+// 查看陪诊服务
+function viewMealList() {
+  meal.setQueryParam('hospitalId', hospital.value.id)
+  uni.switchTab({
+    url: '/pages/index/meal',
+  })
+}
+
 // 页面加载
 onLoad((options) => {
   if (options?.id) {
@@ -47,7 +57,7 @@ onLoad((options) => {
 </script>
 
 <template>
-  <cl-page>
+  <cl-page fullscreen>
     <cl-topbar title="医院详情" />
 
     <!-- 加载中 -->
@@ -97,6 +107,18 @@ onLoad((options) => {
         </view>
       </view>
 
+      <!-- 查看陪诊服务按钮 -->
+      <view class="action-btn">
+        <cl-button
+          type="primary"
+          :width="600"
+          round
+          @tap="viewMealList"
+        >
+          查看陪诊服务
+        </cl-button>
+      </view>
+
       <!-- 科室列表 -->
       <view class="department-list">
         <cl-divider :margin="[30, 0]">
@@ -117,6 +139,9 @@ onLoad((options) => {
         </cl-grid>
       </view>
     </template>
+
+    <!-- 回到首页按钮 -->
+    <back-home />
   </cl-page>
 </template>
 
@@ -131,6 +156,12 @@ onLoad((options) => {
       margin-top: 16rpx;
     }
   }
+}
+
+.action-btn {
+  display: flex;
+  justify-content: center;
+  margin: 30rpx 0;
 }
 
 .department-list {

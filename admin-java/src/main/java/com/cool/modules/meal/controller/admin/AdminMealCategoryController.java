@@ -19,9 +19,9 @@ public class AdminMealCategoryController extends BaseController<MealCategoryServ
     @Override
     protected void init(HttpServletRequest request, @RequestAttribute JSONObject requestParams) {
         setPageOption(
-                createOp()
-                        .keyWordLikeFields(MEAL_CATEGORY_ENTITY.NAME)
-                        .fieldEq(MEAL_CATEGORY_ENTITY.STATUS, MEAL_CATEGORY_ENTITY.STATUS)
+            createOp()
+                .keyWordLikeFields(MEAL_CATEGORY_ENTITY.NAME)
+                .fieldEq(MEAL_CATEGORY_ENTITY.STATUS, MEAL_CATEGORY_ENTITY.STATUS)
         );
     }
 }

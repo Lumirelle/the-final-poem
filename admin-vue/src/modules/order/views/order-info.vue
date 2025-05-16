@@ -34,7 +34,7 @@ const Upsert = useUpsert({
     },
     {
       label: t('选择用户'),
-      prop: 'userId',
+      prop: 'payUserId',
       component: { vm: UserSelect, props: { role: dict.getByLabel('user-role', '患者') || 1 } },
       span: 24,
       required: true,
@@ -121,7 +121,7 @@ const Table = useTable({
       return {
         label: t('支付'),
         type: 'primary',
-        hidden: row.status === (dict.getByLabel('order-status', '已支付') || 1),
+        hidden: row.status !== (dict.getByLabel('order-status', '待支付') || 0),
         callback: (done) => {
           PaymentUpsert.value?.edit({
             ...row,
@@ -137,7 +137,7 @@ const Table = useTable({
     { label: t('编号'), prop: 'orderNumber', minWidth: 140 },
     { label: t('套餐ID'), prop: 'mealId', minWidth: 140 },
     { label: t('套餐'), prop: 'mealName', minWidth: 140 },
-    { label: t('用户ID'), prop: 'userId', minWidth: 140 },
+    { label: t('用户ID'), prop: 'payUserId', minWidth: 140 },
     { label: t('用户'), prop: 'userName', minWidth: 140 },
     {
       label: t('总金额'),
@@ -149,6 +149,7 @@ const Table = useTable({
     { label: t('实付金额'), prop: 'actualAmount', minWidth: 140 },
     { label: t('状态'), prop: 'status', minWidth: 120, dict: dict.get('order-status') },
     { label: t('支付方式'), prop: 'payType', minWidth: 120, dict: dict.get('pay-type') },
+    { label: t('支付时间'), prop: 'payTime', minWidth: 160 },
     {
       label: t('备注'),
       prop: 'remark',
@@ -175,7 +176,7 @@ const Table = useTable({
         {
           label: t('支付'),
           type: 'primary',
-          hidden: scope.row.status === (dict.getByLabel('order-status', '已支付') || 1),
+          hidden: scope.row.status !== (dict.getByLabel('order-status', '待支付') || 0),
           onClick: () => {
             PaymentUpsert.value?.edit({
               ...scope.row,
@@ -203,7 +204,7 @@ const Search = useSearch({
     },
     {
       label: t('用户 ID'),
-      prop: 'userId',
+      prop: 'payUserId',
       component: { name: 'el-input', props: { clearable: true } },
     },
     {

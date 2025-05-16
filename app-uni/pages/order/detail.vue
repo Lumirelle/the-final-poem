@@ -1,0 +1,173 @@
+<script lang="ts" setup>
+import { onLoad } from '@dcloudio/uni-app'
+import { ref } from 'vue'
+import BackHome from '/@/components/back-home.vue'
+import { useCool } from '/@/cool'
+
+const { service } = useCool()
+
+// 详情数据
+const detail = ref<Eps.OrderInfoEntity>({})
+const loading = ref(false)
+
+interface StatusInfo {
+  text: string
+  color: string
+}
+
+// 订单状态映射
+const statusMap: Record<number, StatusInfo> = {
+  0: { text: '待支付', color: 'warning' },
+  1: { text: '已支付', color: 'primary' },
+  2: { text: '待使用', color: 'info' },
+  3: { text: '已完成', color: 'success' },
+  4: { text: '已取消', color: 'danger' },
+  5: { text: '已退款', color: 'danger' },
+}
+
+// 支付方式映射
+const payTypeMap: Record<number, string> = {
+  0: '微信',
+  1: '支付宝',
+  2: '线下银行卡',
+  3: '线下现金',
+}
+
+// 加载详情
+async function loadDetail(id: string) {
+  loading.value = true
+  try {
+    const res = await service.order.info.info({
+      id,
+    })
+    detail.value = res
+  }
+  finally {
+    loading.value = false
+  }
+}
+
+// 页面加载
+onLoad((options) => {
+  if (options?.id) {
+    loadDetail(options.id)
+  }
+})
+</script>
+
+<template>
+  <cl-page fullscreen>
+    <cl-topbar title="订单详情" />
+
+    <cl-loading-mask v-if="loading" />
+
+    <cl-scroller>
+      <!-- 订单状态 -->
+      <view class="status-section">
+        <cl-text
+          :value="statusMap[detail.status || 0]?.text"
+          :color="statusMap[detail.status || 0]?.color"
+          size="48"
+          bold
+        />
+      </view>
+
+      <!-- 订单信息 -->
+      <view class="info-section">
+        <view class="info-row">
+          <cl-text value="订单编号" color="#999" />
+          <cl-text :value="detail.orderNumber" />
+        </view>
+
+        <view class="info-row">
+          <cl-text value="下单时间" color="#999" />
+          <cl-text :value="detail.createTime" />
+        </view>
+
+        <view class="info-row">
+          <cl-text value="支付方式" color="#999" />
+          <cl-text :value="payTypeMap[detail.payType || 0]" />
+        </view>
+
+        <view v-if="detail.payTime" class="info-row">
+          <cl-text value="支付时间" color="#999" />
+          <cl-text :value="detail.payTime" />
+        </view>
+
+        <view class="info-row">
+          <cl-text value="备注信息" color="#999" />
+          <cl-text :value="detail.remark || '无'" />
+        </view>
+      </view>
+
+      <!-- 金额信息 -->
+      <view class="amount-section">
+        <view class="info-row">
+          <cl-text value="订单金额" color="#999" />
+          <cl-text :value="`¥${detail.totalAmount || '0'}`" />
+        </view>
+
+        <view class="info-row">
+          <cl-text value="优惠金额" color="#999" />
+          <cl-text :value="`¥${detail.discountAmount || '0'}`" />
+        </view>
+
+        <view class="info-row total">
+          <cl-text value="实付金额" color="#999" size="32" />
+          <cl-text :value="`¥${detail.actualAmount || '0'}`" color="danger" size="32" bold />
+        </view>
+      </view>
+    </cl-scroller>
+
+    <!-- 回到首页按钮 -->
+    <back-home />
+  </cl-page>
+</template>
+
+<style lang="scss" scoped>
+.status-section {
+  padding: 60rpx 30rpx;
+  background-color: #fff;
+  text-align: center;
+}
+
+.info-section {
+  margin-top: 20rpx;
+  padding: 30rpx;
+  background-color: #fff;
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.amount-section {
+  margin-top: 20rpx;
+  padding: 30rpx;
+  background-color: #fff;
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &.total {
+      margin-top: 30rpx;
+      padding-top: 30rpx;
+      border-top: 2rpx solid #f5f5f5;
+    }
+  }
+}
+</style>

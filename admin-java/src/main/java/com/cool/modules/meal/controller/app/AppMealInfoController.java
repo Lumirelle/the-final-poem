@@ -21,17 +21,17 @@ public class AppMealInfoController extends BaseController<MealInfoService, MealI
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         // 设置分页查询条件
         setPageOption(createOp()
-                .keyWordLikeFields(
-                        MEAL_INFO_ENTITY.NAME,
-                        MEAL_INFO_ENTITY.INTRO
-                )
-                .fieldEq(
-                        MEAL_INFO_ENTITY.STATUS,
-                        MEAL_INFO_ENTITY.CATEGORY_ID,
-                        MEAL_INFO_ENTITY.HOSPITAL_ID,
-                        MEAL_INFO_ENTITY.DEPARTMENT_ID,
-                        MEAL_INFO_ENTITY.DOCTOR_ID
-                )
+            .keyWordLikeFields(
+                MEAL_INFO_ENTITY.NAME,
+                MEAL_INFO_ENTITY.INTRO
+            )
+            .fieldEq(
+                MEAL_INFO_ENTITY.STATUS,
+                MEAL_INFO_ENTITY.CATEGORY_ID,
+                MEAL_INFO_ENTITY.HOSPITAL_ID,
+                MEAL_INFO_ENTITY.DEPARTMENT_ID,
+                MEAL_INFO_ENTITY.DOCTOR_ID
+            )
         );
     }
 } 

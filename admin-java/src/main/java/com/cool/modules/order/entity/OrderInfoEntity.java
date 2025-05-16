@@ -40,8 +40,11 @@ public class OrderInfoEntity extends BaseEntity<OrderInfoEntity> {
     @Column(ignore = true)
     private String mealName;
 
+    @Column
+    private String mealCover;
+
     @ColumnDefine(comment = "用户ID")
-    private Long userId;
+    private Long payUserId;
 
     @Column(ignore = true)
     private String userName;

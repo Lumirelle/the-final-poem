@@ -21,15 +21,16 @@ public class AppHospitalInfoController extends BaseController<HospitalInfoServic
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         // 设置分页查询条件
         setPageOption(createOp()
-                .keyWordLikeFields(
-                        HOSPITAL_INFO_ENTITY.NAME,
-                        HOSPITAL_INFO_ENTITY.CODE,
-                        HOSPITAL_INFO_ENTITY.ADDRESS,
-                        HOSPITAL_INFO_ENTITY.PHONE
-                )
-                .fieldEq(
-                        HOSPITAL_INFO_ENTITY.STATUS
-                )
+            .keyWordLikeFields(
+                HOSPITAL_INFO_ENTITY.NAME,
+                HOSPITAL_INFO_ENTITY.CODE,
+                HOSPITAL_INFO_ENTITY.ADDRESS,
+                HOSPITAL_INFO_ENTITY.PHONE
+            )
+            .fieldEq(
+                HOSPITAL_INFO_ENTITY.ID,
+                HOSPITAL_INFO_ENTITY.STATUS
+            )
         );
     }
 } 

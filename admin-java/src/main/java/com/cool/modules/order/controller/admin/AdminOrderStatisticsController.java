@@ -1,5 +1,6 @@
 package com.cool.modules.order.controller.admin;
 
+import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONObject;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * 订单统计管理
  */
 @Tag(name = "订单统计管理", description = "管理订单统计")
-@CoolRestController(api = { "add", "info", "page"})
+@CoolRestController(api = {"add", "info", "page"})
 public class AdminOrderStatisticsController extends
     BaseController<OrderStatisticsService, OrderStatisticsEntity> {
 
@@ -32,9 +33,17 @@ public class AdminOrderStatisticsController extends
     @PostMapping("/add")
     @Operation(summary = "订单统计", description = "生成订单统计")
     public R add(@RequestAttribute() JSONObject requestParams) {
-      OrderStatisticsDto dto = requestParams.toBean(OrderStatisticsDto.class);
-      service.statistics(dto);
-      return R.ok();
+        return R.ok(Dict.create()
+            .set("id", service.statistics(requestParams.toBean(OrderStatisticsDto.class)))
+        );
+    }
+
+    @PostMapping("/addThisWeek")
+    @Operation(summary = "本周订单统计", description = "生成本周订单统计")
+    public R addThisWeek() {
+        return R.ok(Dict.create()
+            .set("id", service.statisticsThisWeek())
+        );
     }
 
 }

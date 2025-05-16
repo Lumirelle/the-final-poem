@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onLoad } from '@dcloudio/uni-app'
+import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import Tabbar from './components/tabbar.vue'
 import { useCool, usePager } from '/@/cool'
@@ -72,13 +72,13 @@ function viewDetail(item: any) {
 }
 
 // 页面加载时刷新
-onLoad(() => {
+onShow(() => {
   refresh()
 })
 </script>
 
 <template>
-  <cl-page>
+  <cl-page fullscreen>
     <cl-topbar title="医院列表" />
 
     <!-- 搜索区域 -->

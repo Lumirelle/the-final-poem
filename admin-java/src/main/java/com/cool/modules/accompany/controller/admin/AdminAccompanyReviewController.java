@@ -22,14 +22,14 @@ public class AdminAccompanyReviewController extends BaseController<AccompanyRevi
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(
-                createOp()
-                        .keyWordLikeFields(
-                                ACCOMPANY_REVIEW_ENTITY.REMARK
-                        )
-                        .fieldEq(
-                                ACCOMPANY_REVIEW_ENTITY.ID,
-                                ACCOMPANY_REVIEW_ENTITY.STAFF_ID
-                        )
+            createOp()
+                .keyWordLikeFields(
+                    ACCOMPANY_REVIEW_ENTITY.REMARK
+                )
+                .fieldEq(
+                    ACCOMPANY_REVIEW_ENTITY.ID,
+                    ACCOMPANY_REVIEW_ENTITY.STAFF_ID
+                )
         );
     }
 

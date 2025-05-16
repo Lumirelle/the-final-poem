@@ -25,27 +25,42 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ComplaintServiceImpl extends BaseServiceImpl<ComplaintMapper, ComplaintEntity> implements
-        ComplaintService {
+    ComplaintService {
 
     @Override
     public Object page(JSONObject requestParams, Page<ComplaintEntity> page, QueryWrapper queryWrapper) {
         queryWrapper.select(
-                        COMPLAINT_ENTITY.ALL_COLUMNS,
-                        USER_INFO_ENTITY.NICK_NAME.as("userNickName"),
-                        BASE_SYS_USER_ENTITY.NICK_NAME.as("handlerNickName")
-                )
-                .from(COMPLAINT_ENTITY)
-                .leftJoin(USER_INFO_ENTITY)
-                .on(USER_INFO_ENTITY.ID.eq(COMPLAINT_ENTITY.USER_ID))
-                .leftJoin(BASE_SYS_USER_ENTITY)
-                .on(BASE_SYS_USER_ENTITY.ID.eq(COMPLAINT_ENTITY.HANDLER_ID));
-        return super.page(requestParams, page, queryWrapper);
+                COMPLAINT_ENTITY.ALL_COLUMNS,
+                USER_INFO_ENTITY.NICK_NAME.as("userNickName"),
+                BASE_SYS_USER_ENTITY.NICK_NAME.as("handlerNickName")
+            )
+            .from(COMPLAINT_ENTITY)
+            .leftJoin(USER_INFO_ENTITY).on(USER_INFO_ENTITY.ID.eq(COMPLAINT_ENTITY.COMPLAINT_USER_ID))
+            .leftJoin(BASE_SYS_USER_ENTITY).on(BASE_SYS_USER_ENTITY.ID.eq(COMPLAINT_ENTITY.HANDLER_ID));
+        return mapper.paginateWithRelations(page, queryWrapper);
+    }
+
+    @Override
+    public Object info(Long id) {
+        QueryWrapper queryWrapper = QueryWrapper
+            .create()
+            .select(
+                COMPLAINT_ENTITY.ALL_COLUMNS,
+                USER_INFO_ENTITY.NICK_NAME.as("userNickName"),
+                BASE_SYS_USER_ENTITY.NICK_NAME.as("handlerNickName")
+            )
+            .from(COMPLAINT_ENTITY)
+            .leftJoin(USER_INFO_ENTITY).on(USER_INFO_ENTITY.ID.eq(COMPLAINT_ENTITY.COMPLAINT_USER_ID))
+            .leftJoin(BASE_SYS_USER_ENTITY).on(BASE_SYS_USER_ENTITY.ID.eq(COMPLAINT_ENTITY.HANDLER_ID))
+            .where(COMPLAINT_ENTITY.ID.eq(id));
+        return mapper.selectListWithRelationsByQuery(queryWrapper);
     }
 
     @Override
     public Long add(ComplaintEntity entity) {
         entity.setHandlerId(CoolSecurityUtil.getCurrentUserId());
-        return super.add(entity);
+        mapper.insert(entity);
+        return entity.getId();
     }
 
     @Override
@@ -55,10 +70,10 @@ public class ComplaintServiceImpl extends BaseServiceImpl<ComplaintMapper, Compl
         // 统计每个月的投诉数量
         for (int i = 0; i < 12; i++) {
             list.add(count(QueryWrapper.create()
-                    .from(COMPLAINT_ENTITY)
-                    .where(COMPLAINT_ENTITY.CREATE_TIME.ge(DateUtil.offsetMonth(DateUtil.date(), -currentMonth + i))
-                            .and(COMPLAINT_ENTITY.CREATE_TIME.lt(DateUtil.offsetMonth(DateUtil.date(), -currentMonth + i + 1))))
-                    .select(COMPLAINT_ENTITY.ID)));
+                .from(COMPLAINT_ENTITY)
+                .where(COMPLAINT_ENTITY.CREATE_TIME.ge(DateUtil.offsetMonth(DateUtil.date(), -currentMonth + i))
+                    .and(COMPLAINT_ENTITY.CREATE_TIME.lt(DateUtil.offsetMonth(DateUtil.date(), -currentMonth + i + 1))))
+                .select(COMPLAINT_ENTITY.ID)));
         }
         return list;
     }

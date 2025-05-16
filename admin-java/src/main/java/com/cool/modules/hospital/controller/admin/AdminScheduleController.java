@@ -21,12 +21,6 @@ public class AdminScheduleController extends BaseController<ScheduleService, Sch
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
-        // 初始化的逻辑可以为空，因为筛选逻辑在service层实现
     }
 
-    @Operation(summary = "分页")
-    @PostMapping("/page")
-    public R page(@RequestAttribute JSONObject requestParams) {
-        return R.ok(pageResult(service.page(requestParams)));
-    }
 }

@@ -3,12 +3,11 @@ import { onPullDownRefresh, onShow } from '@dcloudio/uni-app'
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Tabbar from './components/tabbar.vue'
-import { useUi } from '/$/cool-ui'
-import { module, useCool, useStore } from '/@/cool'
+import { useCool, useStore } from '/@/cool'
 
 const { router } = useCool()
-const { user } = useStore()
-const ui = useUi()
+const { user, order: orderStore } = useStore()
+
 const { t } = useI18n()
 
 async function refresh() {
@@ -16,7 +15,7 @@ async function refresh() {
     await user.get()
   }
   else {
-    // user.logout();
+    user.logout();
   }
 }
 
@@ -29,29 +28,26 @@ const order = reactive({
     },
     {
       icon: 'order-not-shipped',
-      label: t('未发货'),
-      value: 2,
+      label: t('待使用'),
+      value: 3,
     },
     {
       icon: 'order-received',
-      label: t('已发货'),
+      label: t('已完成'),
       value: 3,
     },
     {
       icon: 'order-refund',
-      label: t('售后 / 退款'),
+      label: t('已取消'),
       value: 4,
     },
   ],
 
   toLink(value: number) {
-    ui.showToast(t('订单模块不存在，请在插件市场中下载'))
+    orderStore.setQueryParam('status', value)
+    router.push('/pages/index/order')
   },
 })
-
-function toBill() {
-  ui.showToast(t('财务模块不存在，请在插件市场中下载'))
-}
 
 function toSet() {
   router.push('/pages/user/set')
@@ -59,15 +55,6 @@ function toSet() {
 
 function toEdit() {
   router.push('/pages/user/edit')
-}
-
-function toMsg() {
-  if (module.get('cool-msg')) {
-    router.push('/uni_modules/cool-msg/pages/list')
-  }
-  else {
-    ui.showToast(t('消息模块不存在，请在插件市场中下载'))
-  }
 }
 
 onPullDownRefresh(async () => {
@@ -97,10 +84,6 @@ onShow(() => {
         <view class="icon" @tap="toSet">
           <text class="cl-icon-set" />
         </view>
-
-        <view class="icon" @tap="toMsg">
-          <text class="cl-icon-msg" />
-        </view>
       </view>
 
       <view class="user" @tap="toEdit">
@@ -121,50 +104,22 @@ onShow(() => {
       <view class="count">
         <view class="item">
           <text>171</text>
-          <text>{{ t("总点击") }}</text>
+          <text>{{ t("总订单") }}</text>
         </view>
 
         <view class="item">
-          <text>24</text>
-          <text>{{ t("赞") }}</text>
+          <text>1</text>
+          <text>{{ t("待支付") }}</text>
         </view>
 
         <view class="item">
-          <text>89</text>
-          <text>{{ t("关注") }}</text>
+          <text>5</text>
+          <text>{{ t("待使用") }}</text>
         </view>
 
         <view class="item">
-          <text>653</text>
-          <text>{{ t("粉丝") }}</text>
-        </view>
-      </view>
-
-      <view class="switch">
-        <view class="item">
-          <cl-text :size="28" bold block :margin="[0, 0, 10, 0]">
-            {{ t("接单模式") }}
-          </cl-text>
-          <cl-text :size="24" color="info">
-            {{ t("已关闭") }}
-          </cl-text>
-
-          <view class="inner">
-            <cl-switch />
-          </view>
-        </view>
-
-        <view class="item">
-          <cl-text :size="28" bold block :margin="[0, 0, 10, 0]">
-            {{ t("消息通知") }}
-          </cl-text>
-          <cl-text :size="24" color="info">
-            {{ t("已开启") }}
-          </cl-text>
-
-          <view class="inner">
-            <cl-switch />
-          </view>
+          <text>165</text>
+          <text>{{ t("已完成") }}</text>
         </view>
       </view>
 
@@ -186,42 +141,6 @@ onShow(() => {
             </cl-text>
           </view>
         </view>
-      </view>
-
-      <view class="menu">
-        <cl-list :radius="24" :border="false">
-          <cl-list-item :label="t('我的账单')" @tap="toBill">
-            <template #icon>
-              <cl-icon name="bill" :size="40" />
-            </template>
-          </cl-list-item>
-
-          <cl-list-item :label="t('观看历史')">
-            <template #icon>
-              <cl-icon name="time" :size="40" />
-            </template>
-          </cl-list-item>
-
-          <cl-list-item :label="t('数据看板')">
-            <template #icon>
-              <cl-icon name="chart-bar" :size="40" />
-            </template>
-          </cl-list-item>
-
-          <cl-list-item :label="t('邀请好友')">
-            <template #icon>
-              <cl-icon name="share" :size="40" />
-            </template>
-          </cl-list-item>
-        </cl-list>
-
-        <cl-list :radius="24" :border="false">
-          <cl-list-item :label="t('设置')" @tap="toSet">
-            <template #icon>
-              <cl-icon name="set" :size="40" />
-            </template>
-          </cl-list-item>
-        </cl-list>
       </view>
     </view>
 
@@ -293,34 +212,6 @@ $gap: 24rpx;
     }
   }
 
-  .switch {
-    display: flex;
-    margin-bottom: 24rpx;
-
-    .item {
-      flex: 1;
-      border-radius: 24rpx;
-      padding: 32rpx;
-      background-color: #fff;
-      position: relative;
-
-      .inner {
-        position: absolute;
-        right: 24rpx;
-        top: calc(50% - 30rpx);
-        transform: scale(0.8);
-      }
-
-      &:nth-child(1) {
-        margin-right: 12rpx;
-      }
-
-      &:nth-child(2) {
-        margin-left: 12rpx;
-      }
-    }
-  }
-
   .status {
     background-color: #fff;
     border-radius: 24rpx;
@@ -338,12 +229,6 @@ $gap: 24rpx;
         flex: 1;
         padding: 48rpx 0 24rpx 0;
       }
-    }
-  }
-
-  .menu {
-    :deep(.cl-list-item) {
-      padding: 4rpx 6rpx 4rpx 12rpx;
     }
   }
 }

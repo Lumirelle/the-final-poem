@@ -4,7 +4,6 @@ import static com.cool.modules.order.entity.table.OrderInfoEntityTableDef.ORDER_
 
 import org.springframework.web.bind.annotation.GetMapping;
 
-import cn.hutool.db.Page;
 import cn.hutool.json.JSONObject;
 import com.cool.core.annotation.CoolRestController;
 import com.cool.core.base.BaseController;
@@ -29,23 +28,22 @@ public class AdminOrderInfoController extends BaseController<OrderInfoService, O
     protected void init(HttpServletRequest request, JSONObject requestParams) {
 
         boolean payOrderOnly = requestParams.getBool("payOrderOnly", false);
-        
+
         setPageOption(
             createOp()
                 .keyWordLikeFields(
-                  ORDER_INFO_ENTITY.ORDER_NUMBER
-                  )
+                    ORDER_INFO_ENTITY.ORDER_NUMBER
+                )
+                // NOTE: UserId 是保留字段，请求时默认传递发起请求用户的 ID，因此本实体类中需要用 payUserId
                 .fieldEq(
-                  ORDER_INFO_ENTITY.USER_ID, 
-                  ORDER_INFO_ENTITY.STATUS, 
-                  ORDER_INFO_ENTITY.PAY_TYPE,
-                  ORDER_INFO_ENTITY.ID
-                  )
-                  .queryWrapper(QueryWrapper.create()
-                    .select(ORDER_INFO_ENTITY.ALL_COLUMNS)
-                    .from(ORDER_INFO_ENTITY)
+                    ORDER_INFO_ENTITY.PAY_USER_ID,
+                    ORDER_INFO_ENTITY.STATUS,
+                    ORDER_INFO_ENTITY.PAY_TYPE,
+                    ORDER_INFO_ENTITY.ID
+                )
+                .queryWrapper(QueryWrapper.create()
                     .where(ORDER_INFO_ENTITY.STATUS.in(1, 2, 3).when(payOrderOnly))
-                  )
+                )
         );
     }
 
