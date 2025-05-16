@@ -96,7 +96,9 @@ function changeMode(item: Platform) {
 async function reqLogin(key: LoginType, data: any) {
   type.value = key
 
+  // @ts-expect-error xxx
   service.user.login[key](data)
+  // @ts-expect-error xxx
     .then(async (res) => {
       // 设置token
       user.setToken(res)
@@ -107,6 +109,7 @@ async function reqLogin(key: LoginType, data: any) {
       // 检测是否需要编辑
       edit.check()
     })
+  // @ts-expect-error xxx
     .catch((err) => {
       ui.showTips(err.message)
       wx.getCode()
@@ -285,12 +288,14 @@ const edit = reactive({
   visible: false,
 
   form: {
+    role: 0,
     avatarUrl: '',
     nickName: '',
   },
 
   check() {
-    if (type.value == 'mini' && user.info?.nickName == '微信用户') {
+    // @ts-expect-error xxx
+    if ((type.value == 'mini' && user.info?.nickName == '微信用户') || user.info?.role === 0) {
       edit.open()
     }
     else {
@@ -327,6 +332,10 @@ const edit = reactive({
 
     if (!edit.form.nickName) {
       return ui.showToast(t('请输入昵称'))
+    }
+
+    if (edit.form.role === 0) {
+      return ui.showToast(t('请选择角色'))
     }
 
     user.update(edit.form)
@@ -463,6 +472,17 @@ onReady(() => {
             >
           </cl-list-item>
         </cl-list>
+
+        <cl-list-item :label="t('角色')" :arrow-icon="false">
+          <cl-radio-group v-model="edit.form.role">
+            <cl-radio :label="1">
+              {{ t('患者') }}
+            </cl-radio>
+            <cl-radio :label="2">
+              {{ t('陪诊人员') }}
+            </cl-radio>
+          </cl-radio-group>
+        </cl-list-item>
 
         <cl-button fill type="primary" :height="90" :font-size="30" @tap="edit.save">
           {{ t("保存") }}

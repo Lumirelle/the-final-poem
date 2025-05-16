@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 订单信息
@@ -53,7 +54,10 @@ public class OrderInfoEntity extends BaseEntity<OrderInfoEntity> {
     private Integer payType;
 
     @ColumnDefine(comment = "支付时间")
-    private String payTime;
+    private Date payTime;
+
+    @ColumnDefine(comment = "就诊时间")
+    private Date visitTime;
 
     @ColumnDefine(comment = "备注")
     private String remark;

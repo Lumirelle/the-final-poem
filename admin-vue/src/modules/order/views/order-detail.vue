@@ -166,8 +166,6 @@ function refresh(params?: any) {
     <cl-row>
       <!-- 刷新按钮 -->
       <cl-refresh-btn />
-      <!-- 新增按钮 -->
-      <cl-add-btn />
       <!-- 导出按钮 -->
       <cl-export-btn :columns="Table?.columns" />
       <cl-flex1 />

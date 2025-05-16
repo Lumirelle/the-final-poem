@@ -16,7 +16,7 @@ import static com.cool.modules.user.entity.table.UserInfoEntityTableDef.USER_INF
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Tag(name = "用户信息", description = "用户信息")
-@CoolRestController(api = {"add", "delete", "update", "page", "list", "info", "count", "countToday"})
+@CoolRestController(api = {"delete", "update", "page", "list", "info", "count", "countToday"})
 public class AdminUserInfoController extends BaseController<UserInfoService, UserInfoEntity> {
 
     @Override

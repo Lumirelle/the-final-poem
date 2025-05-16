@@ -11,8 +11,12 @@ const order = ref<Eps.OrderInfoEntity>({})
 const loading = ref(false)
 const submitting = ref(false)
 
-// 支付方式
-const payType = ref('')
+// 就诊信息
+const form = ref({
+  visitTime: '',
+  remark: '',
+  payType: '',
+})
 
 // 加载订单详情
 async function loadDetail(id: string) {
@@ -30,7 +34,7 @@ async function loadDetail(id: string) {
 
 // 提交支付
 async function handleSubmit() {
-  if (payType.value === null || payType.value === undefined || payType.value === '') {
+  if (form.value.payType === null || form.value.payType === undefined || form.value.payType === '') {
     return uni.showToast({
       title: '请选择支付方式',
       icon: 'none',
@@ -41,8 +45,9 @@ async function handleSubmit() {
   try {
     await service.order.info.update({
       id: order.value.id,
-      payType: Number(payType.value),
-      payTime: new Date().toUTCString(),
+      visitTime: form.value.visitTime,
+      remark: form.value.remark,
+      payType: Number(form.value.payType),
       status: 2, // 待使用
     })
 
@@ -72,7 +77,7 @@ async function handleSubmit() {
 // 选择支付方式
 function handleSelect(value: string) {
   console.log('select pay type', value)
-  payType.value = value
+  form.value.payType = value
 }
 
 // 页面加载
@@ -112,16 +117,30 @@ onLoad((options) => {
         </view>
       </view>
 
+      <view class="extra-info">
+        <!-- 就诊时间 -->
+        <view class="info-item">
+          <cl-text value="就诊时间" color="#666" size="28" />
+          <cl-select-date v-model="form.visitTime" required placeholder="请选择就诊时间" />
+        </view>
+
+        <!-- 备注 -->
+        <view class="info-item">
+          <cl-text value="备注" color="#666" size="28" />
+          <cl-input v-model="form.remark" required placeholder="请输入备注" />
+        </view>
+      </view>
+
       <!-- 支付方式 -->
       <view class="pay-methods">
         <cl-text value="支付方式" size="32" bold :margin="[0, 0, 30, 0]" />
 
         <view class="method-list">
           <view
-            v-for="item in dict.get('pay-type')"
+            v-for="item in dict.get('pay-type').filter(item => !item.label.startsWith('线下'))"
             :key="item.value"
             class="method-item"
-            :class="{ active: payType === item.value }"
+            :class="{ active: form.payType === item.value }"
             @tap="handleSelect(item.value)"
           >
             <cl-icon :name="['wechat', 'alipay', 'card', 'cash'][Number(item.value)]" :size="48" />
@@ -174,6 +193,17 @@ onLoad((options) => {
     &:first-child {
       margin-top: 0;
     }
+  }
+}
+
+.extra-info {
+  margin: 20rpx;
+  padding: 30rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+
+  .info-item {
+    margin-top: 20rpx;
   }
 }
 

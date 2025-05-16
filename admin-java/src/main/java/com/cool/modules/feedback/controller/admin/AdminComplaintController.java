@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * 投诉信息管理
  */
 @Tag(name = "投诉信息管理", description = "管理投诉信息")
-@CoolRestController(api = {"add", "update", "info", "page", "countUser", "countThisYear"})
+@CoolRestController(api = {"update", "info", "page", "countUser", "countThisYear"})
 public class AdminComplaintController extends BaseController<ComplaintService, ComplaintEntity> {
 
     @Override
