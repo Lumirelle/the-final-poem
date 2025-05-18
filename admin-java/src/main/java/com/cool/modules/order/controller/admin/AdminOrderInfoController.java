@@ -17,6 +17,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -26,7 +27,7 @@ import java.util.Date;
  * 订单信息管理
  */
 @Tag(name = "订单信息管理", description = "管理订单信息")
-@CoolRestController(api = {"update", "info", "page", "countPayOrder"})
+@CoolRestController(api = {"update", "info", "page"})
 public class AdminOrderInfoController extends BaseController<OrderInfoService, OrderInfoEntity> {
 
     // 如果传递了 payOrderOnly 参数，则仅分页展示支付的订单
@@ -60,7 +61,8 @@ public class AdminOrderInfoController extends BaseController<OrderInfoService, O
     }
 
     @Override
-    protected R update(@RequestBody OrderInfoEntity orderInfoEntity, @RequestAttribute() JSONObject requestParams) {
+    @PostMapping("/update")
+    public R update(@RequestBody OrderInfoEntity orderInfoEntity, @RequestAttribute() JSONObject requestParams) {
         Long id = orderInfoEntity.getId();
         JSONObject info = JSONUtil.parseObj(JSONUtil.toJsonStr(service.getById(id)));
         requestParams.forEach(info::set);

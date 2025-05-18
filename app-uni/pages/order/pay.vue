@@ -64,6 +64,7 @@ async function handleSubmit() {
     }, 1500)
   }
   catch (err) {
+    console.error(err)
     uni.showToast({
       title: '支付失败',
       icon: 'error',
@@ -136,13 +137,8 @@ onLoad((options) => {
         <cl-text value="支付方式" size="32" bold :margin="[0, 0, 30, 0]" />
 
         <view class="method-list">
-          <view
-            v-for="item in dict.get('pay-type').filter(item => !item.label.startsWith('线下'))"
-            :key="item.value"
-            class="method-item"
-            :class="{ active: form.payType === item.value }"
-            @tap="handleSelect(item.value)"
-          >
+          <view v-for="item in dict.get('pay-type').filter(item => !item.label.startsWith('线下'))" :key="item.value"
+            class="method-item" :class="{ active: form.payType === item.value }" @tap="handleSelect(item.value)">
             <cl-icon :name="['wechat', 'alipay', 'card', 'cash'][Number(item.value)]" :size="48" />
             <cl-text :value="item.label" :margin="[10, 0, 0, 0]" />
           </view>
@@ -151,13 +147,7 @@ onLoad((options) => {
 
       <!-- 支付按钮 -->
       <view class="submit-btn">
-        <cl-button
-          type="primary"
-          :width="600"
-          :loading="submitting"
-          round
-          @tap="handleSubmit"
-        >
+        <cl-button type="primary" :width="600" :loading="submitting" round @tap="handleSubmit">
           立即支付
         </cl-button>
       </view>

@@ -9,6 +9,24 @@
       "cValue": "31"
     }
   ],
+  "base_sys_param": [
+    {
+      "id": 1,
+      "name": "隐私政策",
+      "keyName": "privacyPolicy",
+      "dataType": 0,
+      "data": "这是一段隐私协议：\n1.xxxx\n2.xxxx",
+      "remark": null
+    },
+    {
+      "id": 2,
+      "name": "用户协议",
+      "keyName": "userAgreement",
+      "dataType": 0,
+      "value": "这是一段用户协议：\n1.xxxx\n2.xxxx",
+      "remark": null
+    }
+  ],
   "base_sys_department": [
     {
       "id": 1,

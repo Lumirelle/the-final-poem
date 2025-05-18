@@ -19,7 +19,7 @@ import static com.cool.modules.base.entity.sys.table.BaseSysUserEntityTableDef.B
  * 投诉信息
  */
 @Tag(name = "投诉信息", description = "投诉信息")
-@CoolRestController(api = {"page", "add", "info", "save"})
+@CoolRestController(api = {"page", "add", "info"})
 public class AppComplaintController extends BaseController<ComplaintService, ComplaintEntity> {
 
     @Override

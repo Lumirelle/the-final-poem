@@ -10,6 +10,7 @@ import com.cool.modules.order.entity.OrderInfoEntity;
 import com.cool.modules.order.service.OrderInfoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -42,6 +43,7 @@ public class AppOrderInfoController extends BaseController<OrderInfoService, Ord
     }
 
     @Override
+    @PostMapping("/update")
     protected R update(@RequestBody OrderInfoEntity orderInfoEntity, @RequestAttribute() JSONObject requestParams) {
         Long id = orderInfoEntity.getId();
         JSONObject info = JSONUtil.parseObj(JSONUtil.toJsonStr(service.getById(id)));

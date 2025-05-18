@@ -76,35 +76,26 @@ onReady(() => {
       <cl-text :value="t('关于')" :margin="[30, 0, 20, 20]" block />
 
       <cl-list :radius="16">
-        <cl-list-item
-          :label="`${t('关于')} ${app.info.name}`"
-          @tap="router.push('/pages/user/about')"
-        />
+        <cl-list-item :label="`${t('关于')} ${app.info.name}`" @tap="router.push('/pages/user/about')" />
 
-        <cl-list-item
-          :label="t('用户协议')"
-          @tap="
-            router.push({
-              path: '/pages/user/doc',
-              query: {
-                key: 'userAgreement',
-                title: t('用户协议'),
-              },
-            })
-          "
-        />
-        <cl-list-item
-          :label="t('隐私政策')"
-          @tap="
-            router.push({
-              path: '/pages/user/doc',
-              query: {
-                key: 'privacyPolicy',
-                title: t('隐私政策'),
-              },
-            })
-          "
-        />
+        <cl-list-item :label="t('用户协议')" @tap="
+          router.push({
+            path: '/pages/user/doc',
+            query: {
+              key: 'userAgreement',
+              title: t('用户协议'),
+            },
+          })
+          " />
+        <cl-list-item :label="t('隐私政策')" @tap="
+          router.push({
+            path: '/pages/user/doc',
+            query: {
+              key: 'privacyPolicy',
+              title: t('隐私政策'),
+            },
+          })
+          " />
       </cl-list>
 
       <cl-list :radius="16">

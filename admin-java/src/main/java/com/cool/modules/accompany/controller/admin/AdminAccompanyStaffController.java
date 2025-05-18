@@ -30,7 +30,7 @@ import static com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableD
  * 陪诊员信息
  */
 @Tag(name = "陪诊员管理", description = "陪诊员信息管理")
-@CoolRestController(api = {"add", "delete", "update", "info", "page", "doreview"})
+@CoolRestController(api = {"add", "delete", "update", "info", "page"})
 public class AdminAccompanyStaffController extends BaseController<AccompanyStaffService, AccompanyStaffEntity> {
 
     @Override
