@@ -65,7 +65,7 @@ public class PatientInfoEntity extends BaseEntity<PatientInfoEntity> {
 
     @Index
     @ColumnDefine(comment = "关联用户ID")
-    private Long userId;
+    private Long patientUserId;
 
     @Column(ignore = true)
     private String nickName;

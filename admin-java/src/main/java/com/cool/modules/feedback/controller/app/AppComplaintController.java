@@ -1,15 +1,21 @@
 package com.cool.modules.feedback.controller.app;
 
+import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONObject;
 import com.cool.core.annotation.CoolRestController;
 import com.cool.core.base.BaseController;
+import com.cool.core.request.R;
+import com.cool.core.util.CoolSecurityUtil;
 import com.cool.modules.feedback.entity.ComplaintEntity;
 import com.cool.modules.feedback.service.ComplaintService;
 import com.cool.modules.user.entity.UserInfoEntity;
 import com.cool.modules.base.entity.sys.BaseSysUserEntity;
 import com.mybatisflex.core.query.QueryWrapper;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 
 import static com.cool.modules.feedback.entity.table.ComplaintEntityTableDef.COMPLAINT_ENTITY;
 import static com.cool.modules.user.entity.table.UserInfoEntityTableDef.USER_INFO_ENTITY;
@@ -39,4 +45,14 @@ public class AppComplaintController extends BaseController<ComplaintService, Com
             )
         );
     }
+
+    @Override
+    @Operation(summary = "新增", description = "新增信息，对应后端的实体类")
+    @PostMapping("/add")
+    protected R add(@RequestAttribute() JSONObject requestParams) {
+        ComplaintEntity entity = requestParams.toBean(currentEntityClass());
+        entity.setComplaintUserId(CoolSecurityUtil.getCurrentUserId());
+        return R.ok(Dict.create().set("id", service.add(requestParams, entity)));
+    }
+
 }

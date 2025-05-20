@@ -22,7 +22,7 @@ const Upsert = useUpsert({
     () => {
       return {
         label: t('选择关联用户'),
-        prop: 'userId',
+        prop: 'staffUserId',
         hidden: Upsert.value?.mode === 'update',
         component: {
           vm: UserSelect,
@@ -213,7 +213,7 @@ const Table = useTable({
       showOverflowTooltip: true,
       minWidth: 200,
     },
-    { label: t('账户 ID'), prop: 'userId', minWidth: 140 },
+    { label: t('账户 ID'), prop: 'staffUserId', minWidth: 140 },
     { label: t('账户昵称'), prop: 'nickName', minWidth: 140 },
     {
       label: t('备注'),
@@ -289,7 +289,7 @@ const Search = useSearch({
     },
     // {
     //   label: t('账户 ID'),
-    //   prop: 'userId',
+    //   prop: 'staffUserId',
     //   component: { name: 'el-input', props: { clearable: true } },
     // },
   ],

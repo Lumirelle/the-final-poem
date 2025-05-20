@@ -4,13 +4,13 @@ import { computed, ref } from 'vue'
 import Tabbar from './components/tabbar.vue'
 import { useCool, usePager, useStore } from '/@/cool'
 
-const { service } = useCool()
+const { service, router } = useCool()
 const { onRefresh } = usePager()
 
 const list = ref<Eps.OrderInfoEntity[]>([])
 const loading = ref(false)
 
-const { dict } = useStore()
+const { dict, order, user } = useStore()
 
 // 搜索条件
 const searchForm = ref({
@@ -27,6 +27,9 @@ const orderStatusOptions = computed(() => {
     ...dict.get('order-status'),
   ]
 })
+
+const Confirm = ref<ClConfirm.Ref>()
+const ConfirmInput = ref()
 
 // 刷新列表
 async function refresh() {
@@ -63,8 +66,11 @@ function reset() {
 
 // 查看详情
 function viewDetail(item: Eps.OrderInfoEntity) {
-  uni.navigateTo({
-    url: `/pages/order/detail?id=${item.id}`,
+  router.push({
+    path: '/pages/order/detail',
+    query: {
+      id: item.id
+    }
   })
 }
 
@@ -72,9 +78,8 @@ function viewDetail(item: Eps.OrderInfoEntity) {
 function getStatusText(status: number | undefined) {
   if (status === undefined)
     return '未知'
-  const result = dict.get('order-status').find(item => item.value === status)?.label
-  console.log('order status', result)
-  return result || '未知'
+  const result = dict.getLabel('order-status', status) || '未知'
+  return user.info?.role === 2 ? `患者${result}` : result
 }
 
 // 获取状态样式
@@ -82,14 +87,17 @@ function getStatusType(status: number | undefined) {
   if (status === undefined)
     return 'primary'
   const result = dict.get('order-status').find(item => item.value === status)?.type
-  console.log('order status type', result)
   return result || 'primary'
 }
 
 // 继续支付
 function handlePay(item: Eps.OrderInfoEntity) {
-  uni.navigateTo({
-    url: `/pages/order/pay?id=${item.id}&amount=${item.actualAmount}`,
+  router.push({
+    path: '/pages/order/pay',
+    query: {
+      id: item.id,
+      amount: item.actualAmount
+    }
   })
 }
 
@@ -155,8 +163,51 @@ async function handleRefund(item: Eps.OrderInfoEntity) {
   }
 }
 
+// 核销订单
+async function handleWriteOff(item: Eps.OrderInfoEntity) {
+  // 弹窗输入核销码
+  Confirm.value?.open({
+    title: '请输入核销码',
+    beforeClose: async(action, { done, showLoading, hideLoading }) => {
+      if (action === 'confirm') {
+        showLoading()
+        try {
+          await service.order.info.writeOff({
+            id: item.id,
+            verifyCode: ConfirmInput.value.value,
+          })
+          uni.showToast({
+            title: '核销成功',
+            icon: 'success',
+          })
+          refresh()
+        }
+        catch (err) {
+          uni.showToast({
+            title: '操作失败',
+            icon: 'error',
+          })
+        }
+        done()
+        hideLoading()
+      }
+      else {
+        done()
+      }
+    },
+  })
+}
+
 // 页面加载时刷新
 onShow(() => {
+  // 如果有状态参数,设置到搜索条件中
+  const status = order.getQueryParam('status')
+  console.log('[order] 从其他页面打开：', status)
+  if (status) {
+    searchForm.value.status = status
+    order.resetQueryParam('status')
+  }
+
   refresh()
 })
 </script>
@@ -166,6 +217,10 @@ onShow(() => {
     <cl-topbar title="我的订单" />
 
     <cl-loading-mask v-if="loading" />
+
+    <cl-confirm ref="Confirm">
+      <cl-input ref="ConfirmInput"></cl-input>
+    </cl-confirm>
 
     <!-- 搜索区域 -->
     <cl-filter-bar>
@@ -238,35 +293,49 @@ onShow(() => {
             </view>
 
             <view class="footer">
-              <cl-button
-                v-if="item.status === 0"
-                type="primary"
-                round
-                :width="160"
-                :margin="[0, 0, 0, 20]"
-                @tap.stop="handlePay(item)"
-              >
-                继续支付
-              </cl-button>
-
-              <cl-button
-                v-if="item.status === 0"
-                round
-                :width="160"
-                @tap.stop="handleCancel(item)"
-              >
-                取消订单
-              </cl-button>
-
-              <cl-button
-                v-if="item.status === 1"
-                type="danger"
-                round
-                :width="160"
-                @tap.stop="handleRefund(item)"
-              >
-                申请退款
-              </cl-button>
+              <!-- 患者操作按钮 -->
+              <template v-if="user.info?.role === 1">
+                <cl-button
+                  v-if="item.status === 0"
+                  type="primary"
+                  round
+                  :width="160"
+                  :margin="[0, 0, 0, 20]"
+                  @tap.stop="handlePay(item)"
+                >
+                  继续支付
+                </cl-button>
+                <cl-button
+                  v-if="item.status === 0"
+                  round
+                  :width="160"
+                  @tap.stop="handleCancel(item)"
+                >
+                  取消订单
+                </cl-button>
+                <cl-button
+                  v-if="item.status === 1"
+                  type="danger"
+                  round
+                  :width="160"
+                  @tap.stop="handleRefund(item)"
+                >
+                  申请退款
+                </cl-button>
+              </template>
+              <!-- 陪诊员操作按钮 -->
+              <template v-else>
+                <cl-button
+                  v-if="item.status === 2"
+                  type="primary"
+                  round
+                  :width="160"
+                  :margin="[0, 0, 0, 20]"
+                  @tap.stop="handleWriteOff(item)"
+                >
+                  核销订单
+                </cl-button>
+              </template>
             </view>
           </view>
         </cl-card>

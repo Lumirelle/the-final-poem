@@ -128,7 +128,7 @@ const Upsert = useUpsert({
   onSubmit: (form, { next }) => {
     next({
       ...form,
-      serviceArea: JSON.stringify(form.serviceArea || []).replaceAll(',', ', '),
+      serviceArea: JSON.stringify(form.serviceArea || []).replace(/,/g, ', '),
     })
   },
 })
@@ -170,10 +170,9 @@ watch(
 const Table = useTable({
   columns: [
     { type: 'selection' },
-    { label: t('分类ID'), prop: 'categoryId', minWidth: 120 },
-    { label: t('分类名称'), prop: 'categoryName', minWidth: 120 },
     { label: t('套餐 ID'), prop: 'id', minWidth: 140 },
     { label: t('名称'), prop: 'name', minWidth: 140 },
+    { label: t('分类名称'), prop: 'categoryName', minWidth: 120 },
     { label: t('价格（元）'), prop: 'price', minWidth: 140, sortable: 'custom' },
     { label: t('医院 ID'), prop: 'hospitalId', minWidth: 140 },
     { label: t('医院'), prop: 'hospitalName', minWidth: 140 },
@@ -278,7 +277,7 @@ const Search = useSearch({
   onSearch: (form, { next }) => {
     next({
       ...form,
-      serviceArea: JSON.stringify(form.serviceArea?.sort() || []).replaceAll(',', ', '),
+      serviceArea: JSON.stringify(form.serviceArea?.sort() || []).replace(/,/g, ', '),
     })
   },
 })

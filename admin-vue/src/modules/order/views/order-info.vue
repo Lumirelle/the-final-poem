@@ -68,8 +68,8 @@ const Table = useTable({
     { label: t('编号'), prop: 'orderNumber', minWidth: 140 },
     { label: t('套餐ID'), prop: 'mealId', minWidth: 140 },
     { label: t('套餐'), prop: 'mealName', minWidth: 140 },
-    { label: t('用户ID'), prop: 'payUserId', minWidth: 140 },
-    { label: t('用户'), prop: 'userName', minWidth: 140 },
+    { label: t('患者ID'), prop: 'patientId', minWidth: 140 },
+    { label: t('患者名称'), prop: 'patientName', minWidth: 140 },
     {
       label: t('总金额'),
       prop: 'totalAmount',
@@ -82,6 +82,11 @@ const Table = useTable({
     { label: t('状态'), prop: 'status', minWidth: 120, dict: dict.get('order-status') },
     { label: t('支付方式'), prop: 'payType', minWidth: 120, dict: dict.get('pay-type') },
     { label: t('支付时间'), prop: 'payTime', minWidth: 160 },
+    {
+      label: t('验证码'),
+      prop: 'verifyCode',
+      minWidth: 140,
+    },
     {
       label: t('备注'),
       prop: 'remark',
@@ -125,6 +130,11 @@ const Search = useSearch({
   resetBtn: true,
   items: [
     {
+      label: t('订单 ID'),
+      prop: 'id',
+      component: { name: 'el-input', props: { clearable: true } },
+    },
+    {
       label: t('编号'),
       prop: 'orderNumber',
       component: { name: 'el-input', props: { clearable: true } },
@@ -135,8 +145,8 @@ const Search = useSearch({
       component: { name: 'el-input', props: { clearable: true } },
     },
     {
-      label: t('用户 ID'),
-      prop: 'payUserId',
+      label: t('患者 ID'),
+      prop: 'patientId',
       component: { name: 'el-input', props: { clearable: true } },
     },
     {

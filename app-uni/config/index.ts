@@ -12,12 +12,13 @@ export const config = {
   // 应用信息
   app: {
     // 应用名称
-    name: 'COOL-UNI',
+    name: '医疗陪诊小程序',
     // 应用描述
-    desc: 'uniapp快速开发脚手架',
+    desc: '一个简单的医疗陪诊小程序',
     // 页面配置
     pages: {
       login: '/pages/user/login',
+      profile: '/pages/user/profile',
     },
     // 微信配置
     wx: {

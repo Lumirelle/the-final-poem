@@ -2,7 +2,7 @@
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import BackHome from '/@/components/back-home.vue'
-import { useCool, useStore } from '/@/cool'
+import { router, useCool, useStore } from '/@/cool'
 
 const { service } = useCool()
 const { meal } = useStore()
@@ -35,17 +35,19 @@ async function getDetail(id: string) {
 
 // 查看科室详情
 function viewDepartment(item: any) {
-  uni.navigateTo({
-    url: `/pages/hospital/department?id=${item.id}&hospitalId=${hospital.value.id}`,
+  router.push({
+    path: '/pages/hospital/department',
+    query: {
+      id: item.id,
+      hospitalId: hospital.value.id
+    }
   })
 }
 
 // 查看陪诊服务
 function viewMealList() {
   meal.setQueryParam('hospitalId', hospital.value.id)
-  uni.switchTab({
-    url: '/pages/index/meal',
-  })
+  router.push('/pages/index/meal')
 }
 
 // 页面加载

@@ -4,6 +4,10 @@ import static com.cool.modules.feedback.entity.table.ComplaintEntityTableDef.COM
 
 import java.util.List;
 
+import cn.hutool.core.lang.Dict;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
+import com.cool.core.util.CoolSecurityUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import cn.hutool.json.JSONObject;
@@ -16,6 +20,8 @@ import com.cool.modules.feedback.service.ComplaintService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 
 /**
  * 投诉信息管理
@@ -36,6 +42,15 @@ public class AdminComplaintController extends BaseController<ComplaintService, C
             ));
     }
 
+    @Override
+    @Operation(summary = "新增", description = "新增信息，对应后端的实体类")
+    @PostMapping("/add")
+    protected R add(@RequestAttribute() JSONObject requestParams) {
+        ComplaintEntity entity = requestParams.toBean(currentEntityClass());
+        entity.setHandlerId(CoolSecurityUtil.getCurrentUserId());
+        return R.ok(Dict.create().set("id", service.add(requestParams, entity)));
+    }
+
     @Operation(summary = "统计", description = "统计投诉用户总量")
     @GetMapping("/countUser")
     public R<Long> count() {
@@ -47,6 +62,5 @@ public class AdminComplaintController extends BaseController<ComplaintService, C
     public R<List<Long>> countThisYear() {
         return R.ok(service.countThisYear());
     }
-
 
 }

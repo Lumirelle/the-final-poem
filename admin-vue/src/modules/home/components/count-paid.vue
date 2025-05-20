@@ -8,14 +8,13 @@ const { service } = useCool()
 const num = ref(0)
 
 onMounted(() => {
-  num.value = random(10000)
   service.order.info.countPayOrder().then((res) => {
     num.value = res
   })
 })
 
 const rise = computed(() => {
-  return ((num.value / (num.value - num.value)) * 100).toFixed(2) || 0
+  return 100
 })
 </script>
 

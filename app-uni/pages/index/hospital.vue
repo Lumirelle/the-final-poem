@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import Tabbar from './components/tabbar.vue'
 import { useCool, usePager } from '/@/cool'
 
-const { service } = useCool()
+const { service, router } = useCool()
 
 const { onRefresh } = usePager()
 
@@ -66,8 +66,11 @@ function toggleAdvanced() {
 
 // 查看详情
 function viewDetail(item: any) {
-  uni.navigateTo({
-    url: `/pages/hospital/detail?id=${item.id}`,
+  router.push({
+    path: '/pages/hospital/detail',
+    query: {
+      id: item.id
+    }
   })
 }
 

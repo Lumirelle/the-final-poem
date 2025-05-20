@@ -1,13 +1,9 @@
 package com.cool.modules.accompany.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.cool.core.base.BaseServiceImpl;
-import com.cool.core.request.R;
 import com.cool.modules.accompany.entity.AccompanyReviewEntity;
 import com.cool.modules.accompany.entity.AccompanyStaffEntity;
-import com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableDef;
 import com.cool.modules.accompany.mapper.AccompanyReviewMapper;
 import com.cool.modules.accompany.mapper.AccompanyStaffMapper;
 import com.cool.modules.accompany.service.AccompanyStaffService;
@@ -38,7 +34,7 @@ public class AccompanyStaffServiceImpl extends BaseServiceImpl<AccompanyStaffMap
             )
             .from(ACCOMPANY_STAFF_ENTITY)
             .leftJoin(UserInfoEntityTableDef.USER_INFO_ENTITY)
-            .on(AccompanyStaffEntity::getUserId, UserInfoEntity::getId);
+            .on(AccompanyStaffEntity::getStaffUserId, UserInfoEntity::getId);
         return mapper.paginateWithRelations(page, queryWrapper);
     }
 

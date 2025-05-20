@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 interface QueryParams {
-  status: number | null
+  status: string | null
 }
 
 const useOrderStore = defineStore('order', () => {

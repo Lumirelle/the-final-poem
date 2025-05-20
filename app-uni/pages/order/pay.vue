@@ -3,7 +3,7 @@ import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { useCool, useStore } from '/@/cool'
 
-const { service } = useCool()
+const { service, router } = useCool()
 const { dict } = useStore()
 
 // 订单信息
@@ -58,8 +58,8 @@ async function handleSubmit() {
 
     // 延迟返回，让用户看到成功提示
     setTimeout(() => {
-      uni.navigateBack({
-        delta: 1,
+      router.back({
+        delta: 1
       })
     }, 1500)
   }

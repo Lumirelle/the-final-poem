@@ -2,28 +2,14 @@
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import BackHome from '/@/components/back-home.vue'
-import { useCool } from '/@/cool'
+import { useCool, useStore } from '/@/cool'
 
 const { service } = useCool()
+const { dict, user } = useStore()
 
 // 详情数据
 const detail = ref<Eps.OrderInfoEntity>({})
 const loading = ref(false)
-
-interface StatusInfo {
-  text: string
-  color: string
-}
-
-// 订单状态映射
-const statusMap: Record<number, StatusInfo> = {
-  0: { text: '待支付', color: 'warning' },
-  1: { text: '已支付', color: 'primary' },
-  2: { text: '待使用', color: 'info' },
-  3: { text: '已完成', color: 'success' },
-  4: { text: '已取消', color: 'danger' },
-  5: { text: '已退款', color: 'danger' },
-}
 
 // 支付方式映射
 const payTypeMap: Record<number, string> = {
@@ -47,6 +33,22 @@ async function loadDetail(id: string) {
   }
 }
 
+// 获取状态文本
+function getStatusText(status: number | undefined) {
+  if (status === undefined)
+    return '未知'
+  const result = dict.getLabel('order-status', status) || '未知'
+  return user.info?.role === 2 ? `患者${result}` : result
+}
+
+// 获取状态样式
+function getStatusType(status: number | undefined) {
+  if (status === undefined)
+    return 'primary'
+  const result = dict.get('order-status').find(item => item.value === status)?.type
+  return result || 'primary'
+}
+
 // 页面加载
 onLoad((options) => {
   if (options?.id) {
@@ -65,11 +67,14 @@ onLoad((options) => {
       <!-- 订单状态 -->
       <view class="status-section">
         <cl-text
-          :value="statusMap[detail.status || 0]?.text"
-          :color="statusMap[detail.status || 0]?.color"
-          size="48"
+          :value="getStatusText(detail.status)"
+          :color="getStatusType(detail.status)"
+          :size="48"
           bold
         />
+        <br>
+        <br>
+        <cl-text v-if="user.info?.role == 1" :value="`核销码：${detail.verifyCode}`" color="success" :size="36" bold />
       </view>
 
       <!-- 订单信息 -->
@@ -113,8 +118,8 @@ onLoad((options) => {
         </view>
 
         <view class="info-row total">
-          <cl-text value="实付金额" color="#999" size="32" />
-          <cl-text :value="`¥${detail.actualAmount || '0'}`" color="danger" size="32" bold />
+          <cl-text value="实付金额" color="#999" :size="32" />
+          <cl-text :value="`¥${detail.actualAmount || '0'}`" color="danger" :size="32" bold />
         </view>
       </view>
     </cl-scroller>

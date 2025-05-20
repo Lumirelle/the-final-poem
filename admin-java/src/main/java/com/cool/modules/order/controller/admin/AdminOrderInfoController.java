@@ -43,10 +43,11 @@ public class AdminOrderInfoController extends BaseController<OrderInfoService, O
                 )
                 // NOTE: UserId 是保留字段，请求时默认传递发起请求用户的 ID，因此本实体类中需要用 payUserId
                 .fieldEq(
-                    ORDER_INFO_ENTITY.PAY_USER_ID,
+                    ORDER_INFO_ENTITY.ID,
+                    ORDER_INFO_ENTITY.MEAL_ID,
+                    ORDER_INFO_ENTITY.PATIENT_ID,
                     ORDER_INFO_ENTITY.STATUS,
-                    ORDER_INFO_ENTITY.PAY_TYPE,
-                    ORDER_INFO_ENTITY.ID
+                    ORDER_INFO_ENTITY.PAY_TYPE
                 )
                 .queryWrapper(QueryWrapper.create()
                     .where(ORDER_INFO_ENTITY.STATUS.in(1, 2, 3).when(payOrderOnly))
@@ -55,9 +56,9 @@ public class AdminOrderInfoController extends BaseController<OrderInfoService, O
     }
 
     @Operation(summary = "统计", description = "统计付款订单总数")
-    @GetMapping("/countPayOrder")
-    public R<Long> countPayOrder() {
-        return R.ok(service.countPayOrder());
+    @GetMapping("/countPayed")
+    public R<Long> countPayed() {
+        return R.ok(service.countPayed());
     }
 
     @Override

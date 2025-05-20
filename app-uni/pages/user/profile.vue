@@ -1,30 +1,24 @@
 <script lang="ts" setup>
-import { onReady } from '@dcloudio/uni-app'
-import { reactive, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref, reactive, onMounted } from 'vue'
+import { useCool } from '/@/cool'
 import { useUi } from '/$/cool-ui'
-import { useCool, useStore } from '/@/cool'
+import { useI18n } from 'vue-i18n'
+import { cloneDeep } from 'lodash-es'
 
-const { router, service } = useCool()
-const { user } = useStore()
-const ui = useUi()
+const { service, router } = useCool()
 const { t } = useI18n()
+const ui = useUi()
 
-const loading = ref(false)
-
-// 账户信息
-const form = reactive({
-  nickName: user.info?.nickName,
-})
-
-// 个人档案
+// 角色选项
 const roleOptions = [
   { label: t('患者'), value: 1 },
   { label: t('陪诊人员'), value: 2 },
 ]
 
-const role = ref(user.info?.role)
+// 当前角色
+const role = ref<1 | 2>(1)
 
+// 患者档案表单
 const patientForm = reactive<Eps.PatientInfoEntity>({
   name: '',
   gender: 0,
@@ -43,6 +37,7 @@ const patientForm = reactive<Eps.PatientInfoEntity>({
   avatarUrl: '',
 })
 
+// 陪诊员档案表单
 const staffForm = reactive<Eps.AccompanyStaffEntity>({
   name: '',
   gender: 0,
@@ -55,71 +50,68 @@ const staffForm = reactive<Eps.AccompanyStaffEntity>({
   avatarUrl: '',
 })
 
-async function save() {
-  loading.value = true
-  const roleForm = role.value === 1 ? { ...patientForm, role: 1 } : { ...staffForm, role: 2 }
+// 是否已存在档案
+const hasProfile = ref(false)
+
+// 保存
+async function onSave() {
+  const data = role.value === 1 ? cloneDeep(patientForm) : cloneDeep(staffForm)
+  data.role = role.value
   try {
-    await user.update(form)
-    await service.user.info.updateProfile(roleForm)
-    ui.showTips(t('保存成功'), async () => {
-      await user.get()
-      router.back()
-    })
-  } catch (err: any) {
-    ui.showToast(err.message || t('保存失败'))
+    if (hasProfile.value) {
+      await service.user.info.updateProfile(data)
+      ui.showToast(t('保存成功'))
+    } else {
+      await service.user.info.addProfile(data)
+      ui.showToast(t('创建成功'))
+      hasProfile.value = true
+    }
+    // 保存后跳转到主页
+    router.push('/pages/index/my')
+  } catch (e: any) {
+    ui.showToast(e.message || t('保存失败'))
   }
-  loading.value = false
 }
 
-onReady(async () => {
-  // 拉取当前档案
-  const res = await service.user.info.profile()
-  if (res) {
-    if (role.value === 1) {
-      for (const key in patientForm) {
-        if (key in res) {
-          patientForm[key] = res[key]
-        }
-      }
+// 拉取档案
+async function fetchProfile() {
+  try {
+    const res = await service.user.info.profile()
+    if (res && res.role) {
+      role.value = res.role
+      hasProfile.value = true
+      if (role.value === 1) Object.assign(patientForm, res)
+      else Object.assign(staffForm, res)
     }
-    else if (role.value === 2) {
-      for (const key in staffForm) {
-        if (key in res) {
-          staffForm[key] = res[key]
-        }
-      }
-    }
-    else {
-      ui.showToast(t('角色不匹配'))
-      router.back()
-    }
-    console.log('当前角色', role.value)
-    console.log('当前档案', role.value === 1 ? patientForm : staffForm)
+  } catch (e) {
+    // 无档案
+    hasProfile.value = false
   }
+}
+
+onMounted(() => {
+  fetchProfile()
 })
 </script>
 
 <template>
-  <cl-page>
-    <view class="page">
-      <view class="form">
-        <cl-form label-position="top">
-          <!-- 账户信息 -->
-          <cl-form-item :label="t('昵称')">
-            <cl-input
-              v-model="form.nickName"
-              type="nickname"
-              :border="false"
-              :height="80"
-              :border-radius="12"
-              :placeholder="t('请填写昵称')"
-            />
-          </cl-form-item>
-          <!-- 个人档案 -->
-          <cl-form-item :label="t('角色')">
-            <cl-text type="info">{{ roleOptions.find(r => r.value === role)?.label }}</cl-text>
-          </cl-form-item>
-          <template v-if="role === 1">
+  <cl-page background-color="#fff">
+    <cl-topbar :border="false" background-color="transparent" />
+    <view class="profile-page">
+      <view class="profile-title">
+        <cl-text block bold :size="36">{{ t('创建用户档案') }}</cl-text>
+      </view>
+      <view class="role-select">
+        <cl-radio-group v-model="role">
+          <cl-radio v-for="item in roleOptions" :key="item.value" :label="item.value">
+            {{ item.label }}
+          </cl-radio>
+        </cl-radio-group>
+      </view>
+      <div class="form-container">
+        <!-- 患者表单 -->
+        <template v-if="role === 1">
+          <cl-form>
             <cl-form-item :label="t('姓名')">
               <cl-input v-model="patientForm.name" :placeholder="t('请输入姓名')" />
             </cl-form-item>
@@ -151,8 +143,11 @@ onReady(async () => {
             <cl-form-item :label="t('备注')">
               <cl-input v-model="patientForm.remark" :placeholder="t('备注')" />
             </cl-form-item>
-          </template>
-          <template v-else>
+          </cl-form>
+        </template>
+        <!-- 陪诊员表单 -->
+        <template v-else>
+          <cl-form>
             <cl-form-item :label="t('姓名')">
               <cl-input v-model="staffForm.name" :placeholder="t('请输入姓名')" />
             </cl-form-item>
@@ -182,30 +177,32 @@ onReady(async () => {
             <cl-form-item :label="t('备注')">
               <cl-input v-model="staffForm.remark" :placeholder="t('备注')" />
             </cl-form-item>
-          </template>
-        </cl-form>
-      </view>
-      <cl-footer>
-        <cl-button custom type="primary" :loading="loading" @tap="save">
+          </cl-form>
+        </template>
+        <cl-button type="primary" @tap="onSave" :margin="[40,0,0,0]">
           {{ t('保存') }}
         </cl-button>
-      </cl-footer>
+      </div>
     </view>
   </cl-page>
 </template>
 
 <style lang="scss" scoped>
-.page {
+.profile-page {
+  padding: 40rpx 20rpx;
   .profile-title {
     text-align: center;
     margin-bottom: 30rpx;
   }
-  .role-info {
+  .role-select {
+    margin-bottom: 40rpx;
     text-align: center;
-    margin-bottom: 20rpx;
   }
-  .form {
-    padding: 20rpx 24rpx;
+  .form-container {
+    background: #fff;
+    border-radius: 16rpx;
+    box-shadow: 0 4rpx 24rpx rgba(0,0,0,0.04);
+    padding: 32rpx 20rpx 40rpx 20rpx;
   }
 }
 </style>

@@ -44,11 +44,11 @@ public class OrderInfoEntity extends BaseEntity<OrderInfoEntity> {
     @Column
     private String mealCover;
 
-    @ColumnDefine(comment = "用户ID")
-    private Long payUserId;
+    @ColumnDefine(comment = "患者ID")
+    private Long patientId;
 
     @Column(ignore = true)
-    private String userName;
+    private String patientName;
 
     @ColumnDefine(comment = "支付方式 0-微信 1-支付宝 2-线下银行卡 3-线下现金", defaultValue = "0")
     private Integer payType;
@@ -61,4 +61,8 @@ public class OrderInfoEntity extends BaseEntity<OrderInfoEntity> {
 
     @ColumnDefine(comment = "备注")
     private String remark;
+
+    @ColumnDefine(comment = "核销码")
+    private String verifyCode;
+
 }

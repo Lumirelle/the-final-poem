@@ -26,8 +26,8 @@ const customService = computed(() => {
   return {
     page: (params: any) => {
       const queryParams = { ...params }
-      if (props.scope?.userId) {
-        queryParams.userId = props.scope.userId
+      if (props.scope?.patientId) {
+        queryParams.patientId = props.scope.patientId
       }
       if (props.scope?.mealId) {
         queryParams.mealId = props.scope.mealId

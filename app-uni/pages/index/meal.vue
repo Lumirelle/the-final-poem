@@ -4,8 +4,8 @@ import { computed, ref } from 'vue'
 import Tabbar from './components/tabbar.vue'
 import { useCool, usePager, useStore } from '/@/cool'
 
-const { service } = useCool()
-const { meal } = useStore()
+const { service, router } = useCool()
+const { meal, user } = useStore()
 
 const { onRefresh } = usePager()
 
@@ -108,8 +108,11 @@ function toggleAdvanced() {
 
 // 查看详情
 function viewDetail(item: any) {
-  uni.navigateTo({
-    url: `/pages/meal/detail?id=${item.id}`,
+  router.push({
+    path: '/pages/meal/detail',
+    query: {
+      id: item.id
+    }
   })
 }
 
@@ -134,7 +137,7 @@ onShow(() => {
 
 <template>
   <cl-page fullscreen>
-    <cl-topbar title="套餐列表" />
+    <cl-topbar :title="user.info?.role == 2 ? '我的套餐' : '套餐列表'" />
 
     <!-- 搜索区域 -->
     <cl-filter-bar>

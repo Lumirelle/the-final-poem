@@ -36,8 +36,6 @@ async function handleSubmit() {
   try {
     await service.feedback.complaint.add({
       ...form.value,
-      // @ts-expect-error xxx
-      complaintUserId: user.info?.id,
       status: 0, // 待处理
     })
 

@@ -33,7 +33,7 @@ const chartOption = reactive({
         color: textColor,
       },
       data: [
-        { value: 387, name: '电子产品' },
+        { value: 387, name: 'jiben' },
         { value: 314, name: '服装' },
         { value: 253, name: '家居用品' },
         { value: 198, name: '书籍' },

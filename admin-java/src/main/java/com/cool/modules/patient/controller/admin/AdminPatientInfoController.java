@@ -21,7 +21,7 @@ public class AdminPatientInfoController extends BaseController<PatientInfoServic
         setPageOption(createOp()
             .fieldEq(
                 PATIENT_INFO_ENTITY.ID,
-                PATIENT_INFO_ENTITY.USER_ID,
+                PATIENT_INFO_ENTITY.PATIENT_USER_ID,
                 PATIENT_INFO_ENTITY.TYPE
             )
             .keyWordLikeFields(

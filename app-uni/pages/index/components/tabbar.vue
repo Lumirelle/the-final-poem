@@ -1,16 +1,20 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useCool } from '/@/cool'
+import { useCool, useStore } from '/@/cool'
 
 const { router } = useCool()
 const { t } = useI18n()
+const { user } = useStore()
 
 // 当前页面路径
 const pagePath = router.path
 
 const list = computed(() => {
   const arr = [...router.tabs]
+    .filter((e) => !e.requiredRole || e.requiredRole === user.info?.role)
+
+  console.log('[tabbar] list:', arr)
 
   return arr.map((e) => {
     const active = pagePath?.includes(e.pagePath)
@@ -26,29 +30,7 @@ const list = computed(() => {
 })
 
 function toLink(pagePath: string) {
-  const to = (link: string) => {
-    // #ifdef H5
-    location.href = link
-    // #endif
-
-    // #ifdef APP-PLUS
-    plus.runtime.openURL(link)
-    // #endif
-  }
-
-  switch (pagePath) {
-    case 'cool':
-      to('https://cool-js.com')
-      break
-
-    case 'admin':
-      to('https://show.cool-admin.com')
-      break
-
-    default:
-      router.push(`/${pagePath}`)
-      break
-  }
+  router.push(`/${pagePath}`)
 }
 
 uni.hideTabBar()

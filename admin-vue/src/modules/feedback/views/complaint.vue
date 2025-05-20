@@ -129,7 +129,6 @@ const Table = useTable({
     { type: 'selection' },
     { label: t('用户ID（小程序用户）'), prop: 'complaintUserId', minWidth: 180 },
     { label: t('用户昵称'), prop: 'userNickName', minWidth: 140 },
-    { label: t('订单ID'), prop: 'orderId', minWidth: 140 },
     { label: t('类型'), prop: 'type', minWidth: 120, dict: dict.get('complaint-type') },
     {
       label: t('内容'),
@@ -137,11 +136,18 @@ const Table = useTable({
       showOverflowTooltip: true,
       minWidth: 200,
     },
+    { label: t('订单ID'), prop: 'orderId', minWidth: 140 },
     // 多张图片
     {
       label: t('图片'),
       prop: 'images',
       minWidth: 350,
+    },
+    {
+      label: t('备注'),
+      prop: 'remark',
+      showOverflowTooltip: true,
+      minWidth: 200,
     },
     { label: t('处理人ID（后台用户）'), prop: 'handlerId', minWidth: 180 },
     { label: t('处理人昵称'), prop: 'handlerNickName', minWidth: 120 },
@@ -149,12 +155,6 @@ const Table = useTable({
     {
       label: t('处理结果'),
       prop: 'handleResult',
-      showOverflowTooltip: true,
-      minWidth: 200,
-    },
-    {
-      label: t('备注'),
-      prop: 'remark',
       showOverflowTooltip: true,
       minWidth: 200,
     },

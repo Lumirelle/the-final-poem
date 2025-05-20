@@ -77,12 +77,6 @@ const searchItems = ref([
       },
     },
   },
-  // 账户ID
-  {
-    label: t('账户 ID'),
-    prop: 'accountId',
-    component: { name: 'el-input', props: { clearable: true } },
-  },
   {
     label: t('姓名'),
     prop: 'name',

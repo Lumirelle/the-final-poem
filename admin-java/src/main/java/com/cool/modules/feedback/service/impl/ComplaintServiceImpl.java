@@ -53,14 +53,7 @@ public class ComplaintServiceImpl extends BaseServiceImpl<ComplaintMapper, Compl
             .leftJoin(USER_INFO_ENTITY).on(USER_INFO_ENTITY.ID.eq(COMPLAINT_ENTITY.COMPLAINT_USER_ID))
             .leftJoin(BASE_SYS_USER_ENTITY).on(BASE_SYS_USER_ENTITY.ID.eq(COMPLAINT_ENTITY.HANDLER_ID))
             .where(COMPLAINT_ENTITY.ID.eq(id));
-        return mapper.selectListWithRelationsByQuery(queryWrapper);
-    }
-
-    @Override
-    public Long add(ComplaintEntity entity) {
-        entity.setHandlerId(CoolSecurityUtil.getCurrentUserId());
-        mapper.insert(entity);
-        return entity.getId();
+        return mapper.selectOneWithRelationsByQuery(queryWrapper);
     }
 
     @Override

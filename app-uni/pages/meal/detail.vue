@@ -2,9 +2,11 @@
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import BackHome from '/@/components/back-home.vue'
-import { useCool } from '/@/cool'
+import { useCool, useStore } from '/@/cool'
 
-const { service } = useCool()
+const { service, router } = useCool()
+
+const { user } = useStore()
 
 // 详情数据
 const detail = ref<Eps.MealInfoEntity>({})
@@ -47,8 +49,11 @@ async function handleBuy() {
     console.log('[meal] 生成订单：', res)
 
     // 跳转到支付页面
-    uni.navigateTo({
-      url: `/pages/order/pay?id=${res.id}`,
+    router.push({
+      path: '/pages/order/pay',
+      query: {
+        id: res.id
+      }
     })
   }
   catch (err) {
@@ -86,7 +91,7 @@ onLoad((options) => {
 
       <!-- 基本信息 -->
       <view class="info-section">
-        <view class="price-row">
+        <view v-if="user.info?.role !== 2" class="price-row">
           <cl-text :value="`¥${detail.price || 0}`" color="danger" size="48" bold />
           <cl-button
             type="primary"

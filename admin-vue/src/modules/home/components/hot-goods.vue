@@ -37,74 +37,32 @@ const Crud = useCrud(
         return Promise.resolve({
           list: [
             {
-              keyWord: '无线耳机',
+              keyWord: '普通套餐',
               count: 983,
               ud: 5,
               launchDate: '2023-01-01',
               price: 299,
             },
             {
-              keyWord: '运动耳机',
+              keyWord: '中级套餐',
               count: 763,
               ud: -3,
               launchDate: '2023-02-15',
               price: 199,
             },
             {
-              keyWord: '蓝牙音箱',
+              keyWord: '高级套餐',
               count: 328,
               ud: 7,
               launchDate: '2023-03-10',
               price: 399,
             },
             {
-              keyWord: '4k显示屏',
+              keyWord: 'VIP套餐',
               count: 144,
               ud: 4,
               launchDate: '2023-04-05',
               price: 999,
-            },
-            {
-              keyWord: '罗技 G530',
-              count: 121,
-              ud: -1,
-              launchDate: '2023-05-20',
-              price: 499,
-            },
-            {
-              keyWord: '智能手表',
-              count: 450,
-              ud: 2,
-              launchDate: '2023-06-15',
-              price: 599,
-            },
-            {
-              keyWord: '游戏鼠标',
-              count: 300,
-              ud: 6,
-              launchDate: '2023-07-01',
-              price: 150,
-            },
-            {
-              keyWord: '机械键盘',
-              count: 200,
-              ud: -2,
-              launchDate: '2023-08-10',
-              price: 350,
-            },
-            {
-              keyWord: 'VR眼镜',
-              count: 150,
-              ud: 8,
-              launchDate: '2023-09-05',
-              price: 799,
-            },
-            {
-              keyWord: '智能音箱',
-              count: 100,
-              ud: 3,
-              launchDate: '2023-10-01',
-              price: 250,
             },
           ],
         })
@@ -159,7 +117,7 @@ const Table = useTable({
 <template>
   <div class="card">
     <div class="card__header">
-      <span class="label">{{ $t('热门商品排行') }}</span>
+      <span class="label">{{ $t('热门套餐排行') }}</span>
 
       <cl-select-button v-model="type" :options="options.type" small />
     </div>

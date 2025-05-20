@@ -48,14 +48,15 @@ public class UserLoginServiceImpl implements UserLoginService {
     public void smsCode(String phone, String captchaId, String code) {
         // 校验图片验证码，不通过直接抛异常
         baseSysLoginService.captchaCheck(captchaId, code);
-        userSmsUtil.sendVerifyCode(phone, SendSceneEnum.ALL);
+//        userSmsUtil.sendVerifyCode(phone, SendSceneEnum.ALL);
         coolCache.del("verify:img:" + captchaId);
     }
 
     @Override
     public Object phoneVerifyCode(String phone, String smsCode) {
         // 校验短信验证码，不通过直接抛异常
-        userSmsUtil.checkVerifyCode(phone, smsCode, SendSceneEnum.ALL);
+        // 模拟验证码
+//        userSmsUtil.checkVerifyCode(phone, smsCode, SendSceneEnum.ALL);
         return generateTokenByPhone(phone);
     }
 

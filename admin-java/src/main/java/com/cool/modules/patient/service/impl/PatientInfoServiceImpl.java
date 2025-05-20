@@ -27,7 +27,7 @@ public class PatientInfoServiceImpl extends BaseServiceImpl<PatientInfoMapper, P
                 USER_INFO_ENTITY.NICK_NAME
             )
             .from(PATIENT_INFO_ENTITY)
-            .leftJoin(USER_INFO_ENTITY).on(PATIENT_INFO_ENTITY.USER_ID.eq(USER_INFO_ENTITY.ID));
+            .leftJoin(USER_INFO_ENTITY).on(PATIENT_INFO_ENTITY.PATIENT_USER_ID.eq(USER_INFO_ENTITY.ID));
         return mapper.paginateWithRelations(page, queryWrapper);
     }
 
@@ -39,7 +39,7 @@ public class PatientInfoServiceImpl extends BaseServiceImpl<PatientInfoMapper, P
                 USER_INFO_ENTITY.NICK_NAME
             )
             .from(PATIENT_INFO_ENTITY)
-            .leftJoin(USER_INFO_ENTITY).on(PATIENT_INFO_ENTITY.USER_ID.eq(USER_INFO_ENTITY.ID))
+            .leftJoin(USER_INFO_ENTITY).on(PATIENT_INFO_ENTITY.PATIENT_USER_ID.eq(USER_INFO_ENTITY.ID))
             .where(PATIENT_INFO_ENTITY.ID.eq(id));
         return mapper.selectOneWithRelationsByQuery(queryWrapper);
     }

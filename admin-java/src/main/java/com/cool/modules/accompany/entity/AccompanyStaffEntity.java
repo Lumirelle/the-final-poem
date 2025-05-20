@@ -46,7 +46,7 @@ public class AccompanyStaffEntity extends BaseEntity<AccompanyStaffEntity> {
 
     @Index
     @ColumnDefine(comment = "关联用户ID")
-    private Long userId;
+    private Long staffUserId;
 
     @Column(ignore = true)
     private String nickName;

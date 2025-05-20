@@ -115,7 +115,7 @@ const router = {
             q[k] = decodeURIComponent(v)
           })
       }
-      catch (e) {}
+      catch (e) { }
 
       // 页面配置
       const style = this.routes.find(e => e.path == route)?.style
@@ -326,6 +326,17 @@ const router = {
   // 登录后回调
   afterLogin(callback: () => void) {
     fn.afterLogin = callback
+  },
+
+  // 去创建个人档案
+  profile(options?: { reLaunch: boolean }) {
+    const { reLaunch = false } = options || {}
+
+    this.push({
+      path: this.pages.profile,
+      mode: reLaunch ? 'reLaunch' : 'navigateTo',
+      isGuard: false,
+    })
   },
 }
 

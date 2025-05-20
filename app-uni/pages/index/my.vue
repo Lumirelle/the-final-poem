@@ -1,22 +1,59 @@
 <script lang="ts" setup>
 import { onPullDownRefresh, onShow } from '@dcloudio/uni-app'
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Tabbar from './components/tabbar.vue'
-import { useCool, useStore } from '/@/cool'
+import { service, useCool, useStore } from '/@/cool'
 
 const { router } = useCool()
 const { user, order: orderStore } = useStore()
 
 const { t } = useI18n()
 
+const totalOrder = ref(0)
+const waitingPaymentOrder = ref(0)
+const waitingUseOrder = ref(0)
+const completeOrder = ref(0)
+
 async function refresh() {
   if (user.token) {
     await user.get()
-  }
+  }  
   else {
     user.logout();
   }
+
+  await service.order.info.personCount()
+    .then((res) => {
+      totalOrder.value = res
+    })
+    .catch(() => {
+      totalOrder.value = 0
+    })
+  
+  await service.order.info.personCountWaitingPayment()
+    .then((res) => {
+      waitingPaymentOrder.value = res
+    })
+    .catch(() => {
+      waitingPaymentOrder.value = 0
+    })
+
+  await service.order.info.personCountWaitingUse()
+    .then((res) => {
+      waitingUseOrder.value = res
+    })
+    .catch(() => {
+      waitingUseOrder.value = 0
+    })
+
+  await service.order.info.personCountComplete()
+    .then((res) => {
+      completeOrder.value = res
+    })
+    .catch(() => {
+      completeOrder.value = 0
+    })
 }
 
 const order = reactive({
@@ -24,26 +61,26 @@ const order = reactive({
     {
       icon: 'order-paid',
       label: t('待支付'),
-      value: 1,
+      value: '0',
     },
     {
       icon: 'order-not-shipped',
       label: t('待使用'),
-      value: 3,
+      value: '2',
     },
     {
       icon: 'order-received',
       label: t('已完成'),
-      value: 3,
+      value: '3',
     },
     {
       icon: 'order-refund',
       label: t('已取消'),
-      value: 4,
+      value: '4',
     },
   ],
 
-  toLink(value: number) {
+  toLink(value: string) {
     orderStore.setQueryParam('status', value)
     router.push('/pages/index/order')
   },
@@ -103,22 +140,22 @@ onShow(() => {
 
       <view class="count">
         <view class="item">
-          <text>171</text>
+          <text>{{ totalOrder }}</text>
           <text>{{ t("总订单") }}</text>
         </view>
 
         <view class="item">
-          <text>1</text>
+          <text>{{ waitingPaymentOrder }}</text>
           <text>{{ t("待支付") }}</text>
         </view>
 
         <view class="item">
-          <text>5</text>
+          <text>{{ waitingUseOrder }}</text>
           <text>{{ t("待使用") }}</text>
         </view>
 
         <view class="item">
-          <text>165</text>
+          <text>{{ completeOrder }}</text>
           <text>{{ t("已完成") }}</text>
         </view>
       </view>

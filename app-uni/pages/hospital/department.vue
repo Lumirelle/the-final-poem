@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import BackHome from '/@/components/back-home.vue'
 import { useCool } from '/@/cool'
 
-const { service } = useCool()
+const { service, router } = useCool()
 
 const department = ref<any>({})
 const doctors = ref<any[]>([])
@@ -34,8 +34,13 @@ async function getDetail(id: string) {
 
 // 查看医生详情
 function viewDoctor(item: any) {
-  uni.navigateTo({
-    url: `/pages/hospital/doctor?id=${item.id}&departmentId=${department.value.id}&hospitalId=${department.value.hospitalId}`,
+  router.push({
+    path: '/pages/hospital/doctor',
+    query: {
+      id: item.id,
+      departmentId: department.value.id,
+      hospitalId: department.value.hospitalId
+    }
   })
 }
 

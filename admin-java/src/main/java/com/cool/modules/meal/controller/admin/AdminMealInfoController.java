@@ -20,8 +20,7 @@ public class AdminMealInfoController extends BaseController<MealInfoService, Mea
     protected void init(HttpServletRequest request, @RequestAttribute JSONObject requestParams) {
         setPageOption(createOp()
             .keyWordLikeFields(
-                MEAL_INFO_ENTITY.NAME,
-                MEAL_INFO_ENTITY.SERVICE_AREA
+                MEAL_INFO_ENTITY.NAME
             )
             .fieldEq(
                 MEAL_INFO_ENTITY.ID,

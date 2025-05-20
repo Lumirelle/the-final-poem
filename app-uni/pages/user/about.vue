@@ -20,13 +20,6 @@ onReady(() => {
         <image src="/static/logo.png" />
       </view>
 
-      <!-- 版本 -->
-      <cl-version-about />
-
-      <cl-list>
-        <cl-list-item :label="t('联系我们')" />
-      </cl-list>
-
       <cl-text
         block
         align="center"

@@ -2,6 +2,7 @@ package com.cool.modules.meal.service.impl;
 
 import cn.hutool.json.JSONObject;
 import com.cool.core.base.BaseServiceImpl;
+import com.cool.core.util.CoolSecurityUtil;
 import com.cool.modules.accompany.entity.AccompanyStaffEntity;
 import com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableDef;
 import com.cool.modules.hospital.entity.DepartmentEntity;
@@ -48,7 +49,11 @@ public class MealInfoServiceImpl extends BaseServiceImpl<MealInfoMapper, MealInf
             .leftJoin(HOSPITAL_INFO_ENTITY).on(MEAL_INFO_ENTITY.HOSPITAL_ID.eq(HOSPITAL_INFO_ENTITY.ID))
             .leftJoin(DEPARTMENT_ENTITY).on(MEAL_INFO_ENTITY.DEPARTMENT_ID.eq(DEPARTMENT_ENTITY.ID))
             .leftJoin(DOCTOR_ENTITY).on(MEAL_INFO_ENTITY.DOCTOR_ID.eq(DOCTOR_ENTITY.ID))
-            .leftJoin(ACCOMPANY_STAFF_ENTITY).on(MEAL_INFO_ENTITY.STAFF_ID.eq(ACCOMPANY_STAFF_ENTITY.ID));
+            .leftJoin(ACCOMPANY_STAFF_ENTITY).on(MEAL_INFO_ENTITY.STAFF_ID.eq(ACCOMPANY_STAFF_ENTITY.ID))
+            // 如果用户是陪诊人员（userRole == 2），则只查询自己的数据
+            .where(
+                ACCOMPANY_STAFF_ENTITY.STAFF_USER_ID.eq(CoolSecurityUtil.getCurrentUserId()).when(requestParams.containsKey("userRole") && requestParams.getInt("userRole") == 2)
+            );
         return mapper.paginateWithRelations(page, queryWrapper);
     }
 

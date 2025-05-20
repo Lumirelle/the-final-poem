@@ -70,6 +70,12 @@
           "style": {
             "navigationBarTitleText": "%page.关于我们%"
           }
+        },
+        {
+          "path": "profile",
+          "style": {
+            "navigationStyle": "custom"
+          }
         }
       ]
     },
@@ -160,7 +166,8 @@
         "pagePath": "pages/index/feedback",
         "iconPath": "static/icon/tabbar/cool.png",
         "selectedIconPath": "static/icon/tabbar/cool2.png",
-        "text": "%反馈%"
+        "text": "%反馈%",
+        "requiredRole": 1
       },
       {
         "pagePath": "pages/index/my",

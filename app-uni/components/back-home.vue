@@ -5,7 +5,7 @@ const { router } = useCool()
 
 // 回到对应的tab页面
 function handleBackHome() {
-  let targetUrl = '/pages/index/home'
+  let targetUrl = '/pages/index/hospital'
 
   const currentPage = getCurrentPages().pop()
   const currentPath = currentPage?.route || ''
@@ -22,9 +22,7 @@ function handleBackHome() {
     }
   }
 
-  uni.switchTab({
-    url: targetUrl,
-  })
+  router.push(targetUrl)
 }
 </script>
 

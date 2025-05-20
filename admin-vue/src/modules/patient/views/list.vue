@@ -37,7 +37,7 @@ const Upsert = useUpsert({
     () => {
       return {
         label: t('选择关联用户'),
-        prop: 'userId',
+        prop: 'patientUserId',
         group: 'basic',
         hidden: Upsert.value?.mode === 'update',
         component: {
@@ -225,7 +225,7 @@ const Table = useTable({
       minWidth: 150,
       sortable: 'custom',
     },
-    { label: t('账户 ID'), prop: 'userId', minWidth: 140 },
+    { label: t('账户 ID'), prop: 'patientUserId', minWidth: 140 },
     { label: t('账户昵称'), prop: 'nickName', minWidth: 140 },
     {
       label: t('备注'),
