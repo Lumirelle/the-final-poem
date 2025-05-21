@@ -18,6 +18,8 @@ const ignoreRole = [
   '/pages/user/login',
   '/pages/user/captcha',
   '/pages/user/doc',
+  '/pages/user/profile',
+  '/pages/user/set',
 ]
 
 const justPatient = [

@@ -1,11 +1,15 @@
 package com.cool.modules.hospital.entity;
 
 import com.cool.core.base.BaseEntity;
+import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import com.tangzc.mybatisflex.autotable.annotation.UniIndex;
 import lombok.Getter;
 import lombok.Setter;
+import org.dromara.autotable.annotation.ColumnType;
+
+import static org.dromara.autotable.annotation.mysql.MysqlTypeConstant.TEXT;
 
 /**
  * 医院信息
@@ -37,7 +41,7 @@ public class HospitalInfoEntity extends BaseEntity<HospitalInfoEntity> {
     @ColumnDefine(comment = "详细图")
     private String detailImage;
 
-    @ColumnDefine(comment = "医院简介")
+    @ColumnDefine(comment = "医院简介", type = "TEXT")
     private String introduction;
 
 }

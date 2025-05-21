@@ -33,7 +33,7 @@ public class ComplaintEntity extends BaseEntity<ComplaintEntity> {
     @ColumnDefine(comment = "状态 0=待处理 1=处理中 2=已解决 3=未解决 4=已关闭", defaultValue = "0")
     private Integer status;
 
-    @ColumnDefine(comment = "内容")
+    @ColumnDefine(comment = "内容", type = "TEXT")
     private String content;
 
     @ColumnDefine(comment = "联系方式")

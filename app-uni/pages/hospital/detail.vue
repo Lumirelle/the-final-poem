@@ -135,7 +135,7 @@ onLoad((options) => {
           >
             <view class="department-item">
               <cl-image :src="item.coverImage" :size="120" radius="6" />
-              <cl-text :value="item.name" :margin="[20, 0, 0, 0]" />
+              <cl-text :value="item.name" :margin="[20, 0, 0, 0]" :ellipsis="1" />
             </view>
           </cl-grid-item>
         </cl-grid>

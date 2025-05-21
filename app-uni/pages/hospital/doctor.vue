@@ -2,9 +2,10 @@
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import BackHome from '/@/components/back-home.vue'
-import { useCool } from '/@/cool'
+import { useCool, useStore } from '/@/cool'
 
-const { service } = useCool()
+const { service, router } = useCool()
+const { meal } = useStore()
 
 const doctor = ref<any>({})
 const loading = ref(false)
@@ -23,6 +24,13 @@ async function getDetail(id: string) {
   finally {
     loading.value = false
   }
+}
+
+
+// 查看陪诊服务
+function viewMealList() {
+  meal.setQueryParam('doctorId', doctor.value.id)
+  router.push('/pages/index/meal')
 }
 
 // 页面加载
@@ -88,6 +96,18 @@ onLoad((options) => {
           />
         </cl-card>
       </view>
+
+      <!-- 查看陪诊服务按钮 -->
+      <view class="action-btn">
+        <cl-button
+          type="primary"
+          :width="600"
+          round
+          @tap="viewMealList"
+        >
+          查看陪诊服务
+        </cl-button>
+      </view>
     </template>
 
     <!-- 回到首页按钮 -->
@@ -120,5 +140,11 @@ onLoad((options) => {
       }
     }
   }
+}
+
+.action-btn {
+  display: flex;
+  justify-content: center;
+  margin: 30rpx 0;
 }
 </style>

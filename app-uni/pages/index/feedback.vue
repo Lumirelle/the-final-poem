@@ -52,7 +52,7 @@ async function handleSubmit() {
       router.push({
         path: '/pages/order/detail',
         query: {
-          orderId: form.value.orderId,
+          id: form.value.orderId,
         },
       })
     }

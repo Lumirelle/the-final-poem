@@ -6,6 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "123456"  # 设置 root 用户密码
       MYSQL_DATABASE: "database"         # 创建一个初始数据库
+      TZ: Asia/Shanghai # 指定时区
     networks:
       - backend
     ports:

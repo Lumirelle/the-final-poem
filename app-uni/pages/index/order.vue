@@ -294,6 +294,14 @@ onShow(() => {
                   <cl-text value="实付金额" color="#666" size="28" />
                   <cl-text :value="`¥${item.actualAmount}`" color="danger" size="32" bold />
                 </view>
+                <view class="price-row">
+                  <cl-text value="订单创建时间" color="#666" size="28" />
+                  <cl-text :value="item.createTime" color="danger" size="32" bold />
+                </view>
+                <view class="price-row">
+                  <cl-text value="订单支付时间" color="#666" size="28" />
+                  <cl-text :value="item.payTime" color="danger" size="32" bold />
+                </view>
               </view>
             </view>
 

@@ -7,9 +7,9 @@ import Tabbar from './components/tabbar.vue'
 const { service } = useCool()
 const { t } = useI18n()
 const { onRefresh } = usePager()
-const { dict, user } = useStore()
+const { dict } = useStore()
 
-const list = ref<any[]>([])
+const list = ref<Eps.ComplaintEntity[]>([])
 const loading = ref(false)
 
 // 刷新列表
@@ -36,34 +36,6 @@ async function refresh() {
 onMounted(() => {
   refresh()
 })
-
-
-// 获取状态文本
-function getStatusText(status: number | undefined) {
-  if (status === undefined)
-    return '未知'
-  const result = dict.getLabel('order-status', status) || '未知'
-  return user.info?.role === 2 ? `患者${result}` : result
-}
-
-// 获取状态样式
-function getStatusType(status: number | undefined) {
-  if (status === undefined)
-    return 'primary'
-  const result = dict.get('order-status').find(item => item.value === status)?.type
-  return result || 'primary'
-}
-
-function getTypeName(type: number) {
-  // 0=服务态度 1=价格问题 2=服务质量 3=其他
-  switch (type) {
-    case 0: return t('服务态度')
-    case 1: return t('价格问题')
-    case 2: return t('服务质量')
-    case 3: return t('其他')
-    default: return type
-  }
-}
 </script>
 
 <template>
@@ -75,19 +47,43 @@ function getTypeName(type: number) {
       </view>
       <view v-else class="feedback-list">
         <cl-card v-for="item in list" :key="item.id" :title="item.content" :desc="item.createTime">
-          <template #extra>
-            <cl-tag v-if="item.status === 0" type="warning">{{ t('待处理') }}</cl-tag>
-            <cl-tag v-else-if="item.status === 1" type="info">{{ t('处理中') }}</cl-tag>
-            <cl-tag v-else-if="item.status === 2" type="success">{{ t('已解决') }}</cl-tag>
-            <cl-tag v-else-if="item.status === 3" type="danger">{{ t('未解决') }}</cl-tag>
-            <cl-tag v-else-if="item.status === 4" type="default">{{ t('已关闭') }}</cl-tag>
-          </template>
-          <view class="row"><cl-text type="info">{{ t('订单号：') }}</cl-text>{{ item.orderNumber || '-' }}</view>
-          <view class="row"><cl-text type="info">{{ t('反馈人：') }}</cl-text>{{ item.userNickName || '-' }}</view>
-          <view class="row">{{ t('类型：') }}{{ getTypeName(item.type) }}</view>
-          <view class="row">{{ t('联系方式：') }}{{ item.contactInfo || '-' }}</view>
+          <view class="row">
+            <cl-tag :type="dict.getType('complaint-status', item.status)" :size="24" :padding="8" :margin="[0, 0, 8, 0]">
+              {{ dict.getLabel('complaint-status', item.status) }}
+            </cl-tag>
+          </view>
+          <view class="row">
+            <cl-text type="info">
+              {{ t('反馈时间：') }}
+            </cl-text>
+            {{ item.createTime || '-' }}
+          </view>
+          <view class="row">
+            <cl-text type="info">
+              {{ t('订单号：') }}
+            </cl-text>
+            {{ item.orderNumber || '-' }}
+          </view>
+          <view class="row">
+            <cl-text type="info">
+              {{ t('反馈人：') }}
+            </cl-text>
+            {{ item.userNickName || '-' }}
+          </view>
+          <view class="row">
+            {{ t('类型：') }}{{ dict.getLabel('complaint-type', item.type) }}
+          </view>
+          <view class="row">
+            {{ t('联系方式：') }}{{ item.contactInfo || '-' }}
+          </view>
           <view v-if="item.images && (Array.isArray(item.images) ? item.images.length : item.images)" class="images">
-            <cl-image v-for="img in (Array.isArray(item.images) ? item.images : (item.images ? item.images.split(',') : []))" :key="img" :src="img" :size="120" radius="8" :margin="[0,12,0,0]" />
+            <cl-image 
+            v-for="img in (Array.isArray(item.images) ? item.images : (item.images ? item.images.split(',') : []))" 
+            :key="img" 
+            :src="img" 
+            :size="120" 
+            radius="8" 
+            :margin="[0,12,0,0]" />
           </view>
           <view v-if="item.handleResult" class="handle-result">{{ t('处理结果：') }}{{ item.handleResult }}</view>
           <view v-if="item.remark" class="remark">{{ t('备注：') }}{{ item.remark }}</view>

@@ -2,9 +2,10 @@
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import BackHome from '/@/components/back-home.vue'
-import { useCool } from '/@/cool'
+import { useCool, useStore } from '/@/cool'
 
 const { service, router } = useCool()
+const { meal } = useStore()
 
 const department = ref<any>({})
 const doctors = ref<any[]>([])
@@ -42,6 +43,12 @@ function viewDoctor(item: any) {
       hospitalId: department.value.hospitalId
     }
   })
+}
+
+// 查看陪诊服务
+function viewMealList() {
+  meal.setQueryParam('departmentId', department.value.id)
+  router.push('/pages/index/meal')
 }
 
 // 页面加载
@@ -87,6 +94,18 @@ onLoad((options) => {
             :line-height="1.6"
           />
         </cl-card>
+      </view>
+
+      <!-- 查看陪诊服务按钮 -->
+      <view class="action-btn">
+        <cl-button
+          type="primary"
+          :width="600"
+          round
+          @tap="viewMealList"
+        >
+          查看陪诊服务
+        </cl-button>
       </view>
 
       <!-- 医生列表 -->
@@ -150,6 +169,12 @@ onLoad((options) => {
     align-items: center;
     padding: 20rpx 0;
   }
+}
+
+.action-btn {
+  display: flex;
+  justify-content: center;
+  margin: 30rpx 0;
 }
 
 .doctor-list {

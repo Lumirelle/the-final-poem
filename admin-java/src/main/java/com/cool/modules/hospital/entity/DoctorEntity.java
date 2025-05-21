@@ -48,12 +48,11 @@ public class DoctorEntity extends BaseEntity<DoctorEntity> {
     private Integer status;
 
     // 简介
-    @ColumnDefine(comment = "简介")
+    @ColumnDefine(comment = "简介", type = "TEXT")
     private String introduction;
 
     // 头像
     @ColumnDefine(comment = "头像")
     private String avatar;
-    
 
 }

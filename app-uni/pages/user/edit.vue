@@ -25,7 +25,7 @@ const roleOptions = [
 
 const role = ref(user.info?.role)
 
-const patientForm = reactive<Eps.PatientInfoEntity>({
+const patientForm = ref<Eps.PatientInfoEntity>({
   name: '',
   gender: 0,
   birthday: undefined,
@@ -43,7 +43,7 @@ const patientForm = reactive<Eps.PatientInfoEntity>({
   avatarUrl: '',
 })
 
-const staffForm = reactive<Eps.AccompanyStaffEntity>({
+const staffForm = ref<Eps.AccompanyStaffEntity>({
   name: '',
   gender: 0,
   birthday: undefined,
@@ -71,40 +71,15 @@ async function save() {
   loading.value = false
 }
 
-
-// 获取状态文本
-function getLevelText(level: number | undefined) {
-  if (level === undefined)
-    return '未知'
-  const result = dict.getLabel('acc-staff-level', level) || '未知'
-  return result
-}
-
-// 获取状态样式
-function getLevelType(level: number | undefined) {
-  if (level === undefined)
-    return 'primary'
-  const result = dict.get('acc-staff-level').find(item => item.value === level)?.type || 'primary'
-  return result
-}
-
 onReady(async () => {
   // 拉取当前档案
   const res = await service.user.info.profile()
   if (res) {
     if (role.value === 1) {
-      for (const key in patientForm) {
-        if (key in res) {
-          patientForm[key] = res[key]
-        }
-      }
+      patientForm.value = res
     }
     else if (role.value === 2) {
-      for (const key in staffForm) {
-        if (key in res) {
-          staffForm[key] = res[key]
-        }
-      }
+      staffForm.value = res
     }
     else {
       ui.showToast(t('角色不匹配'))
@@ -152,7 +127,6 @@ onReady(async () => {
               <cl-radio-group v-model="patientForm.gender">
                 <cl-radio :label="1">{{ t('男') }}</cl-radio>
                 <cl-radio :label="2">{{ t('女') }}</cl-radio>
-                <cl-radio :label="0">{{ t('未知') }}</cl-radio>
               </cl-radio-group>
             </cl-form-item>
             <cl-form-item :label="t('生日')">
@@ -186,7 +160,6 @@ onReady(async () => {
               <cl-radio-group v-model="staffForm.gender">
                 <cl-radio :label="1">{{ t('男') }}</cl-radio>
                 <cl-radio :label="2">{{ t('女') }}</cl-radio>
-                <cl-radio :label="0">{{ t('未知') }}</cl-radio>
               </cl-radio-group>
             </cl-form-item>
             <cl-form-item :label="t('生日')">
@@ -196,8 +169,8 @@ onReady(async () => {
               <cl-input v-model="staffForm.phone" :placeholder="t('请输入手机号')" />
             </cl-form-item>
             <cl-form-item :label="t('级别')">
-              <cl-tag :type="getLevelType(staffForm.status)">
-                {{ getLevelText(staffForm.status) }}
+              <cl-tag :type="dict.getType('acc-staff-level', staffForm.level)">
+                {{ dict.getLabel('acc-staff-level', staffForm.level) }}
               </cl-tag>
             </cl-form-item>
             <cl-form-item :label="t('简介')">
@@ -209,7 +182,7 @@ onReady(async () => {
           </template>
         </cl-form>
       </view>
-      
+
       <cl-footer>
         <cl-button custom type="primary" :loading="loading" @tap="save">
           {{ t('保存') }}

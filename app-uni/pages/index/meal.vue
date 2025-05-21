@@ -164,10 +164,28 @@ onLoad(() => {
 onShow(() => {
   // 如果有医院ID参数,设置到搜索条件中
   const hospitalId = meal.getQueryParam('hospitalId')
-  console.log('[meal] 从其他页面打开：', hospitalId)
   if (hospitalId) {
+    console.log('[meal] 从其他页面打开：', hospitalId)
     searchForm.value.hospitalId = hospitalId
     meal.resetQueryParam('hospitalId')
+  }
+
+  // 如果有科室ID参数,设置到搜索条件中
+  const departmentId = meal.getQueryParam('departmentId')
+  if (departmentId) {
+    console.log('[meal] 从其他页面打开：', departmentId)
+    searchForm.value.departmentId = departmentId
+    showAdvanced.value = true
+    meal.resetQueryParam('departmentId')
+  }
+
+  // 如果有医生ID参数,设置到搜索条件中
+  const doctorId = meal.getQueryParam('doctorId')
+  if (doctorId) {
+    console.log('[meal] 从其他页面打开：', doctorId)
+    searchForm.value.doctorId = doctorId
+    showAdvanced.value = true
+    meal.resetQueryParam('doctorId')
   }
 
   refresh()
@@ -195,7 +213,7 @@ onShow(() => {
             <cl-select v-model="searchForm.hospitalId" :options="hospitalOptions" />
           </cl-form-item>
 
-          <cl-form-item label="陪诊人员" :margin="[0, 20, 20, 0]">
+          <cl-form-item v-if="user.info?.role === 1" label="陪诊人员" :margin="[0, 20, 20, 0]">
             <cl-select v-model="searchForm.staffId" :options="staffOptions" />
           </cl-form-item>
         </view>

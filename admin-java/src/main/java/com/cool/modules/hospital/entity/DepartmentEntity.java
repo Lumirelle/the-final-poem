@@ -41,7 +41,7 @@ public class DepartmentEntity extends BaseEntity<DepartmentEntity> {
     @ColumnDefine(comment = "封面图")
     private String coverImage;
 
-    @ColumnDefine(comment = "简介")
+    @ColumnDefine(comment = "简介", type = "TEXT")
     private String introduction;
 
 }

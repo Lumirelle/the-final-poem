@@ -75,6 +75,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInf
             mapper.update(info);
 
             AccompanyStaffEntity profile = params.toBean(AccompanyStaffEntity.class);
+            profile.setLevel(0);
             profile.setStaffUserId(userId);
             accompanyStaffMapper.insert(profile);
             return true;
