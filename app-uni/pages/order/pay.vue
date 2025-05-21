@@ -58,8 +58,11 @@ async function handleSubmit() {
 
     // 延迟返回，让用户看到成功提示
     setTimeout(() => {
-      router.back({
-        delta: 1
+      router.push({
+        path: '/pages/order/detail',
+        query: {
+          id: order.value.id,
+        },
       })
     }, 1500)
   }

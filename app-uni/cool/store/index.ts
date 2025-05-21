@@ -2,6 +2,7 @@ import { useDictStore } from './dict'
 import { useMealStore } from './meal'
 import { useOrderStore } from './order'
 import { useUserStore } from './user'
+import { useFeedbackStore } from './feedback'
 
 export function useStore() {
   return {
@@ -9,5 +10,6 @@ export function useStore() {
     dict: useDictStore(),
     meal: useMealStore(),
     order: useOrderStore(),
+    feedback: useFeedbackStore(),
   }
 }

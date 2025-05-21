@@ -2,17 +2,21 @@
 import { ref } from 'vue'
 import Tabbar from './components/tabbar.vue'
 import { useCool, useStore } from '/@/cool'
+import { onShow } from '@dcloudio/uni-app'
 
-const { dict, user } = useStore()
+const { dict, feedback } = useStore()
 
-const { service } = useCool()
+const { service, router } = useCool()
 
 const form = ref({
   type: '', // 反馈类型
   content: '', // 反馈内容
   contactInfo: '', // 联系方式
   images: [] as string[], // 图片列表
+  orderId: '', // 订单ID
 })
+
+const orderDetail = ref<Eps.OrderInfoEntity>({})
 
 const submitting = ref(false)
 
@@ -44,13 +48,18 @@ async function handleSubmit() {
       icon: 'success',
     })
 
-    // 重置表单
-    form.value = {
-      type: '',
-      content: '',
-      contactInfo: '',
-      images: [],
+    if (form.value.orderId) {
+      router.push({
+        path: '/pages/order/detail',
+        query: {
+          orderId: form.value.orderId,
+        },
+      })
     }
+    else {
+      router.home()
+    }
+
   }
   catch (err) {
     uni.showToast({
@@ -62,6 +71,34 @@ async function handleSubmit() {
     submitting.value = false
   }
 }
+
+onShow(async() => {
+  form.value = {
+    type: '',
+    content: '',
+    contactInfo: '',
+    images: [],
+    orderId: '',
+  }
+
+  const orderId = feedback.getQueryParam('orderId')
+  if (orderId) {
+    console.log('[feedback]: 从其他页面打开', orderId)
+    form.value.orderId = orderId
+
+    // 获取订单详情
+    const res = await service.order.info.info({
+      id: orderId,
+    })
+    if (res) {
+      orderDetail.value = res
+    }
+  } else {
+    console.log('[feedback]: 从首页打开')
+    orderDetail.value = {} as Eps.OrderInfoEntity
+  }
+  feedback.resetQueryParam('orderId')
+})
 </script>
 
 <template>
@@ -71,6 +108,14 @@ async function handleSubmit() {
     <cl-scroller>
       <view class="feedback-form">
         <cl-form :model="form">
+          <!-- 订单号 -->
+          <cl-form-item v-if="form.orderId" label="订单号">
+            <cl-input
+              v-model="orderDetail.orderNumber"
+              :disabled="true"
+            />
+          </cl-form-item>
+
           <!-- 反馈类型 -->
           <cl-form-item label="反馈类型" required>
             <cl-select
@@ -90,20 +135,20 @@ async function handleSubmit() {
             />
           </cl-form-item>
 
+          <!-- 联系方式 -->
+          <cl-form-item label="联系方式" required>
+            <cl-input
+              v-model="form.contactInfo"
+              placeholder="请留下您的联系方式，方便我们及时回复"
+            />
+          </cl-form-item>
+
           <!-- 图片上传 -->
           <cl-form-item label="上传图片">
             <cl-upload
               v-model="form.images"
               :limit="9 - form.images.length"
               multiple
-            />
-          </cl-form-item>
-
-          <!-- 联系方式 -->
-          <cl-form-item label="联系方式">
-            <cl-input
-              v-model="form.contactInfo"
-              placeholder="请留下您的联系方式，方便我们及时回复"
             />
           </cl-form-item>
         </cl-form>

@@ -4,11 +4,16 @@ import { ref } from 'vue'
 import BackHome from '/@/components/back-home.vue'
 import { useCool, useStore } from '/@/cool'
 
+
 const { service } = useCool()
 const { dict, user } = useStore()
 
 // 详情数据
 const detail = ref<Eps.OrderInfoEntity>({})
+const mealDetail = ref<Eps.MealInfoEntity>({})
+const staffDetail = ref<Eps.AccompanyStaffEntity>({})
+const patientDetail = ref<Eps.PatientInfoEntity>({})
+
 const loading = ref(false)
 
 // 支付方式映射
@@ -20,39 +25,81 @@ const payTypeMap: Record<number, string> = {
 }
 
 // 加载详情
-async function loadDetail(id: string) {
+async function refresh(id: string) {
   loading.value = true
   try {
     const res = await service.order.info.info({
       id,
     })
     detail.value = res
+
+    if (detail.value.mealId) {
+      const mealRes = await service.meal.info.info({
+        id: detail.value.mealId,
+      })
+      mealDetail.value = mealRes
+    }
+
+    if (mealDetail.value.staffId) {
+      const staffRes = await service.accompany.staff.info({
+        id: mealDetail.value.staffId,
+      })
+      staffDetail.value = staffRes
+    }
+
+    if (detail.value.patientId) {
+      const patientRes = await service.patient.info.info({
+        id: detail.value.patientId,
+      })
+      patientDetail.value = patientRes
+    }
   }
   finally {
     loading.value = false
   }
 }
 
-// 获取状态文本
-function getStatusText(status: number | undefined) {
-  if (status === undefined)
-    return '未知'
-  const result = dict.getLabel('order-status', status) || '未知'
-  return user.info?.role === 2 ? `患者${result}` : result
-}
-
-// 获取状态样式
-function getStatusType(status: number | undefined) {
-  if (status === undefined)
-    return 'primary'
-  const result = dict.get('order-status').find(item => item.value === status)?.type
-  return result || 'primary'
+// 核销订单
+const Confirm = ref<ClConfirm.Ref>()
+const ConfirmInput = ref()
+async function handleWriteOff(item: Eps.OrderInfoEntity) {
+  // 弹窗输入核销码
+  Confirm.value?.open({
+    title: '请输入核销码',
+    beforeClose: async(action, { done, showLoading, hideLoading }) => {
+      if (action === 'confirm') {
+        showLoading()
+        try {
+          await service.order.info.writeOff({
+            id: item.id,
+            verifyCode: ConfirmInput.value.value,
+          })
+          uni.showToast({
+            title: '核销成功',
+            icon: 'success',
+          })
+          refresh(detail.value.id)
+        }
+        catch (err) {
+          uni.showToast({
+            title: '操作失败',
+            icon: 'error',
+          })
+        }
+        done()
+        hideLoading()
+      }
+      else {
+        done()
+      }
+    },
+  })
 }
 
 // 页面加载
 onLoad((options) => {
   if (options?.id) {
-    loadDetail(options.id)
+    refresh(options.id)
   }
 })
 </script>
@@ -63,12 +110,16 @@ onLoad((options) => {
 
     <cl-loading-mask v-if="loading" />
 
+    <cl-confirm ref="Confirm">
+      <cl-input ref="ConfirmInput"></cl-input>
+    </cl-confirm>
+
     <cl-scroller>
       <!-- 订单状态 -->
       <view class="status-section">
         <cl-text
-          :value="getStatusText(detail.status)"
-          :color="getStatusType(detail.status)"
+          :value="dict.getLabel('order-status', detail.status)"
+          :color="dict.getType('order-status', detail.status)"
           :size="48"
           bold
         />
@@ -122,6 +173,74 @@ onLoad((options) => {
           <cl-text :value="`¥${detail.actualAmount || '0'}`" color="danger" :size="32" bold />
         </view>
       </view>
+
+      <!-- 患者显示陪诊员档案 -->
+      <view v-if="user.info?.role == 1" class="staff-section">
+        <cl-text class="section-title" value="陪诊员信息" :size="32" bold />
+        <view class="info-row">
+          <cl-text value="姓名" color="#999" />
+          <cl-text :value="staffDetail.name || '无'" />
+        </view>
+
+        <view class="info-row">
+          <cl-text value="手机号" color="#999" />
+          <cl-text :value="staffDetail.phone || '无'" />
+        </view>
+
+        <view class="info-row">
+          <cl-text value="级别" color="#999" />
+          <cl-tag :type="dict.getType('acc-staff-level', staffDetail.status)">
+            {{ dict.getLabel('acc-staff-level', staffDetail.status) }}
+          </cl-tag>
+        </view>
+
+        <view class="info-row">
+          <cl-text value="简介" color="#999" />
+          <cl-text :value="staffDetail.introduction || '无'" />
+        </view>
+      </view>
+
+      <!-- 陪诊员显示患者档案 -->
+      <view v-if="user.info?.role == 2" class="staff-section">
+        <cl-text class="section-title" value="患者信息" :size="32" bold />
+        <view class="info-row">
+          <cl-text value="姓名" color="#999" />
+          <cl-text :value="patientDetail.name || '无'" />
+        </view>
+
+        <view class="info-row">
+          <cl-text value="手机号" color="#999" />
+          <cl-text :value="patientDetail.phone || '无'" />
+        </view>
+
+        <view class="info-row">
+          <cl-text value="病历号" color="#999" />
+          <cl-text :value="patientDetail.medicalRecordNumber || '无'" />
+        </view>
+        <view class="info-row">
+          <cl-text value="病史" color="#999" />
+          <cl-text :value="patientDetail.medicalHistory || '无'" />
+        </view>
+        <view class="info-row">
+          <cl-text value="过敏史" color="#999" />
+          <cl-text :value="patientDetail.allergyHistory || '无'" />
+        </view>
+        <view class="info-row">
+          <cl-text value="地址" color="#999" />
+          <cl-text :value="patientDetail.address || '无'" />
+        </view>
+      </view>
+
+      <!-- 核销订单按钮 -->
+      <cl-button
+        v-if="user.info?.role == 2 && detail.status === 2"
+        type="primary"
+        round
+        :width="160"
+        @tap.stop="handleWriteOff(detail)"
+      >
+        核销订单
+      </cl-button>
     </cl-scroller>
 
     <!-- 回到首页按钮 -->
@@ -172,6 +291,30 @@ onLoad((options) => {
       margin-top: 30rpx;
       padding-top: 30rpx;
       border-top: 2rpx solid #f5f5f5;
+    }
+  }
+}
+
+.staff-section {
+  margin-top: 20rpx;
+  padding: 30rpx;
+  background-color: #fff;
+
+  .section-title {
+    margin-bottom: 20rpx;
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }

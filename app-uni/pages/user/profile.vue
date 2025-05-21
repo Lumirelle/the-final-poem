@@ -43,7 +43,6 @@ const staffForm = reactive<Eps.AccompanyStaffEntity>({
   gender: 0,
   birthday: undefined,
   phone: '',
-  level: 0,
   status: 0,
   introduction: '',
   remark: '',
@@ -163,13 +162,6 @@ onMounted(() => {
             </cl-form-item>
             <cl-form-item :label="t('手机号')">
               <cl-input v-model="staffForm.phone" :placeholder="t('请输入手机号')" />
-            </cl-form-item>
-            <cl-form-item :label="t('级别')">
-              <cl-radio-group v-model="staffForm.level">
-                <cl-radio :label="0">{{ t('初级') }}</cl-radio>
-                <cl-radio :label="1">{{ t('中级') }}</cl-radio>
-                <cl-radio :label="2">{{ t('高级') }}</cl-radio>
-              </cl-radio-group>
             </cl-form-item>
             <cl-form-item :label="t('简介')">
               <cl-input v-model="staffForm.introduction" :placeholder="t('请输入简介')" />

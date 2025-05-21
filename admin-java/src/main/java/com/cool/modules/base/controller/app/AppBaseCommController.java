@@ -35,15 +35,12 @@ public class AppBaseCommController {
 
     private final BaseSysParamService baseSysParamService;
     final private FileUploadStrategyFactory fileUploadStrategyFactory;
-    @Value("${cool.sysParam.allowKeys:[]}")
-    private List<String> allowKeys;
 
     @TokenIgnore
     @Operation(summary = "参数配置")
     @GetMapping("/param")
     public R param(@RequestAttribute() JSONObject requestParams) {
         String key = requestParams.get("key", String.class);
-        CoolPreconditions.check(!allowKeys.contains(key), "非法操作");
         return R.ok(baseSysParamService.dataByKey(key));
     }
 

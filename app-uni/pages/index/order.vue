@@ -10,7 +10,7 @@ const { onRefresh } = usePager()
 const list = ref<Eps.OrderInfoEntity[]>([])
 const loading = ref(false)
 
-const { dict, order, user } = useStore()
+const { dict, order, user, feedback } = useStore()
 
 // 搜索条件
 const searchForm = ref({
@@ -27,9 +27,6 @@ const orderStatusOptions = computed(() => {
     ...dict.get('order-status'),
   ]
 })
-
-const Confirm = ref<ClConfirm.Ref>()
-const ConfirmInput = ref()
 
 // 刷新列表
 async function refresh() {
@@ -163,7 +160,15 @@ async function handleRefund(item: Eps.OrderInfoEntity) {
   }
 }
 
+// 投诉反馈
+async function handleFeedback(item:Eps.OrderInfoEntity) {
+  feedback.setQueryParam('orderId', item.id)
+  router.push('/pages/index/feedback')
+}
+
 // 核销订单
+const Confirm = ref<ClConfirm.Ref>()
+const ConfirmInput = ref()
 async function handleWriteOff(item: Eps.OrderInfoEntity) {
   // 弹窗输入核销码
   Confirm.value?.open({
@@ -321,6 +326,15 @@ onShow(() => {
                   @tap.stop="handleRefund(item)"
                 >
                   申请退款
+                </cl-button>
+                <cl-button
+                  v-if="item.status === 3 && !item.hasComplaint"
+                  type="info"
+                  round
+                  :width="160"
+                  @tap.stop="handleFeedback(item)"
+                >
+                  投诉反馈
                 </cl-button>
               </template>
               <!-- 陪诊员操作按钮 -->

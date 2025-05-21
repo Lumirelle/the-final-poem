@@ -129,7 +129,17 @@ onLoad((options) => {
         <view class="info-row">
           <cl-icon name="face-auth" :size="32" color="primary" />
           <cl-text
-            :value="detail.doctorName"
+            :value="'医生：' + detail.doctorName"
+            color="#666"
+            :margin="[0, 0, 0, 10]"
+            size="28"
+          />
+        </view>
+
+        <view class="info-row">
+          <cl-icon name="face-auth" :size="32" color="primary" />
+          <cl-text
+            :value="'陪诊员：' + detail.staffName"
             color="#666"
             :margin="[0, 0, 0, 10]"
             size="28"

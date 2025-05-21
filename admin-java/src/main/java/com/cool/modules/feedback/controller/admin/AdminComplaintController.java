@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 投诉信息管理
@@ -43,12 +44,11 @@ public class AdminComplaintController extends BaseController<ComplaintService, C
     }
 
     @Override
-    @Operation(summary = "新增", description = "新增信息，对应后端的实体类")
-    @PostMapping("/add")
-    protected R add(@RequestAttribute() JSONObject requestParams) {
-        ComplaintEntity entity = requestParams.toBean(currentEntityClass());
+    @Operation(summary = "修改", description = "根据ID修改")
+    @PostMapping("/update")
+    protected R update(@RequestBody ComplaintEntity entity, @RequestAttribute() JSONObject requestParams) {
         entity.setHandlerId(CoolSecurityUtil.getCurrentUserId());
-        return R.ok(Dict.create().set("id", service.add(requestParams, entity)));
+        return R.ok(Dict.create().set("id", service.update(requestParams, entity)));
     }
 
     @Operation(summary = "统计", description = "统计投诉用户总量")

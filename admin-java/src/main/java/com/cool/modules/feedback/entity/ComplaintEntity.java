@@ -19,9 +19,13 @@ import java.util.List;
 @Table(value = "feedback_complaint", comment = "投诉信息")
 public class ComplaintEntity extends BaseEntity<ComplaintEntity> {
 
+    // Order
     @UniIndex
     @ColumnDefine(comment = "订单 ID")
     private String orderId;
+
+    @Column(ignore = true)
+    private String orderNumber;
 
     @ColumnDefine(comment = "类型 0=服务态度 1=价格问题 2=服务质量 3=其他", defaultValue = "0")
     private Integer type;

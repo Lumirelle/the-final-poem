@@ -38,12 +38,6 @@ const Upsert = useUpsert({
       span: 12,
       required: true,
     },
-    {
-      label: t('图标'),
-      prop: 'icon',
-      component: { name: 'cl-upload' },
-      required: true,
-    },
   ],
 })
 
@@ -59,12 +53,6 @@ const Table = useTable({
       component: { name: 'cl-switch' },
     },
     { label: t('排序'), prop: 'sort', minWidth: 140, sortable: 'custom' },
-    {
-      label: t('图标'),
-      prop: 'icon',
-      minWidth: 100,
-      component: { name: 'cl-image', props: { size: 60 } },
-    },
     {
       label: t('创建时间'),
       prop: 'createTime',

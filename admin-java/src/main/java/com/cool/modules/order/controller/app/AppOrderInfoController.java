@@ -11,6 +11,7 @@ import com.cool.core.request.PageResult;
 import com.cool.core.request.R;
 import com.cool.core.util.CoolSecurityUtil;
 import com.cool.core.util.EntityUtils;
+import com.cool.modules.feedback.entity.ComplaintEntity;
 import com.cool.modules.order.controller.app.params.WriteOffParam;
 import com.cool.modules.order.entity.OrderInfoEntity;
 import com.cool.modules.order.service.OrderInfoService;
@@ -21,6 +22,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -34,14 +36,10 @@ import static com.cool.modules.patient.entity.table.PatientInfoEntityTableDef.PA
  */
 @Tag(name = "订单信息", description = "订单信息")
 @CoolRestController(api = {"page", "info", "update", "add"})
+@RequiredArgsConstructor
 public class AppOrderInfoController extends BaseController<OrderInfoService, OrderInfoEntity> {
 
     private final UserInfoService userInfoService;
-
-    public AppOrderInfoController(UserInfoService userInfoService) {
-        super();
-        this.userInfoService = userInfoService;
-    }
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
@@ -61,11 +59,13 @@ public class AppOrderInfoController extends BaseController<OrderInfoService, Ord
                 ORDER_INFO_ENTITY.MEAL_ID,
                 ORDER_INFO_ENTITY.PAY_TYPE
             )
-            .queryWrapper(QueryWrapper.create()
-                .where(
-                    PATIENT_INFO_ENTITY.PATIENT_USER_ID.eq(userId)
-                        .or(ACCOMPANY_STAFF_ENTITY.STAFF_USER_ID.eq(userId))
-                ))
+            .queryWrapper(
+                QueryWrapper.create()
+                    .where(
+                        PATIENT_INFO_ENTITY.PATIENT_USER_ID.eq(userId)
+                            .or(ACCOMPANY_STAFF_ENTITY.STAFF_USER_ID.eq(userId))
+                    )
+            )
         );
     }
 
@@ -103,6 +103,8 @@ public class AppOrderInfoController extends BaseController<OrderInfoService, Ord
     public R update(@RequestBody OrderInfoEntity orderInfoEntity, @RequestAttribute() JSONObject requestParams) {
         Long id = orderInfoEntity.getId();
         JSONObject info = JSONUtil.parseObj(JSONUtil.toJsonStr(service.getById(id)));
+        info.set("visitTime", orderInfoEntity.getVisitTime());
+        info.set("remark", orderInfoEntity.getRemark());
         info.set("status", requestParams.get("status"));
         // 随机六位验证码
         info.set("verifyCode", RandomUtil.randomString("0123456789", 6));

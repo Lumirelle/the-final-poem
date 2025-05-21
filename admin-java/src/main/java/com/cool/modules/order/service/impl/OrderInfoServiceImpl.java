@@ -5,6 +5,9 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONObject;
 import com.cool.core.base.BaseServiceImpl;
 import com.cool.core.util.CoolSecurityUtil;
+import com.cool.modules.feedback.mapper.ComplaintMapper;
+import com.cool.modules.meal.entity.MealInfoEntity;
+import com.cool.modules.meal.mapper.MealInfoMapper;
 import com.cool.modules.order.entity.OrderInfoEntity;
 import com.cool.modules.order.mapper.OrderInfoMapper;
 import com.cool.modules.order.service.OrderInfoService;
@@ -12,12 +15,16 @@ import com.cool.modules.patient.entity.PatientInfoEntity;
 import com.cool.modules.patient.mapper.PatientInfoMapper;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
+import com.mybatisflex.core.update.UpdateWrapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 import static com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY;
+import static com.cool.modules.feedback.entity.table.ComplaintEntityTableDef.COMPLAINT_ENTITY;
 import static com.cool.modules.meal.entity.table.MealInfoEntityTableDef.MEAL_INFO_ENTITY;
 import static com.cool.modules.order.entity.table.OrderInfoEntityTableDef.ORDER_INFO_ENTITY;
 import static com.cool.modules.patient.entity.table.PatientInfoEntityTableDef.PATIENT_INFO_ENTITY;
@@ -28,15 +35,11 @@ import static com.cool.modules.user.entity.table.UserInfoEntityTableDef.USER_INF
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OrderInfoServiceImpl extends BaseServiceImpl<OrderInfoMapper, OrderInfoEntity> implements
     OrderInfoService {
 
     private final PatientInfoMapper patientInfoMapper;
-
-    public OrderInfoServiceImpl(PatientInfoMapper patientInfoMapper) {
-        super();
-        this.patientInfoMapper = patientInfoMapper;
-    }
 
     @Override
     public Object page(JSONObject requestParams, Page<OrderInfoEntity> page, QueryWrapper queryWrapper) {
@@ -51,7 +54,15 @@ public class OrderInfoServiceImpl extends BaseServiceImpl<OrderInfoMapper, Order
             .leftJoin(MEAL_INFO_ENTITY).on(ORDER_INFO_ENTITY.MEAL_ID.eq(MEAL_INFO_ENTITY.ID))
             .leftJoin(ACCOMPANY_STAFF_ENTITY).on(MEAL_INFO_ENTITY.STAFF_ID.eq(ACCOMPANY_STAFF_ENTITY.ID))
             .leftJoin(USER_INFO_ENTITY).on(PATIENT_INFO_ENTITY.PATIENT_USER_ID.eq(USER_INFO_ENTITY.ID));
-        return mapper.paginateWithRelations(page, queryWrapper);
+        return mapper.paginateWithRelations(page, queryWrapper, fieldQueryBuilder -> {
+            fieldQueryBuilder.field(OrderInfoEntity::getHasComplaint)
+                .queryWrapper(orderInfo ->
+                    QueryWrapper.create()
+                        .select("CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END")
+                        .from(COMPLAINT_ENTITY)
+                        .where(COMPLAINT_ENTITY.ORDER_ID.eq(orderInfo.getId()))
+                );
+        });
     }
 
     @Override
@@ -172,5 +183,12 @@ public class OrderInfoServiceImpl extends BaseServiceImpl<OrderInfoMapper, Order
         }
         orderInfoEntity.setStatus(3);
         update(orderInfoEntity);
+
+        // 记录服务次数
+        UpdateChain.of(MealInfoEntity.class)
+            .setRaw(MEAL_INFO_ENTITY.SERVICE_COUNT, "service_count + 1")
+            .where(MEAL_INFO_ENTITY.ID.eq(orderInfoEntity.getMealId()))
+            .update();
     }
+
 }

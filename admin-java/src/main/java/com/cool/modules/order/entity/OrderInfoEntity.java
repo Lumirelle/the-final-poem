@@ -65,4 +65,6 @@ public class OrderInfoEntity extends BaseEntity<OrderInfoEntity> {
     @ColumnDefine(comment = "核销码")
     private String verifyCode;
 
+    @Column(ignore = true)
+    private Boolean hasComplaint;
 }

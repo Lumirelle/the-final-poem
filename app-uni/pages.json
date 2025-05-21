@@ -29,6 +29,12 @@
       "style": {
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/index/feedback-my",
+      "style": {
+        "navigationStyle": "custom"
+      }
     }
   ],
   "subPackages": [
@@ -168,6 +174,13 @@
         "selectedIconPath": "static/icon/tabbar/cool2.png",
         "text": "%反馈%",
         "requiredRole": 1
+      },
+      {
+        "pagePath": "pages/index/feedback-my",
+        "iconPath": "static/icon/tabbar/cool.png",
+        "selectedIconPath": "static/icon/tabbar/cool2.png",
+        "text": "%反馈%",
+        "requiredRole": 2
       },
       {
         "pagePath": "pages/index/my",

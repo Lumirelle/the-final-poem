@@ -13,9 +13,17 @@ target/
 .springBeans
 .sts4-cache
 
-assets/
+assets/**/*
+!assets/public/
+!assets/public/upload/
+!assets/public/upload/base/
+!assets/public/upload/base/*
 ### IntelliJ IDEA ###
-.idea
+.idea/*
+!.idea/runConfigurations/
+!.idea/encodings.xml
+!.idea/sqldialects.xml
+!.idea/misc.xml
 *.iws
 *.iml
 *.ipr

@@ -45,12 +45,6 @@ const columns = ref([
     label: t('排序'),
     minWidth: 120,
   },
-  {
-    prop: 'icon',
-    label: t('图标'),
-    minWidth: 150,
-    component: { name: 'cl-image', props: { size: 60 } },
-  },
 ])
 
 // 定义搜索项

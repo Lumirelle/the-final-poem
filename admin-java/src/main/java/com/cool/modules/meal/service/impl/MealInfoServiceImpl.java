@@ -5,6 +5,7 @@ import com.cool.core.base.BaseServiceImpl;
 import com.cool.core.util.CoolSecurityUtil;
 import com.cool.modules.accompany.entity.AccompanyStaffEntity;
 import com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableDef;
+import com.cool.modules.accompany.mapper.AccompanyStaffMapper;
 import com.cool.modules.hospital.entity.DepartmentEntity;
 import com.cool.modules.hospital.entity.DoctorEntity;
 import com.cool.modules.hospital.entity.HospitalInfoEntity;
@@ -19,8 +20,12 @@ import com.cool.modules.meal.mapper.MealInfoMapper;
 import com.cool.modules.meal.service.MealInfoService;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.row.Db;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 import static com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY;
 import static com.cool.modules.hospital.entity.table.DepartmentEntityTableDef.DEPARTMENT_ENTITY;
@@ -32,6 +37,9 @@ import static com.cool.modules.meal.entity.table.MealInfoEntityTableDef.MEAL_INF
 @Service
 @RequiredArgsConstructor
 public class MealInfoServiceImpl extends BaseServiceImpl<MealInfoMapper, MealInfoEntity> implements MealInfoService {
+
+    private final AccompanyStaffMapper accompanyStaffMapper;
+    private final MealInfoMapper mealInfoMapper;
 
     @Override
     public Object page(JSONObject requestParams, Page<MealInfoEntity> page, QueryWrapper queryWrapper) {
@@ -76,5 +84,75 @@ public class MealInfoServiceImpl extends BaseServiceImpl<MealInfoMapper, MealInf
             .leftJoin(ACCOMPANY_STAFF_ENTITY).on(MEAL_INFO_ENTITY.STAFF_ID.eq(ACCOMPANY_STAFF_ENTITY.ID))
             .where(MEAL_INFO_ENTITY.ID.eq(id));
         return mapper.selectOneWithRelationsByQuery(queryWrapper);
+    }
+
+    @Override
+    public Long add(MealInfoEntity entity) {
+        long mealsCount = mealInfoMapper.selectCountByQuery(
+            QueryWrapper.create()
+                .select(MEAL_INFO_ENTITY.ID)
+                .from(MEAL_INFO_ENTITY)
+                .where(MEAL_INFO_ENTITY.STAFF_ID.eq(entity.getStaffId()))
+        );
+
+        // 添加套餐限制 20 个
+        if (mealsCount >= 20) {
+            throw new RuntimeException("套餐数量已达 20 个的上限！");
+        }
+
+        AccompanyStaffEntity accompanyStaffEntity = accompanyStaffMapper.selectOneById(entity.getStaffId());
+
+        // 根据已启用套餐数量限制套餐启用状态
+        long enableMealsCount = mealInfoMapper.selectCountByQuery(
+            QueryWrapper.create()
+                .select(MEAL_INFO_ENTITY.ID)
+                .from(MEAL_INFO_ENTITY)
+                .where(MEAL_INFO_ENTITY.STAFF_ID.eq(entity.getStaffId()))
+                .and(MEAL_INFO_ENTITY.STATUS.eq(1))
+        );
+        if (accompanyStaffEntity.getLevel() == 0 && enableMealsCount >= 3) {
+            entity.setStatus(0);
+        } else if (accompanyStaffEntity.getLevel() == 1 && enableMealsCount >= 5) {
+            entity.setStatus(0);
+        } else if (accompanyStaffEntity.getLevel() == 2 && enableMealsCount >= 10) {
+            entity.setStatus(0);
+        }
+
+        return super.add(entity);
+    }
+
+    @Override
+    public boolean update(MealInfoEntity entity) {
+        // 修改的套餐状态是禁用的，无需判断
+        if (entity.getStatus() == 0) {
+            return super.update(entity);
+        }
+
+        AccompanyStaffEntity accompanyStaffEntity = accompanyStaffMapper.selectOneById(entity.getStaffId());
+
+        // 根据价格限制套餐启用状态
+        if (accompanyStaffEntity.getLevel() == 0 && entity.getPrice().compareTo(new BigDecimal(100)) > 0) {
+            throw new RuntimeException("初级陪诊员套餐价格不能超过 100 元！");
+        } else if (accompanyStaffEntity.getLevel() == 1 && entity.getPrice().compareTo(new BigDecimal(1000)) > 0) {
+            throw new RuntimeException("中级陪诊员套餐价格不能超过 1000 元！");
+        }
+
+        // 根据已启用套餐数量限制套餐启用状态
+        long enableMealsCount = mealInfoMapper.selectCountByQuery(
+            QueryWrapper.create()
+                .select(MEAL_INFO_ENTITY.ID)
+                .from(MEAL_INFO_ENTITY)
+                .where(MEAL_INFO_ENTITY.STAFF_ID.eq(entity.getStaffId()))
+                .and(MEAL_INFO_ENTITY.STATUS.eq(1))
+        );
+        if (accompanyStaffEntity.getLevel() == 0 && enableMealsCount >= 3) {
+            throw new RuntimeException("初级陪诊员只能启用 3 个套餐！");
+        } else if (accompanyStaffEntity.getLevel() == 1 && enableMealsCount >= 5) {
+            throw new RuntimeException("中级陪诊员只能启用 5 个套餐！");
+        } else if (accompanyStaffEntity.getLevel() == 2 && enableMealsCount >= 10) {
+            throw new RuntimeException("高级陪诊员只能启用 10 个套餐！");
+        }
+
+        return super.update(entity);
     }
 }

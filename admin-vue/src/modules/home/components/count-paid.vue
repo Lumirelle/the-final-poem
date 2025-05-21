@@ -8,7 +8,7 @@ const { service } = useCool()
 const num = ref(0)
 
 onMounted(() => {
-  service.order.info.countPayOrder().then((res) => {
+  service.order.info.countPayed().then((res) => {
     num.value = res
   })
 })

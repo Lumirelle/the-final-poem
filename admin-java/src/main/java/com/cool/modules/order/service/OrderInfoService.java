@@ -22,5 +22,5 @@ public interface OrderInfoService extends BaseService<OrderInfoEntity> {
   Long countPayed();
 
   void writeOff(Long id, String verifyCode);
-  
+
 }

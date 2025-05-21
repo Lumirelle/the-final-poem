@@ -12,19 +12,37 @@ const { onRefresh } = usePager()
 // 初始数据
 const categoryList = ref<Eps.MealCategoryEntity[]>([])
 const hospitalList = ref<Eps.HospitalInfoEntity[]>([])
-// const departmentList = ref<Eps.DepartmentInfoEntity[]>([])
-// const doctorList = ref<Eps.DoctorInfoEntity[]>([])
-// const staffList = ref<Eps.StaffInfoEntity[]>([])
+const departmentList = ref<Eps.DepartmentEntity[]>([])
+const doctorList = ref<Eps.DoctorEntity[]>([])
+const staffList = ref<Eps.AccompanyStaffEntity[]>([])
 
+// 分类、医院、科室、医生、陪诊人员选项
 const categoryOptions = computed(() => {
   return categoryList.value.map(item => ({
     label: item.name,
     value: item.id,
   }))
 })
-
 const hospitalOptions = computed(() => {
   return hospitalList.value.map(item => ({
+    label: item.name,
+    value: item.id,
+  }))
+})
+const departmentOptions = computed(() => {
+  return departmentList.value.map(item => ({
+    label: item.name,
+    value: item.id,
+  }))
+})
+const doctorOptions = computed(() => {
+  return doctorList.value.map(item => ({
+    label: item.name,
+    value: item.id,
+  }))
+})
+const staffOptions = computed(() => {
+  return staffList.value.map(item => ({
     label: item.name,
     value: item.id,
   }))
@@ -65,6 +83,27 @@ async function refresh() {
       size: 100,
     })
     hospitalList.value = [{ id: '', name: '全部' }, ...resHospital.list]
+
+    // 获取科室列表
+    const resDepartment = await service.hospital.department.page({
+      page: 1,
+      size: 100,
+    })
+    departmentList.value = [{ id: '', name: '全部' }, ...resDepartment.list]
+
+    // 获取医生列表
+    const resDoctor = await service.hospital.doctor.page({
+      page: 1,
+      size: 100,
+    })
+    doctorList.value = [{ id: '', name: '全部' }, ...resDoctor.list]
+
+    // 获取陪诊人员列表
+    const resStaff = await service.accompany.staff.page({
+      page: 1,
+      size: 100,
+    })
+    staffList.value = [{ id: '', name: '全部' }, ...resStaff.list]
 
     // 获取套餐列表
     const res = await next(
@@ -155,20 +194,20 @@ onShow(() => {
           <cl-form-item label="所属医院" :margin="[0, 20, 20, 0]">
             <cl-select v-model="searchForm.hospitalId" :options="hospitalOptions" />
           </cl-form-item>
+
+          <cl-form-item label="陪诊人员" :margin="[0, 20, 20, 0]">
+            <cl-select v-model="searchForm.staffId" :options="staffOptions" />
+          </cl-form-item>
         </view>
 
         <!-- 高级搜索项 -->
         <view v-show="showAdvanced" class="advanced-search">
           <cl-form-item label="所属科室" :margin="[0, 20, 20, 0]">
-            <cl-input v-model="searchForm.departmentId" placeholder="请选择所属科室" />
+            <cl-select v-model="searchForm.departmentId" :options="departmentOptions" />
           </cl-form-item>
 
           <cl-form-item label="主治医生" :margin="[0, 20, 20, 0]">
-            <cl-input v-model="searchForm.doctorId" placeholder="请选择主治医生" />
-          </cl-form-item>
-
-          <cl-form-item label="陪诊人员" :margin="[0, 20, 20, 0]">
-            <cl-input v-model="searchForm.staffId" placeholder="请选择陪诊人员" />
+            <cl-select v-model="searchForm.doctorId" :options="doctorOptions" />
           </cl-form-item>
         </view>
 
@@ -232,7 +271,17 @@ onShow(() => {
               <view class="info-row">
                 <cl-icon name="face-auth" :size="32" color="primary" />
                 <cl-text
-                  :value="item.doctorName"
+                  :value="'医生：' + item.doctorName"
+                  color="#666"
+                  :margin="[0, 0, 0, 10]"
+                  size="28"
+                />
+              </view>
+
+              <view class="info-row">
+                <cl-icon name="face-auth" :size="32" color="primary" />
+                <cl-text
+                  :value="'陪诊员：' + item.staffName"
                   color="#666"
                   :margin="[0, 0, 0, 10]"
                   size="28"

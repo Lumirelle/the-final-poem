@@ -6,7 +6,7 @@ import { useUi } from '/$/cool-ui'
 import { useCool, useStore } from '/@/cool'
 
 const { router, service } = useCool()
-const { user } = useStore()
+const { user, dict } = useStore()
 const ui = useUi()
 const { t } = useI18n()
 
@@ -71,6 +71,23 @@ async function save() {
   loading.value = false
 }
 
+
+// 获取状态文本
+function getLevelText(level: number | undefined) {
+  if (level === undefined)
+    return '未知'
+  const result = dict.getLabel('acc-staff-level', level) || '未知'
+  return result
+}
+
+// 获取状态样式
+function getLevelType(level: number | undefined) {
+  if (level === undefined)
+    return 'primary'
+  const result = dict.get('acc-staff-level').find(item => item.value === level)?.type || 'primary'
+  return result
+}
+
 onReady(async () => {
   // 拉取当前档案
   const res = await service.user.info.profile()
@@ -104,7 +121,10 @@ onReady(async () => {
     <view class="page">
       <view class="form">
         <cl-form label-position="top">
-          <!-- 账户信息 -->
+          <cl-divider :margin="[30, 0]">
+            个人信息
+          </cl-divider>
+
           <cl-form-item :label="t('昵称')">
             <cl-input
               v-model="form.nickName"
@@ -115,10 +135,15 @@ onReady(async () => {
               :placeholder="t('请填写昵称')"
             />
           </cl-form-item>
-          <!-- 个人档案 -->
+
+          <cl-divider :margin="[30, 0]">
+            个人档案
+          </cl-divider>
+
           <cl-form-item :label="t('角色')">
             <cl-text type="info">{{ roleOptions.find(r => r.value === role)?.label }}</cl-text>
           </cl-form-item>
+          <!-- 患者表单 -->
           <template v-if="role === 1">
             <cl-form-item :label="t('姓名')">
               <cl-input v-model="patientForm.name" :placeholder="t('请输入姓名')" />
@@ -131,7 +156,7 @@ onReady(async () => {
               </cl-radio-group>
             </cl-form-item>
             <cl-form-item :label="t('生日')">
-              <cl-input v-model="patientForm.birthday" :placeholder="t('请选择生日')" />
+              <cl-select-date v-model="patientForm.birthday" :placeholder="t('请选择生日')"></cl-select-date>
             </cl-form-item>
             <cl-form-item :label="t('手机号')">
               <cl-input v-model="patientForm.phone" :placeholder="t('请输入手机号')" />
@@ -152,6 +177,7 @@ onReady(async () => {
               <cl-input v-model="patientForm.remark" :placeholder="t('备注')" />
             </cl-form-item>
           </template>
+          <!-- 陪诊员表单 -->
           <template v-else>
             <cl-form-item :label="t('姓名')">
               <cl-input v-model="staffForm.name" :placeholder="t('请输入姓名')" />
@@ -164,17 +190,15 @@ onReady(async () => {
               </cl-radio-group>
             </cl-form-item>
             <cl-form-item :label="t('生日')">
-              <cl-input v-model="staffForm.birthday" :placeholder="t('请选择生日')" />
+              <cl-select-date v-model="staffForm.birthday" :placeholder="t('请选择生日')"></cl-select-date>
             </cl-form-item>
             <cl-form-item :label="t('手机号')">
               <cl-input v-model="staffForm.phone" :placeholder="t('请输入手机号')" />
             </cl-form-item>
             <cl-form-item :label="t('级别')">
-              <cl-radio-group v-model="staffForm.level">
-                <cl-radio :label="0">{{ t('初级') }}</cl-radio>
-                <cl-radio :label="1">{{ t('中级') }}</cl-radio>
-                <cl-radio :label="2">{{ t('高级') }}</cl-radio>
-              </cl-radio-group>
+              <cl-tag :type="getLevelType(staffForm.status)">
+                {{ getLevelText(staffForm.status) }}
+              </cl-tag>
             </cl-form-item>
             <cl-form-item :label="t('简介')">
               <cl-input v-model="staffForm.introduction" :placeholder="t('请输入简介')" />
@@ -185,6 +209,7 @@ onReady(async () => {
           </template>
         </cl-form>
       </view>
+      
       <cl-footer>
         <cl-button custom type="primary" :loading="loading" @tap="save">
           {{ t('保存') }}

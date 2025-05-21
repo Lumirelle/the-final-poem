@@ -27,6 +27,18 @@ const useDictStore = defineStore('dict', () => {
       .join(',')
   }
 
+  // 获取类型
+  function getType(name: Dict.Key | any[], value: any): string {
+    const arr: any[] = String(value)?.split(',') || []
+
+    return arr
+      .map((e) => {
+        return (isString(name) ? get(name) : name).find(a => a.value == e)?.type
+      })
+      .filter(Boolean)
+      .join(',')
+  }
+
   // 刷新
   async function refresh(types?: Dict.Key[]) {
     return service.dict.info
@@ -60,6 +72,7 @@ const useDictStore = defineStore('dict', () => {
     data,
     get,
     getLabel,
+    getType,
     refresh,
   }
 })

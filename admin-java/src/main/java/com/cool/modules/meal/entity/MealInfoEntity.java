@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.dromara.autotable.annotation.Index;
 
+import java.math.BigDecimal;
+
 /**
  * 服务套餐表
  */
@@ -21,7 +23,7 @@ public class MealInfoEntity extends BaseEntity<MealInfoEntity> {
     private String name;
 
     @ColumnDefine(comment = "价格")
-    private Double price;
+    private BigDecimal price;
 
     @ColumnDefine(comment = "状态 0-禁用 1-启用", defaultValue = "1")
     private Integer status;

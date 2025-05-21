@@ -25,6 +25,4 @@ public class MealCategoryEntity extends BaseEntity<MealCategoryEntity> {
     @ColumnDefine(comment = "排序")
     private Integer sort;
 
-    @ColumnDefine(comment = "图标")
-    private String icon;
 }
