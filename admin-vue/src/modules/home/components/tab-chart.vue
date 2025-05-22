@@ -94,7 +94,7 @@ const chartOption = reactive({
 })
 
 function refresh() {
-  chartOption.xAxis.data = range(12).map((_, i) => t('{i}月', { i: i + 1 }))
+  chartOption.xAxis.data = range(12).map((_, i) => i + 1 + '月')
   chartOption.series[0].data = range(12).map(() => Number.parseInt(String(Math.random() * 10000)))
   chartOption.series[1].data = range(12).map(() => 10000)
 }
@@ -113,7 +113,7 @@ onMounted(() => {
     <div class="card__header">
       <cl-select-button v-model="tab.active" :options="tab.list" @change="onChange" />
 
-      <span class="year">{{ $t('{year}年', { year: dayjs().year() }) }}</span>
+      <span class="year">{{ dayjs().year() + '年' }}</span>
     </div>
 
     <v-chart :option="chartOption" autoresize />

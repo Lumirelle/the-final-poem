@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { random } from 'lodash-es'
 import { computed, onMounted, ref } from 'vue'
 import { useCool } from '/@/cool'
 

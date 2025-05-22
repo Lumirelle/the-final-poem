@@ -88,9 +88,6 @@ public class ComplaintServiceImpl extends BaseServiceImpl<ComplaintMapper, Compl
         for (int i = 0; i < 12; i++) {
             Date beginOfIMonth = DateUtil.offsetMonth(beginOfYear, i);
             Date endOfIMonth = DateUtil.endOfMonth(beginOfIMonth);
-            if (beginOfIMonth.before(DateUtil.date())) {
-                break;
-            }
             list.add(count(QueryWrapper.create()
                 .from(COMPLAINT_ENTITY)
                 .where(COMPLAINT_ENTITY.CREATE_TIME.ge(beginOfIMonth)

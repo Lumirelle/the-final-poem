@@ -30,7 +30,6 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         svg: {
           skipNames: ['base', 'theme'],
         },
-        demo: mode == 'demo', // 是否开启演示模式
       }),
       // visualizer({
       //   open: false,

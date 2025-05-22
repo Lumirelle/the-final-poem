@@ -1,14 +1,13 @@
 <script lang="ts" setup>
 import { BottomRight, TopRight } from '@element-plus/icons-vue'
-import { random } from 'lodash-es'
 import { onMounted, ref } from 'vue'
+import { service } from '/@/cool'
 
-const rate = ref(0)
 const num = ref(0)
 
-onMounted(() => {
-  rate.value = Math.random() * 30 + 30
-  num.value = random(10000000)
+onMounted(async () => {
+  const res = await service.order.info.sumAmount()
+  num.value = res
 })
 </script>
 

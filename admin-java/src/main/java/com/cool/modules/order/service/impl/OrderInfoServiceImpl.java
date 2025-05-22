@@ -14,6 +14,7 @@ import com.cool.modules.order.service.OrderInfoService;
 import com.cool.modules.patient.entity.PatientInfoEntity;
 import com.cool.modules.patient.mapper.PatientInfoMapper;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.core.update.UpdateWrapper;
@@ -21,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.cool.modules.accompany.entity.table.AccompanyStaffEntityTableDef.ACCOMPANY_STAFF_ENTITY;
@@ -152,6 +155,16 @@ public class OrderInfoServiceImpl extends BaseServiceImpl<OrderInfoMapper, Order
             .where(ORDER_INFO_ENTITY.STATUS.ge(1))
             .and(ORDER_INFO_ENTITY.STATUS.le(3))
         );
+    }
+
+    @Override
+    public BigDecimal sumAmount() {
+        Map map = mapper.selectOneByQueryAs(
+            QueryWrapper.create()
+                .select(QueryMethods.sum(ORDER_INFO_ENTITY.ACTUAL_AMOUNT).as("result")),
+            Map.class
+        );
+        return (BigDecimal) map.get("result");
     }
 
     @Override

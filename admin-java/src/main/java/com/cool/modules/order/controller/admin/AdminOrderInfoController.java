@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -59,6 +60,12 @@ public class AdminOrderInfoController extends BaseController<OrderInfoService, O
     @GetMapping("/countPayed")
     public R<Long> countPayed() {
         return R.ok(service.countPayed());
+    }
+
+    @Operation(summary = "计算销售额", description = "计算销售额")
+    @GetMapping("/sumAmount")
+    public R<BigDecimal> sumAmount() {
+        return R.ok(service.sumAmount());
     }
 
     @Override

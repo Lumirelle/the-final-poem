@@ -8,10 +8,6 @@ export default (): ModuleConfig => {
   return {
     enable: true,
     order: 99,
-    toolbar: {
-      component: import('./components/theme.vue'),
-      h5: false,
-    },
     options: {
       name: 'default',
 

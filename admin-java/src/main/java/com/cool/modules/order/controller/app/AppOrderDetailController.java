@@ -17,7 +17,7 @@ import static com.cool.modules.order.entity.table.OrderInfoEntityTableDef.ORDER_
  * 订单详情
  */
 @Tag(name = "订单详情", description = "订单详情")
-@CoolRestController(api = {"page", "info"})
+@CoolRestController(api = {"add", "page", "info"})
 public class AppOrderDetailController extends BaseController<OrderDetailService, OrderDetailEntity> {
 
     @Override
